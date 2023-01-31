@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('plan_prizes', function (Blueprint $table) {
             $table->foreignId('fk_prize')->references('id')->on('prizes')->onDelete('cascade');
             $table->foreignId('fk_plan')->references('id')->on('plans')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

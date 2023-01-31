@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('picture');
             $table->enum('rarity', ['common', 'rare', 'uncommon', 'very rare']);
             $table->foreignId('fk_level')->references('id')->on('levels')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

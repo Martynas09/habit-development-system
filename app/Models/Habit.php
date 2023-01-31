@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Habit extends Model
 {
-    protected $table = 'habits';
+    use HasFactory;
 }

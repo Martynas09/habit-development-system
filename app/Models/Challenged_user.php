@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Challenged_user extends Model
 {
-    protected $table = 'challenged_users';
+    use HasFactory;
 }

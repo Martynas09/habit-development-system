@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('plan_habits', function (Blueprint $table) {
             $table->foreignId('fk_plan')->references('id')->on('plans')->onDelete('cascade');
             $table->foreignId('fk_habit')->references('id')->on('habits')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

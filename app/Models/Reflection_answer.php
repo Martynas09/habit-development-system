@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Reflection_answer extends Model
 {
-    protected $table = 'reflection_answers';
+    use HasFactory;
 }

@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class User_achievement extends Model
 {
-    protected $table = 'user_achievements';
+    use HasFactory;
 }

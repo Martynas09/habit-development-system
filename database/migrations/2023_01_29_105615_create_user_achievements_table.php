@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('fk_user')->references('id')->on('users')->onDelete('cascade');
             $table->foreignId('fk_achievement')->references('id')->on('achievements')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

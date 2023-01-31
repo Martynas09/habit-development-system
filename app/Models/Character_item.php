@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Character_item extends Model
 {
-    protected $table = 'character_items';
+    use HasFactory;
 }

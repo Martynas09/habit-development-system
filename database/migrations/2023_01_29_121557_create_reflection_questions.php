@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('number');
             $table->string('content');
             $table->boolean('required');
+            $table->timestamps();
         });
     }
 

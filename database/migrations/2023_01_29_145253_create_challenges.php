@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('duration');
             $table->enum('status', ['new', 'in progress', 'completed']);
             $table->foreignId('fk_user')->references('id')->on('users')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

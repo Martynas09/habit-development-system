@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreignId('fk_task')->references('id')->on('tasks')->onDelete('cascade');
             $table->foreignId('fk_plan')->references('id')->on('plans')->onDelete('cascade');
             $table->foreignId('fk_plan_goal')->references('id')->on('plan_goals')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

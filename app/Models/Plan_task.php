@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Plan_task extends Model
 {
-    protected $table = 'plan_tasks';
+    use HasFactory;
 }

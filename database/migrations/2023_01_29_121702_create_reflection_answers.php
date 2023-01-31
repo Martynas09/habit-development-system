@@ -19,6 +19,7 @@ return new class extends Migration
             $table->boolean('answer');
             $table->foreignId('fk_user')->references('id')->on('users')->onDelete('cascade');
             $table->foreignId('fk_question')->references('id')->on('reflection_questions')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
