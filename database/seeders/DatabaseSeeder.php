@@ -16,6 +16,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        \App\Models\User::factory()->create([
+            'username' => 'Test User',
+            'email' => 'test@test',
+            'email_verified_at' => now(),
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'remember_token' => 'ZbwWAZpB5n',
+         ]);
         \App\Models\User::factory(15)->create();
         \App\Models\Reflection_question::factory(10)->create();
         \App\Models\Reflection_answer::factory(100)->create();
@@ -36,11 +43,6 @@ class DatabaseSeeder extends Seeder
         \App\Models\Reminder::factory(100)->create();
         \App\Models\Task::factory(50)->create();
         \App\Models\Plan_task::factory(70)->create();
-
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        
     }
 }

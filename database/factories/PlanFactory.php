@@ -17,6 +17,7 @@ class PlanFactory extends Factory
     public function definition()
     {
         return [
+            'title' => $this->faker->word(),
             'active' => $this->faker->boolean(),
             'fk_user' => $this->faker->randomElement(\App\Models\User::pluck('id')),
         ];
