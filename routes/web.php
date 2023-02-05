@@ -36,6 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('profile/characterEdit', [ProfileController::class, 'characterShow'])->name('profile.haracterEdit');
+    Route::post('profile/characterEdit', [ProfileController::class, 'characterEdit'])->name('profile.characterEdit');
 });
 
 Route::get('/plans', [PlanController::class, 'showPlans'])->name('plans');

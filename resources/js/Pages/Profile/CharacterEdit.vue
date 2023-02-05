@@ -11,19 +11,14 @@
                 <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                     <div class="grid grid-cols-2">
                         <div>
-                            <CharacterPreview 
-                            :head="head"
-                            :top="top"
-                            :bottom="bottom"
-                            :shoes="shoes" />
+                            <CharacterPreview :head="head" :top="top" :bottom="bottom" :shoes="shoes" />
                         </div>
                         <div>
-                            <CharacterItemSelection 
-                            :itemsHead="itemsHead"
-                            :itemsTop="itemsTop"
-                            :itemsBottom="itemsBottom"
-                            :itemsShoes="itemsShoes"
-                            />
+                            <CharacterItemSelection :itemsHead="itemsHead" :itemsTop="itemsTop"
+                                :itemsBottom="itemsBottom" :itemsShoes="itemsShoes" @changeBodyPart="(e)=>changeBodyPart(e.category,e.partID,e.picture)" />
+                            <div class="flex flex-row-reverse">
+                                <a-button @click="saveToDB" type="primary">Save</a-button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -33,7 +28,7 @@
 </template>
 
 <script setup>
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head,router } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import CharacterPreview from '@/Components/CharacterPreview.vue';
 import CharacterItemSelection from '@/Components/CharacterItemSelection.vue';
@@ -55,62 +50,55 @@ const shoes = ref();
 const shoesID = ref();
 
 
-
 onMounted(() => {
     head.value = props.character.get_head[0].picture;
     top.value = props.character.get_top[0].picture;
     bottom.value = props.character.get_bottom[0].picture;
     shoes.value = props.character.get_shoes[0].picture;
+
+    headID.value=props.character.get_head[0].id;
+    topID.value=props.character.get_top[0].id;
+    bottomID.value=props.character.get_bottom[0].id;
+    shoesID.value=props.character.get_shoes[0].id;
 })
 
-function changeBodyPart(part, partID, partUrl) {
-    switch (part) {
+function changeBodyPart(category, partID, partUrl) {
+    switch (category) {
         case "head":
             head.value = partUrl;
-            headId.value = partID;
+            headID.value = partID;
             break;
-        case "body":
-            // code block
+        case "bottom":
+            bottom.value = partUrl;
+            bottomID.value = partID;
+            break;
+        case "top":
+            top.value = partUrl;
+            topID.value = partID;
+            break;
+        case "shoes":
+            shoes.value = partUrl;
+            shoesID.value = partID;
             break;
         default:
-        // code block
-
+            break;
     }
 }
 
-const form = useForm({
-    headID: headID.value,
-    topID: topID.value,
-    bottomID: bottomID.value,
-    shoesID: shoesID.value,
-});
-
 const saveToDB = () => {
-    form.post(
-        '/api/saveChargerApperiance',
+    router.post(
+        '/profile/characterEdit',
+        {
+            head: headID.value,
+            top: topID.value,
+            bottom: bottomID.value,
+            shoes: shoesID.value,
+        },
         {
             preserveScroll: true,
-            onSuccess: () => message.success('Comment deleted successfully'),
-            onError: () => message.error('Something went wrong'),
+            onSuccess: () => message.success('Personažas atnaujintas sėkmingai'),
+            onError: () => message.error('Klaida atnaujinant personažą'),
         },
     );
 };
-
-// public function saveChargerApperiance(Request $request)
-//     {
-//         $request->validate([
-//             'headID' => 'required',
-//             'topID' => 'required',
-//         ]);
-//         $post = new Character_item();
-//         $post->head = $request->headID;
-//         $post->content = $request->content;
-//         $post->user_id = auth()->user()->id;
-//         $post->files = $request->jsonFiles;
-//         $post->save();
-//     }
-
-
-
-console.log(props.itemsHead)
 </script>
