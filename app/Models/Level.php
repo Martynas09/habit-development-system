@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Level extends Model
 {
     use HasFactory;
+    
+    public function getItems()
+    {
+        return $this->hasMany(Character_item::class, 'fk_level', 'id');
+    }
 }

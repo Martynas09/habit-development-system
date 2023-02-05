@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Character_item;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -10,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\Users_character;
+use App\Models\Level;
 
 class ProfileController extends Controller
 {
@@ -59,5 +62,22 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+    public function characterShow(Request $request)
+    {
+        $user = $request->user();
+        $character=Users_character::where('fk_user', $user->id)->first()->load('getHead', 'getTop', 'getBottom', 'getShoes');
+        $level=Level::where('requiredXP', '<=', $user->experience_points)->orderBy('requiredXP', 'desc')->first();
+        $itemsHead=Character_item::where('fk_level', '<=', $level->id)->where('category', '=', 'head')->get();
+        $itemsTop=Character_item::where('fk_level', '<=', $level->id)->where('category', '=', 'top')->get();
+        $itemsBottom=Character_item::where('fk_level', '<=', $level->id)->where('category', '=', 'bottom')->get();
+        $itemsShoes=Character_item::where('fk_level', '<=', $level->id)->where('category', '=', 'shoes')->get();
+        return inertia::render('Profile/CharacterEdit', [
+            'character' => $character,
+            'itemsHead' => $itemsHead,
+            'itemsTop' => $itemsTop,
+            'itemsBottom' => $itemsBottom,
+            'itemsShoes' => $itemsShoes,
+        ]);
     }
 }

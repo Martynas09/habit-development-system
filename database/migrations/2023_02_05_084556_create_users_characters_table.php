@@ -13,12 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('challenges', function (Blueprint $table) {
+        Schema::create('users_characters', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->text('description');
-            $table->integer('duration');
-            $table->enum('status', ['new', 'in progress', 'completed']);
+            $table->foreignId('head')->references('id')->on('character_items')->onDelete('cascade');
+            $table->foreignId('top')->references('id')->on('character_items')->onDelete('cascade');
+            $table->foreignId('bottom')->references('id')->on('character_items')->onDelete('cascade');
+            $table->foreignId('shoes')->references('id')->on('character_items')->onDelete('cascade');
             $table->foreignId('fk_user')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('challenges');
+        Schema::dropIfExists('users_characters');
     }
 };
