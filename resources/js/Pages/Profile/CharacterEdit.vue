@@ -1,10 +1,22 @@
 <template>
 
-    <Head title="Dashboard" />
-
+    <Head title="Personažo redagavimas" />
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Personažo redagavimas</h2>
+            <a-breadcrumb>
+                <a-breadcrumb-item href="" class="text-xl">
+                    <Link :href="route('dashboard')">
+                    <home-outlined style="font-size:20px"/>
+                    </Link>
+                </a-breadcrumb-item>
+                <a-breadcrumb-item href="" class="text-xl">
+                    <Link :href="route('profile.edit')">
+                    <user-outlined style="font-size:20px;margin-right:5px"/>
+                    <span>Profilis</span>
+                    </Link>
+                </a-breadcrumb-item>
+                <a-breadcrumb-item class="text-xl">Personažo redagavimas</a-breadcrumb-item>
+            </a-breadcrumb>
         </template>
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
@@ -15,9 +27,10 @@
                         </div>
                         <div>
                             <CharacterItemSelection :itemsHead="itemsHead" :itemsTop="itemsTop"
-                                :itemsBottom="itemsBottom" :itemsShoes="itemsShoes" @changeBodyPart="(e)=>changeBodyPart(e.category,e.partID,e.picture)" />
-                            <div class="flex flex-row-reverse">
-                                <a-button @click="saveToDB" type="primary">Save</a-button>
+                                :itemsBottom="itemsBottom" :itemsShoes="itemsShoes"
+                                @changeBodyPart="(e) => changeBodyPart(e.category, e.partID, e.picture)" />
+                            <div class="mt-10">
+                                <a-button @click="saveToDB" type="primary">Išsaugoti pakeitimus</a-button>
                             </div>
                         </div>
                     </div>
@@ -26,15 +39,14 @@
         </div>
     </AuthenticatedLayout>
 </template>
-
 <script setup>
-import { Head,router } from '@inertiajs/vue3';
+import { Head, router, Link } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import CharacterPreview from '@/Components/CharacterPreview.vue';
 import CharacterItemSelection from '@/Components/CharacterItemSelection.vue';
 import { ref, onMounted } from 'vue';
 import { message } from 'ant-design-vue';
-// import { Link } from '@inertiajs/inertia-vue3'; gali vaiksciot per puslapius no reload look github
+import { HomeOutlined, UserOutlined } from '@ant-design/icons-vue';
 
 const props = defineProps({ character: Object, itemsHead: Object, itemsTop: Object, itemsBottom: Object, itemsShoes: Object });
 const head = ref();
@@ -56,10 +68,10 @@ onMounted(() => {
     bottom.value = props.character.get_bottom[0].picture;
     shoes.value = props.character.get_shoes[0].picture;
 
-    headID.value=props.character.get_head[0].id;
-    topID.value=props.character.get_top[0].id;
-    bottomID.value=props.character.get_bottom[0].id;
-    shoesID.value=props.character.get_shoes[0].id;
+    headID.value = props.character.get_head[0].id;
+    topID.value = props.character.get_top[0].id;
+    bottomID.value = props.character.get_bottom[0].id;
+    shoesID.value = props.character.get_shoes[0].id;
 })
 
 function changeBodyPart(category, partID, partUrl) {

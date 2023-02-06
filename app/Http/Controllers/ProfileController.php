@@ -21,9 +21,11 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
+        $userAvatar=Users_character::where('fk_user', auth()->user()->id)->first()->load('getHead');
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
+            'userAvatar' => $userAvatar,
         ]);
     }
 

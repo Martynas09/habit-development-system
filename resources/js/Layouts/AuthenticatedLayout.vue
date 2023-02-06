@@ -153,3 +153,7 @@ const showingNavigationDropdown = ref(false);
         </div>
     </div>
 </template>
+<style>
+::-webkit-scrollbar {
+  display: none;
+}</style>

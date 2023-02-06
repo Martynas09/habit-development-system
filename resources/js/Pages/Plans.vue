@@ -4,7 +4,7 @@
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Planų valdymas</h2>
+            <a-page-header title="Planų valdymas"/>
         </template>
 
         <div class="py-12">
