@@ -1,40 +1,40 @@
 <script setup>
+import { useForm } from '@inertiajs/vue3';
+import { nextTick, ref } from 'vue';
 import DangerButton from '@/Components/DangerButton.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import Modal from '@/Components/Modal.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { useForm } from '@inertiajs/vue3';
-import { nextTick, ref } from 'vue';
 
 const confirmingUserDeletion = ref(false);
 const passwordInput = ref(null);
 
 const form = useForm({
-    password: '',
+  password: '',
 });
 
 const confirmUserDeletion = () => {
-    confirmingUserDeletion.value = true;
+  confirmingUserDeletion.value = true;
 
-    nextTick(() => passwordInput.value.focus());
+  nextTick(() => passwordInput.value.focus());
+};
+const closeModal = () => {
+  confirmingUserDeletion.value = false;
+
+  form.reset();
 };
 
 const deleteUser = () => {
-    form.delete(route('profile.destroy'), {
-        preserveScroll: true,
-        onSuccess: () => closeModal(),
-        onError: () => passwordInput.value.focus(),
-        onFinish: () => form.reset(),
-    });
+  form.delete(route('profile.destroy'), {
+    preserveScroll: true,
+    onSuccess: () => closeModal(),
+    onError: () => passwordInput.value.focus(),
+    onFinish: () => form.reset(),
+  });
 };
 
-const closeModal = () => {
-    confirmingUserDeletion.value = false;
-
-    form.reset();
-};
 </script>
 
 <template>
@@ -43,8 +43,8 @@ const closeModal = () => {
             <h2 class="text-lg font-medium text-gray-900">Pašalinti paskyrą</h2>
 
             <p class="mt-1 text-sm text-gray-600">
-                Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting
-                your account, please download any data or information that you wish to retain.
+                Kai ištrinsite savo paskyrą, visi jos ištekliai ir duomenys bus visam laikui ištrinti. Prieš ištrinant savo
+                paskyrą, atsisiųskite bet kokius duomenis ar informaciją, kurią norite išlaikyti.
             </p>
         </header>
 
@@ -53,12 +53,12 @@ const closeModal = () => {
         <Modal :show="confirmingUserDeletion" @close="closeModal">
             <div class="p-6">
                 <h2 class="text-lg font-medium text-gray-900">
-                    Are you sure you want to delete your account?
+                    Ar tikrai norite ištrinti savo paskyrą?
                 </h2>
 
                 <p class="mt-1 text-sm text-gray-600">
-                    Once your account is deleted, all of its resources and data will be permanently deleted. Please
-                    enter your password to confirm you would like to permanently delete your account.
+                    Kai ištrinsite savo paskyrą, visi jos ištekliai ir duomenys bus visam laikui ištrinti. Prašome įvesti
+                    slaptažodį, kad patvirtintumėte, kad norite visam laikui ištrinti savo paskyrą.
                 </p>
 
                 <div class="mt-6">
@@ -78,7 +78,7 @@ const closeModal = () => {
                 </div>
 
                 <div class="mt-6 flex justify-end">
-                    <SecondaryButton @click="closeModal"> Cancel </SecondaryButton>
+                    <SecondaryButton @click="closeModal"> Atšaukti </SecondaryButton>
 
                     <DangerButton
                         class="ml-3"
@@ -86,7 +86,7 @@ const closeModal = () => {
                         :disabled="form.processing"
                         @click="deleteUser"
                     >
-                        Delete Account
+                        Pašalinti paskyrą
                     </DangerButton>
                 </div>
             </div>

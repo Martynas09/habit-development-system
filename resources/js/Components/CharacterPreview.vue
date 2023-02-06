@@ -11,7 +11,9 @@
 </template>
 
 <script setup>
-const props = defineProps({ head: String, top: String, bottom: String, shoes: String });
+defineProps({
+  head: String, top: String, bottom: String, shoes: String,
+});
 </script>
 <style>
 </style>

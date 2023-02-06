@@ -41,14 +41,16 @@
 </template>
 <script setup>
 import { Head, router, Link } from '@inertiajs/vue3';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import CharacterPreview from '@/Components/CharacterPreview.vue';
-import CharacterItemSelection from '@/Components/CharacterItemSelection.vue';
 import { ref, onMounted } from 'vue';
 import { message } from 'ant-design-vue';
 import { HomeOutlined, UserOutlined } from '@ant-design/icons-vue';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import CharacterPreview from '@/Components/CharacterPreview.vue';
+import CharacterItemSelection from '@/Components/CharacterItemSelection.vue';
 
-const props = defineProps({ character: Object, itemsHead: Object, itemsTop: Object, itemsBottom: Object, itemsShoes: Object });
+const props = defineProps({
+  character: Object, itemsHead: Object, itemsTop: Object, itemsBottom: Object, itemsShoes: Object,
+});
 const head = ref();
 const headID = ref();
 
@@ -61,56 +63,55 @@ const bottomID = ref();
 const shoes = ref();
 const shoesID = ref();
 
-
 onMounted(() => {
-    head.value = props.character.get_head[0].picture;
-    top.value = props.character.get_top[0].picture;
-    bottom.value = props.character.get_bottom[0].picture;
-    shoes.value = props.character.get_shoes[0].picture;
+  head.value = props.character.get_head[0].picture;
+  top.value = props.character.get_top[0].picture;
+  bottom.value = props.character.get_bottom[0].picture;
+  shoes.value = props.character.get_shoes[0].picture;
 
-    headID.value = props.character.get_head[0].id;
-    topID.value = props.character.get_top[0].id;
-    bottomID.value = props.character.get_bottom[0].id;
-    shoesID.value = props.character.get_shoes[0].id;
-})
+  headID.value = props.character.get_head[0].id;
+  topID.value = props.character.get_top[0].id;
+  bottomID.value = props.character.get_bottom[0].id;
+  shoesID.value = props.character.get_shoes[0].id;
+});
 
 function changeBodyPart(category, partID, partUrl) {
-    switch (category) {
-        case "head":
-            head.value = partUrl;
-            headID.value = partID;
-            break;
-        case "bottom":
-            bottom.value = partUrl;
-            bottomID.value = partID;
-            break;
-        case "top":
-            top.value = partUrl;
-            topID.value = partID;
-            break;
-        case "shoes":
-            shoes.value = partUrl;
-            shoesID.value = partID;
-            break;
-        default:
-            break;
-    }
+  switch (category) {
+    case 'head':
+      head.value = partUrl;
+      headID.value = partID;
+      break;
+    case 'bottom':
+      bottom.value = partUrl;
+      bottomID.value = partID;
+      break;
+    case 'top':
+      top.value = partUrl;
+      topID.value = partID;
+      break;
+    case 'shoes':
+      shoes.value = partUrl;
+      shoesID.value = partID;
+      break;
+    default:
+      break;
+  }
 }
 
 const saveToDB = () => {
-    router.post(
-        '/profile/characterEdit',
-        {
-            head: headID.value,
-            top: topID.value,
-            bottom: bottomID.value,
-            shoes: shoesID.value,
-        },
-        {
-            preserveScroll: true,
-            onSuccess: () => message.success('Personažas atnaujintas sėkmingai'),
-            onError: () => message.error('Klaida atnaujinant personažą'),
-        },
-    );
+  router.post(
+    '/profile/characterEdit',
+    {
+      head: headID.value,
+      top: topID.value,
+      bottom: bottomID.value,
+      shoes: shoesID.value,
+    },
+    {
+      preserveScroll: true,
+      onSuccess: () => message.success('Personažas atnaujintas sėkmingai'),
+      onError: () => message.error('Klaida atnaujinant personažą'),
+    },
+  );
 };
 </script>

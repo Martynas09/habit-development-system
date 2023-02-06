@@ -89,6 +89,6 @@ class ProfileController extends Controller
         $character->bottom=$request->bottom;
         $character->shoes=$request->shoes;
         $character->save();
-        return Redirect::route('profile.characterEdit');
+        return Redirect::route('profile.edit');
     }
 }

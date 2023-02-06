@@ -1,18 +1,3 @@
-<script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import DeleteUserForm from './Partials/DeleteUserForm.vue';
-import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
-import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
-import { Head, Link } from '@inertiajs/vue3';
-import { HomeOutlined, UserOutlined } from '@ant-design/icons-vue';
-
-defineProps({
-    mustVerifyEmail: Boolean,
-    status: String,
-    userAvatar: Object,
-});
-</script>
-
 <template>
 
     <Head title="Profile" />
@@ -20,7 +5,7 @@ defineProps({
     <AuthenticatedLayout>
         <template #header>
             <a-breadcrumb>
-                <a-breadcrumb-item href="" class="text-xl">
+                <a-breadcrumb-item href="/dashboard" class="text-xl">
                     <Link :href="route('dashboard')">
                     <home-outlined style="font-size: 20px" />
                     </Link>
@@ -38,9 +23,14 @@ defineProps({
                             class="max-w-xl" />
                     </div>
                     <div class="pl-16">
-                        <Link :href="route('profile.characterEdit')">
-                        <a-button type="primary">Redaguoti personažą</a-button>
-                        </Link>
+                        <div class="flex items-center justify-center p-10">
+                            <img :src="'/storage/' + userAvatar.get_head[0].picture" class="w-36 rounded-full border-2 border-solid border-gray-800">
+                        </div>
+                        <div class="flex items-center justify-center pt-2">
+                            <Link :href="route('profile.characterEdit')">
+                            <a-button type="primary">Redaguoti personažą</a-button>
+                            </Link>
+                        </div>
                     </div>
                 </div>
                 <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
@@ -54,3 +44,17 @@ defineProps({
         </div>
     </AuthenticatedLayout>
 </template>
+<script setup>
+import { Head, Link } from '@inertiajs/vue3';
+import { HomeOutlined, UserOutlined } from '@ant-design/icons-vue';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import DeleteUserForm from './Partials/DeleteUserForm.vue';
+import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
+import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
+
+defineProps({
+  mustVerifyEmail: Boolean,
+  status: String,
+  userAvatar: Object,
+});
+</script>
