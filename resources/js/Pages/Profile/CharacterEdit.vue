@@ -1,43 +1,43 @@
 <template>
 
-    <Head title="Personažo redagavimas" />
-    <AuthenticatedLayout>
-        <template #header>
-            <a-breadcrumb>
-                <a-breadcrumb-item href="" class="text-xl">
-                    <Link :href="route('dashboard')">
-                    <home-outlined style="font-size:20px"/>
-                    </Link>
-                </a-breadcrumb-item>
-                <a-breadcrumb-item href="" class="text-xl">
-                    <Link :href="route('profile.edit')">
-                    <user-outlined style="font-size:20px;margin-right:5px"/>
-                    <span>Profilis</span>
-                    </Link>
-                </a-breadcrumb-item>
-                <a-breadcrumb-item class="text-xl">Personažo redagavimas</a-breadcrumb-item>
-            </a-breadcrumb>
-        </template>
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-                <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                    <div class="grid grid-cols-2">
-                        <div>
-                            <CharacterPreview :head="head" :top="top" :bottom="bottom" :shoes="shoes" />
-                        </div>
-                        <div>
-                            <CharacterItemSelection :itemsHead="itemsHead" :itemsTop="itemsTop"
-                                :itemsBottom="itemsBottom" :itemsShoes="itemsShoes"
-                                @changeBodyPart="(e) => changeBodyPart(e.category, e.partID, e.picture)" />
-                            <div class="mt-10">
-                                <a-button @click="saveToDB" type="primary">Išsaugoti pakeitimus</a-button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  <Head title="Personažo redagavimas" />
+  <AuthenticatedLayout>
+    <template #header>
+      <a-breadcrumb>
+        <a-breadcrumb-item href="" class="text-xl">
+          <Link :href="route('dashboard')">
+          <home-outlined style="font-size:20px" />
+          </Link>
+        </a-breadcrumb-item>
+        <a-breadcrumb-item href="" class="text-xl">
+          <Link :href="route('profile.edit')">
+          <user-outlined style="font-size:20px;margin-right:5px" />
+          <span>Profilis</span>
+          </Link>
+        </a-breadcrumb-item>
+        <a-breadcrumb-item class="text-xl">Personažo redagavimas</a-breadcrumb-item>
+      </a-breadcrumb>
+    </template>
+    <div class="py-12">
+      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+        <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+          <div class="grid grid-cols-2">
+            <div>
+              <CharacterPreview :head="head" :top="top" :bottom="bottom" :shoes="shoes" />
             </div>
+            <div>
+              <CharacterItemSelection :itemsHead="itemsHead" :itemsTop="itemsTop" :itemsBottom="itemsBottom"
+                :itemsShoes="itemsShoes" :character="character"
+                @changeBodyPart="(e) => changeBodyPart(e.category, e.partID, e.picture)" />
+              <div class="mt-10">
+                <a-button @click="saveToDB" type="primary">Išsaugoti pakeitimus</a-button>
+              </div>
+            </div>
+          </div>
         </div>
-    </AuthenticatedLayout>
+      </div>
+    </div>
+  </AuthenticatedLayout>
 </template>
 <script setup>
 import { Head, router, Link } from '@inertiajs/vue3';

@@ -4,7 +4,12 @@
 
     <AuthenticatedLayout>
         <template #header>
-            <a-page-header title="Planų valdymas"/>
+            <a-breadcrumb>
+                <a-breadcrumb-item class="text-xl">
+                    <reconciliation-outlined style="font-size:20px"/>
+                    Planų valdymas
+                </a-breadcrumb-item>
+            </a-breadcrumb>
         </template>
 
         <div class="py-12">
@@ -24,6 +29,7 @@
 
 <script setup>
 import { Head } from '@inertiajs/vue3';
+import { ReconciliationOutlined } from '@ant-design/icons-vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 const props = defineProps({ plans: Object });
