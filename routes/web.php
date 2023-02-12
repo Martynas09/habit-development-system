@@ -31,14 +31,20 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+//PROFILE ROUTES
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('profile/characterEdit', [ProfileController::class, 'characterShow'])->name('profile.haracterEdit');
+    Route::get('profile/characterEdit', [ProfileController::class, 'characterShow'])->name('profile.characterEdit');
     Route::post('profile/characterEdit', [ProfileController::class, 'characterEdit'])->name('profile.characterEdit');
 });
 
-Route::get('/plans', [PlanController::class, 'showPlans'])->name('plans');
+//PLAN ROUTES
+Route::middleware('auth')->group(function () {
+    Route::get('/plans', [PlanController::class, 'showPlans'])->name('Plan.PlanListView');
+    Route::get('/plans/view{id}', [PlanController::class, 'showPlan'])->name('Plan.PlanView');
+});
 
-require __DIR__.'/auth.php';
+
+require __DIR__ . '/auth.php';

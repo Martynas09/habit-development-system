@@ -85,6 +85,11 @@ class DatabaseSeeder extends Seeder
         \App\Models\Note::factory(40)->create();
         \App\Models\Challenge::factory(5)->create();
         \App\Models\Challenged_user::factory(10)->create();
+        \App\Models\Plan::factory()->create([
+            'title' => 'Test Plan',
+            'active' => 1,
+            'fk_user' => 1,
+        ]);
         \App\Models\Plan::factory(20)->create();
         \App\Models\Prize::factory(25)->create();
         \App\Models\Plan_prize::factory(15)->create();

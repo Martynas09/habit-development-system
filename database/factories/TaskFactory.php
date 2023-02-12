@@ -17,8 +17,8 @@ class TaskFactory extends Factory
     public function definition()
     {
         return [
-            'duration' => $this->faker->numberBetween(10, 120),
-            'title' => $this->faker->word,
+            'duration' => $this->faker->randomElement([15, 30, 45, 60, 75, 90, 105, 120]),
+            'title' => $this->faker->randomElement(['Bėgiojimas','Knygos skaitymas','Meditacija','Sportas','Mokymasis','Pasivaikščiojimas']),
         ];
     }
 }
