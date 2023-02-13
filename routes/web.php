@@ -44,6 +44,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/plans', [PlanController::class, 'showPlans'])->name('Plan.PlanListView');
     Route::get('/plans/view{id}', [PlanController::class, 'showPlan'])->name('Plan.PlanView');
+    Route::post('/plans/view{id}', [PlanController::class, 'taskDone'])->name('Plan.PlanView');
 });
 
 

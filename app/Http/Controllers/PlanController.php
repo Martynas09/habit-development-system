@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Plan;
+use App\Models\Plan_task;
 
 class PlanController extends Controller
 {
@@ -21,5 +22,11 @@ class PlanController extends Controller
         return inertia::render('Plan/PlanView', [
             'plan' => $plan
         ]);
+    }
+    public function taskDone(Request $request)
+    {
+        $task = Plan_task::where('id', $request->id)->first();
+        $task->is_done = 1;
+        $task->save();
     }
 }

@@ -29,22 +29,32 @@
               <template #dateCellRender="{ current }">
                 <ul class="events">
                   <li v-for="item in getListData(current)" :key="item.content">
-                    <a-popover :title='text' trigger="click">
-                      <template #content>
-                        <p>Atlikimo laikas: {{ time }}</p>
-                        <p>Užduotis {{ status }}</p>
+                    <a-popover trigger="click">
+                      <template #title>
+                        <span class="font-bold">{{text}}</span>
                       </template>
-                      <a-badge @click=handleClick(item) :status="item.type" :text="item.content" />
+                      <template #content>
+                        <p class="font-semibold p-0 m-0">Atlikimo laikas:</p>
+                        <p class="pb-1 m-0">{{ starttime }}-{{ endtime }}</p>
+                        <p :class="status === 'atlikta' ? 'text-green-600' : 'text-red-600'">Užduotis {{ status }}</p>
+                        <a-button v-if="status==='neatlikta'&& visible===true" type="primary" size="small" class="w-full" @click="handleTaskDone();taskDone()">Pažymėti atlikta</a-button>
+                      </template>
+                      <a-badge @click=handleClick(item) :status="item.type"
+                        :text="dayjs(item.time).format('HH:mm') + ' ' + item.content" />
                     </a-popover>
                   </li>
                 </ul>
               </template>
-              <!-- <template #monthCellRender="{ current }">
-                <div v-if="getMonthData(current)" class="notes-month">
-                  <section>{{ getMonthData(current) }}</section>
-                  <span>Backlog number</span>
+              <template #monthCellRender="{ current }">
+                <div v-if="getMonthData(current)[0]" class="notes-month">
+                  <p class="text-sm p-0 m-0">Išviso užduočių: {{ getMonthData(current)[0] }}</p>
+                  <p class="text-sm p-0 m-0 text-green-600">Atlikta: {{ getMonthData(current)[1] }}</p>
+                  <p class="text-sm p-0 m-0 text-red-600">Neatlikta: {{ getMonthData(current)[2] }}</p>
                 </div>
-              </template> -->
+                <div v-else class="notes-month">
+                  <span class="text-sm p-0 m-0">Nėra užduočių</span>
+                </div>
+              </template>
             </a-calendar>
             <!-- <a-modal v-model:visible="visible" :title='text' okText="Uždaryti" @ok="handleOk">
               <p>Atlikimo laikas: {{ time }}</p>
@@ -60,19 +70,22 @@
   </AuthenticatedLayout>
 </template>
 <script setup>
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import { ReconciliationOutlined, HomeOutlined } from '@ant-design/icons-vue';
 import { ref } from 'vue';
 import dayjs from 'dayjs';
+import { message } from 'ant-design-vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 const props = defineProps({ plan: Object });
 
 const value = ref();
-const time = ref();
+const starttime = ref();
+const endtime = ref();
 const text = ref();
 const status = ref();
 const visible = ref(false);
+const taskID = ref();
 // const disabledDate = (current) => current && current < dayjs().endOf('day');
 
 function getListData(current) {
@@ -81,15 +94,19 @@ function getListData(current) {
     if (dayjs(task.execution_date).format('D') === dayjs(current).format('D') && dayjs(task.execution_date).format('M') === dayjs(current).format('M')) {
       if (task.is_done === 1) {
         events.push({
+          id: task.id,
           type: 'success',
           content: task.get_task[0].title,
           time: task.execution_date,
+          duration: task.get_task[0].duration,
         });
       } else {
         events.push({
+          id: task.id,
           type: 'error',
           content: task.get_task[0].title,
           time: task.execution_date,
+          duration: task.get_task[0].duration,
         });
       }
     }
@@ -98,21 +115,53 @@ function getListData(current) {
 }
 
 function handleClick(item) {
-  time.value = dayjs(item.text).format('HH:mm');
+  starttime.value = dayjs(item.time).format('HH:mm');
+  endtime.value = dayjs(item.time).add(item.duration, 'minute').format('HH:mm');
   text.value = item.content;
   if (item.type === 'success') {
     status.value = 'atlikta';
   } else {
     status.value = 'neatlikta';
   }
+  taskID.value = item.id;
   visible.value = true;
 }
 // const handleOk = () => {
 //   visible.value = false;
 // };
-// function getMonthData() {
-//   return 123;
-// }
+function getMonthData(current) {
+  let total = 0;
+  let done = 0;
+  let undone = 0;
+  props.plan.get_tasks.forEach((task) => {
+    if (dayjs(task.execution_date).format('M') === dayjs(current).format('M')) {
+      total += 1;
+      if (task.is_done === 1) {
+        done += 1;
+      } else {
+        undone += 1;
+      }
+    }
+  });
+  return [total, done, undone];
+}
+const taskDone = () => {
+  router.post(
+    '/plans/view{id}',
+    {
+      id: taskID.value,
+    },
+    {
+      preserveScroll: true,
+      onSuccess: () => message.success('Užduotis pažymėta kaip atlikta', 1).then(() => message.info('Gavote 200 patirties taškų!', 2.5)),
+      onError: () => message.error('Klaida pažymėjant užduotį kaip atliktą'),
+    },
+  );
+};
+function handleTaskDone() {
+  visible.value = false;
+  status.value = 'atlikta';
+}
 </script>
 <style scoped>
 .events {
