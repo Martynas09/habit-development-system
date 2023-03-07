@@ -1,5 +1,4 @@
 <template>
-
     <Head title="Dashboard" />
 
     <AuthenticatedLayout>
@@ -14,12 +13,17 @@
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="pb-4">
+                    <Link :href="route('Plan.ChooseAlternativeView')">
+                    <a-button type="primary">Sudaryti naują planą</a-button>
+                    </Link>
+                </div>
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <h3 :style="{ margin: '16px' }">Jūsų planai:</h3>
                     <a-list bordered :data-source="data">
                         <template v-for="plan in props.plans" v-bind:key="plan">
                             <Link :href="route('Plan.PlanView', { id: plan.id })">
-                                <a-list-item>{{ plan.title }}</a-list-item>
+                            <a-list-item>{{ plan.title }}</a-list-item>
                             </Link>
                         </template>
                     </a-list>
@@ -37,6 +41,4 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 const props = defineProps({ plans: Object });
 </script>
-<style>
-
-</style>
+<style></style>

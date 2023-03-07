@@ -21,7 +21,7 @@
     </template>
 
     <div class="py-12">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+      <div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
           <h3 :style="{ margin: '16px' }">Planas:</h3>
           <div style="border: 1px solid #d9d9d9; border-radius: 4px; margin: 16px ">

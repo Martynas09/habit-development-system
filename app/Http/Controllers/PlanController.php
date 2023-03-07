@@ -29,4 +29,12 @@ class PlanController extends Controller
         $task->is_done = 1;
         $task->save();
     }
+    public function showAlternatives()
+    {
+        return inertia::render('Plan/ChooseAlternativeView');
+    }
+    public function showQuestionnaire()
+    {
+        return inertia::render('Plan/QuestionnaireView');
+    }
 }
