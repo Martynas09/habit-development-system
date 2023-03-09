@@ -37,4 +37,8 @@ class PlanController extends Controller
     {
         return inertia::render('Plan/QuestionnaireView');
     }
+    public function showCustom()
+    {
+        return inertia::render('Plan/CustomView');
+    }
 }

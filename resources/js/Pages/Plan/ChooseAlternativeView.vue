@@ -77,7 +77,7 @@
                                 <li><plus-square-two-tone class="pr-3" />Galimybė lanksčiai pritaikyti planą prie konkrečių poreikių ar pageidavimų.</li>
                             </ul>
                             <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                                <Link>
+                                <Link :href="route('Plan.CustomView')">
                                 <a-button type="primary">Pasirinkti</a-button>
                                 </Link>
                             </div>

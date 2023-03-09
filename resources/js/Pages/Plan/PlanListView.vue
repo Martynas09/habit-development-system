@@ -4,6 +4,11 @@
     <AuthenticatedLayout>
         <template #header>
             <a-breadcrumb>
+                <a-breadcrumb-item href="" class="text-xl">
+                    <Link :href="route('dashboard')">
+                    <home-outlined style="font-size:20px" />
+                    </Link>
+                </a-breadcrumb-item>
                 <a-breadcrumb-item class="text-xl">
                     <reconciliation-outlined style="font-size:20px" />
                     Planų valdymas
@@ -20,7 +25,7 @@
                 </div>
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <h3 :style="{ margin: '16px' }">Jūsų planai:</h3>
-                    <a-list bordered :data-source="data">
+                    <a-list bordered>
                         <template v-for="plan in props.plans" v-bind:key="plan">
                             <Link :href="route('Plan.PlanView', { id: plan.id })">
                             <a-list-item>{{ plan.title }}</a-list-item>
@@ -36,7 +41,7 @@
 
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
-import { ReconciliationOutlined } from '@ant-design/icons-vue';
+import { ReconciliationOutlined, HomeOutlined } from '@ant-design/icons-vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 const props = defineProps({ plans: Object });

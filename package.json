@@ -23,6 +23,8 @@
     },
     "dependencies": {
         "ant-design-vue": "^3.2.15",
-        "unplugin-vue-components": "^0.23.0"
+        "unplugin-vue-components": "^0.23.0",
+        "uuid": "^9.0.0",
+        "vuedraggable": "^4.1.0"
     }
 }
