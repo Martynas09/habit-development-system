@@ -14,6 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('plan_prizes', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('fk_prize')->references('id')->on('prizes')->onDelete('cascade');
             $table->foreignId('fk_plan')->references('id')->on('plans')->onDelete('cascade');
             $table->timestamps();

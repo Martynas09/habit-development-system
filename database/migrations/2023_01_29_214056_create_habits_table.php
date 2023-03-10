@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('habits', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->foreignId('fk_goal')->references('id')->on('goals')->onDelete('cascade');
             $table->timestamps();
         });
     }

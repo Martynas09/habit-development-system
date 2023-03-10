@@ -48,6 +48,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/plans/alternatives', [PlanController::class, 'showAlternatives'])->name('Plan.ChooseAlternativeView');
     Route::get('/plans/questionnaire', [PlanController::class, 'showQuestionnaire'])->name('Plan.QuestionnaireView');
     Route::get('/plans/custom', [PlanController::class, 'showCustom'])->name('Plan.CustomView');
+    Route::post('/plans/custom', [PlanController::class, 'createPlan'])->name('Plan.CustomView');
 });
 
 

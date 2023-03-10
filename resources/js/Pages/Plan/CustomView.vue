@@ -29,6 +29,7 @@
       <div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
         <h3 class="pb-2 text-xl">Plano parametrai:</h3>
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+          todo: Pavadinimas, prizai, priminimai
           <!-- Tikslų forma -->
           <a-form ref="formRef" name="dynamic_form_item" :model="dynamicValidateForm">
             <div class="pl-6 pt-4"><a-form-item style="margin-top:0px;margin-bottom:0px" name="goal"
@@ -91,14 +92,15 @@
                 <h3 class="text-center border-b border-zinc-300 font-bold bg-zinc-50">Užduočių sąrašas</h3>
                 <draggable class="list-group" handle=".handle" itemKey="id" :list="listTasks" :clone="handleClone"
                   :group="{ name: 'people', pull: 'clone', put: false }" @change="log">
-                  <template #item="{ element,index }">
+                  <template #item="{ element, index }">
                     <div class="list-group-item flex p-1 items-center hover:bg-zinc-50">
                       <i class="handle px-2"><unordered-list-outlined /></i>
                       <a-input style="width: 40%" v-model:value="element.task" placeholder="Užduoties pavadinimas" />
                       <a-input-number style="margin-left: 8px;margin-right: 5px" v-model:value="element.duration" :min="1"
                         :max="360" placeholder="Trukmė" /> min.
-                      <minus-circle-two-tone two-tone-color="#ef4444" v-if="listTasks.length > 1" class="pl-2"
-                        :disabled="listTasks.length === 1" @click="removeTask(index)" />
+                      <!-- todo: Jei taskas jau įdėtas neleist ištrint-->
+                      <minus-circle-two-tone v-if="element.canDelete" two-tone-color="#ef4444" class="pl-2"
+                        @click="removeTask(index)" />
                     </div>
                   </template>
                 </draggable>
@@ -110,7 +112,8 @@
                 </div>
               </div>
             </div>
-            <p class="pl-6 pt-4" style="margin-top:0px;margin-bottom:0px">Sudėkite užduotis į norimas savaitės dienas ir nustatykite jų laiką</p>
+            <p class="pl-6 pt-4" style="margin-top:0px;margin-bottom:0px">Sudėkite užduotis į norimas savaitės dienas ir
+              nustatykite jų laiką.</p>
             <div class="grid grid-cols-7 py-4 px-6">
               <div class="border border-zinc-300 min-h-[150px]">
                 <h3 style="margin-top:0px;margin-bottom:0px"
@@ -118,9 +121,11 @@
                 <draggable class="list-group" :list="listMonday" group="people" @change="log" itemKey="id">
                   <template #item="{ element, index }">
                     <div class="list-group-item hover:bg-zinc-50">
-                      <a-time-picker style="width: 41%; margin-bottom:7px;margin-top:7px;margin-left:5px;margin-right:5px"
+                      <a-time-picker :minute-step="5"
+                        style="width: 41%; margin-bottom:7px;margin-top:7px;margin-left:5px;margin-right:5px"
                         v-model:value="element.time" format="HH:mm" placeholder="Laikas" />{{ element.task }}
-                      <button @click="removeAtMonday(index)"><minus-circle-two-tone two-tone-color="#ef4444" /></button>
+                      <button @click="removeFromDay(index, element.fatherId, 'listMonday')"><minus-circle-two-tone
+                          two-tone-color="#ef4444" /></button>
                       <a-divider style="margin-top:0px;margin-bottom:0px" />
                     </div>
                   </template>
@@ -134,7 +139,8 @@
                     <div class="list-group-item hover:bg-zinc-50">
                       <a-time-picker style="width: 41%; margin-bottom:7px;margin-top:7px;margin-left:5px;margin-right:5px"
                         v-model:value="element.time" format="HH:mm" placeholder="Laikas" />{{ element.task }}
-                      <button @click="removeAtTuesday(index)"><minus-circle-two-tone two-tone-color="#ef4444" /></button>
+                      <button @click="removeFromDay(index, element.fatherId,'listTuesday')"><minus-circle-two-tone
+                          two-tone-color="#ef4444" /></button>
                       <a-divider style="margin-top:0px;margin-bottom:0px" />
                     </div>
                   </template>
@@ -148,7 +154,7 @@
                     <div class="list-group-item hover:bg-zinc-50">
                       <a-time-picker style="width: 41%; margin-bottom:7px;margin-top:7px;margin-left:5px;margin-right:5px"
                         v-model:value="element.time" format="HH:mm" placeholder="Laikas" />{{ element.task }}
-                      <button @click="removeAtWednesday(index)"><minus-circle-two-tone
+                      <button @click="removeFromDay(index, element.fatherId,'listWednesday')"><minus-circle-two-tone
                           two-tone-color="#ef4444" /></button>
                       <a-divider style="margin-top:0px;margin-bottom:0px" />
                     </div>
@@ -163,7 +169,8 @@
                     <div class="list-group-item hover:bg-zinc-50">
                       <a-time-picker style="width: 41%; margin-bottom:7px;margin-top:7px;margin-left:5px;margin-right:5px"
                         v-model:value="element.time" format="HH:mm" placeholder="Laikas" />{{ element.task }}
-                      <button @click="removeAtThursday(index)"><minus-circle-two-tone two-tone-color="#ef4444" /></button>
+                      <button @click="removeFromDay(index, element.fatherId,'listThursday')"><minus-circle-two-tone
+                          two-tone-color="#ef4444" /></button>
                       <a-divider style="margin-top:0px;margin-bottom:0px" />
                     </div>
                   </template>
@@ -177,7 +184,8 @@
                     <div class="list-group-item hover:bg-zinc-50">
                       <a-time-picker style="width: 41%; margin-bottom:7px;margin-top:7px;margin-left:5px;margin-right:5px"
                         v-model:value="element.time" format="HH:mm" placeholder="Laikas" />{{ element.task }}
-                      <button @click="removeAtFriday(index)"><minus-circle-two-tone two-tone-color="#ef4444" /></button>
+                      <button @click="removeFromDay(index, element.fatherId,'listFriday')"><minus-circle-two-tone
+                          two-tone-color="#ef4444" /></button>
                       <a-divider style="margin-top:0px;margin-bottom:0px" />
                     </div>
                   </template>
@@ -191,7 +199,8 @@
                     <div class="list-group-item hover:bg-zinc-50">
                       <a-time-picker style="width: 41%; margin-bottom:7px;margin-top:7px;margin-left:5px;margin-right:5px"
                         v-model:value="element.time" format="HH:mm" placeholder="Laikas" />{{ element.task }}
-                      <button @click="removeAtSaturday(index)"><minus-circle-two-tone two-tone-color="#ef4444" /></button>
+                      <button @click="removeFromDay(index, element.fatherId,'listSaturday')"><minus-circle-two-tone
+                          two-tone-color="#ef4444" /></button>
                       <a-divider style="margin-top:0px;margin-bottom:0px" />
                     </div>
                   </template>
@@ -204,14 +213,20 @@
                   <template #item="{ element, index }">
                     <div class="list-group-item hover:bg-zinc-50">
                       <a-time-picker style="width: 41%; margin-bottom:7px;margin-top:7px;margin-left:5px;margin-right:5px"
-                        v-model:value="element.time" format="HH:mm" placeholder="Laikas" />{{ element.task }}
-                      <button @click="removeAtSunday(index)"><minus-circle-two-tone two-tone-color="#ef4444" /></button>
+                        v-model:value="element.time" format="HH:mm" valueFormat="HH:mm" placeholder="Laikas" />{{
+                          element.task }}
+                      <button @click="removeFromDay(index, element.fatherId,'listSunday')"><minus-circle-two-tone
+                          two-tone-color="#ef4444" /></button>
                       <a-divider style="margin-top:0px;margin-bottom:0px" />
                     </div>
                   </template>
                 </draggable>
               </div>
             </div>
+          </div>
+          <a-spin :spinning="form.processing" />
+          <div class="mt-10">
+            <a-button @click="saveToDB" type="primary">Išsaugoti pakeitimus</a-button>
           </div>
           <!-- Tvarkaraščio formavimo formos pabaiga -->
         </div>
@@ -221,12 +236,13 @@
   </AuthenticatedLayout>
 </template>
 <script setup>
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 import {
   ReconciliationOutlined, HomeOutlined, GoldOutlined, PlusOutlined, MinusCircleTwoTone, UnorderedListOutlined,
 } from '@ant-design/icons-vue';
 import { v4 as uuidv4 } from 'uuid';
 import { onMounted, reactive, ref } from 'vue';
+import { message } from 'ant-design-vue';
 import draggable from 'vuedraggable';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
@@ -246,30 +262,28 @@ const listSaturday = ref([
 ]);
 const listSunday = ref([
 ]);
-
 const log = (evt) => {
   window.console.log(evt);
 };
-const removeAtMonday = (idx) => {
-  listMonday.value.splice(idx, 1);
+const listMap = {
+  listMonday,
+  listTuesday,
+  listWednesday,
+  listThursday,
+  listFriday,
+  listSaturday,
+  listSunday,
 };
-const removeAtTuesday = (idx) => {
-  listTuesday.value.splice(idx, 1);
-};
-const removeAtWednesday = (idx) => {
-  listWednesday.value.splice(idx, 1);
-};
-const removeAtThursday = (idx) => {
-  listThursday.value.splice(idx, 1);
-};
-const removeAtFriday = (idx) => {
-  listFriday.value.splice(idx, 1);
-};
-const removeAtSaturday = (idx) => {
-  listSaturday.value.splice(idx, 1);
-};
-const removeAtSunday = (idx) => {
-  listSunday.value.splice(idx, 1);
+
+const removeFromDay = (idx, fatherId, listName) => {
+  const list = listMap[listName];
+  list.value.splice(idx, 1);
+  const exists = (element) => element.fatherId === fatherId;
+
+  if (!listMonday.value.some(exists) && !listTuesday.value.some(exists) && !listWednesday.value.some(exists) && !listThursday.value.some(exists) && !listFriday.value.some(exists) && !listSaturday.value.some(exists) && !listSunday.value.some(exists)) {
+    const father = listTasks.value.find((x) => x.id === fatherId);
+    father.canDelete = true;
+  }
 };
 
 const formRef = ref();
@@ -277,7 +291,6 @@ const formRef = ref();
 const dynamicValidateForm = reactive({
   goals: [],
   habits: [],
-  tasks: [],
 });
 
 onMounted(() => {
@@ -287,11 +300,6 @@ onMounted(() => {
   });
   dynamicValidateForm.habits.push({
     value: '',
-    key: Date.now(),
-  });
-  dynamicValidateForm.tasks.push({
-    name: '',
-    duration: '',
     key: Date.now(),
   });
 });
@@ -324,16 +332,40 @@ const removeTask = (item) => {
   listTasks.value.splice(item, 1);
 };
 const addTask = () => {
-  listTasks.value.push({ id: uuidv4(), task: '', duration: '' });
+  listTasks.value.push({
+    id: uuidv4(), task: '', duration: '', canDelete: true,
+  });
 };
-const handleClone = (item) => ({ id: uuidv4(), task: item.task, duration: item.duration });
 
-// const submitForm = () => {
-//   formRef.value.validate().then(() => {
-//     console.log('values', dynamicValidateForm.domains);
-//   }).catch((error) => {
-//     console.log('error', error);
-//   });
-// };
+function handleClone(item) {
+  // eslint-disable-next-line no-param-reassign
+  item.canDelete = false;
+  return {
+    id: uuidv4(), task: item.task, duration: item.duration, fatherId: item.id,
+  };
+}
+
+const form = useForm({
+  goals: dynamicValidateForm.goals,
+  habits: dynamicValidateForm.habits,
+  tasks: listTasks.value,
+  monday: listMonday.value,
+  tuesday: listTuesday.value,
+  wednesday: listWednesday.value,
+  thursday: listThursday.value,
+  friday: listFriday.value,
+  saturday: listSaturday.value,
+  sunday: listSunday.value,
+});
+const saveToDB = () => {
+  form.post(
+    '/plans/custom',
+    {
+      preserveScroll: true,
+      onSuccess: () => message.success('Planas sukurtas sėkmingai'),
+      onError: () => message.error('Klaida sukuriant planą'),
+    },
+  );
+};
 </script>
 <style scoped></style>

@@ -18,7 +18,6 @@ class HabitFactory extends Factory
     {
         return [
             'title' => $this->faker->word,
-            'fk_goal' => $this->faker->randomElement(\App\Models\Goal::pluck('id')),
         ];
     }
 }
