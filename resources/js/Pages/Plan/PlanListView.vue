@@ -18,18 +18,31 @@
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="pb-4">
-                    <Link :href="route('Plan.ChooseAlternativeView')">
-                    <a-button type="primary">Sudaryti naują planą</a-button>
-                    </Link>
+                <div class="flex pb-1">
+                    <h3 class="pl-2 text-xl flex-grow">Jūsų planai:</h3>
+                    <div class="flex-shrink-0 justify-end pr-2">
+                        <Link :href="route('Plan.ChooseAlternativeView')">
+                        <a-button type="primary">Sudaryti naują planą</a-button>
+                        </Link>
+                    </div>
                 </div>
+
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <h3 :style="{ margin: '16px' }">Jūsų planai:</h3>
-                    <a-list bordered>
+                    <a-divider style="margin-top:0px;margin-bottom:0px" />
+                    <a-list>
                         <template v-for="plan in props.plans" v-bind:key="plan">
-                            <Link :href="route('Plan.PlanView', { id: plan.id })">
-                            <a-list-item>{{ plan.title }}</a-list-item>
-                            </Link>
+                            <div class="pl-4">
+                                <Link :href="route('Plan.PlanView', { id: plan.id })">
+                                <div class="flex pt-3">
+                                    <a-list-item>
+                                        <p class="text-lg">{{ plan.title }}</p>
+                                        <p v-if="plan.active === 1" class="text-green-500 pl-2">Aktyvus</p>
+                                        <p v-else class="text-red-500 pl-2">Neaktyvus</p>
+                                    </a-list-item>
+                                </div>
+                                </Link>
+                            </div>
+                            <a-divider style="margin-top:0px;margin-bottom:0px" />
                         </template>
                     </a-list>
                 </div>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PlanController;
+use App\Http\Controllers\ChallengeController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -49,6 +50,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/plans/questionnaire', [PlanController::class, 'showQuestionnaire'])->name('Plan.QuestionnaireView');
     Route::get('/plans/custom', [PlanController::class, 'showCustom'])->name('Plan.CustomView');
     Route::post('/plans/custom', [PlanController::class, 'createPlan'])->name('Plan.CustomView');
+});
+
+//CHALLENGE ROUTES
+Route::middleware('auth')->group(function () {
+    Route::get('/challenges', [ChallengeController::class, 'showChallengesList'])->name('Challenge.ChallengesListView');
 });
 
 

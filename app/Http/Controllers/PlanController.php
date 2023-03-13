@@ -49,7 +49,7 @@ class PlanController extends Controller
         //reikia validacijos
         $plan = new Plan();
         $plan->fk_user = auth()->user()->id;
-        $plan->title = "Testinis planas";
+        $plan->title = $request->title;
         $plan->active = 1;
         $plan->save();
         foreach ($request->tasks as $task) {
@@ -86,7 +86,7 @@ class PlanController extends Controller
                 }
             }
         }
+        return Inertia::render('Plan/CustomView',[ 'plan_id' => $plan->id]);
 
-        // return Redirect::route('profile.edit');
     }
 }

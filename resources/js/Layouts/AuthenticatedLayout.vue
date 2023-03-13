@@ -7,6 +7,7 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
+import UserStats from '@/Components/UserStats.vue';
 
 const showingNavigationDropdown = ref(false);
 </script>
@@ -22,7 +23,7 @@ const showingNavigationDropdown = ref(false);
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
                                 <Link :href="route('dashboard')">
-                                <ApplicationLogo class="block h-11 w-auto fill-current text-gray-500" />
+                                <ApplicationLogo class="block h-11 w-auto fill-current text-blue-500" />
                                 </Link>
                             </div>
 
@@ -34,18 +35,19 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('Plan.PlanListView')" :active="route().current('Plan.PlanListView')">
                                     Planai
                                 </NavLink>
+                                <NavLink :href="route('Challenge.ChallengesListView')" :active="route().current('Challenge.ChallengesListView')">
+                                    Iššūkiai
+                                </NavLink>
                             </div>
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
+                            <UserStats :user="$page.props.auth.user"></UserStats>
                             <!-- Settings Dropdown -->
                             <div class="ml-3 relative">
                                 <Dropdown align="right" width="48">
                                     <template #trigger>
-                                        <span class="inline-flex rounded-md">
-                                            <div class="inline-flex items-center" style="width: 170px">
-                                                <a-progress :percent="50" size="small" status="active" />
-                                            </div>
+                                        <span>
                                             <button type="button"
                                                 class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                                                 <a-avatar style="margin-right:6px">

@@ -25,6 +25,7 @@
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
           <h3 :style="{ margin: '16px' }">Planas:</h3>
           <div style="border: 1px solid #d9d9d9; border-radius: 4px; margin: 16px ">
+            <a-config-provider :locale="ltLT">
             <a-calendar v-model:value="value">
               <template #dateCellRender="{ current }">
                 <ul class="events">
@@ -56,6 +57,7 @@
                 </div>
               </template>
             </a-calendar>
+            </a-config-provider>
             <!-- <a-modal v-model:visible="visible" :title='text' okText="Uždaryti" @ok="handleOk">
               <p>Atlikimo laikas: {{ time }}</p>
               <p>Užduotis {{ status }}</p>
@@ -75,10 +77,11 @@ import { ReconciliationOutlined, HomeOutlined } from '@ant-design/icons-vue';
 import { ref } from 'vue';
 import dayjs from 'dayjs';
 import { message } from 'ant-design-vue';
+import ltLT from 'ant-design-vue/es/locale/lt_LT';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import 'dayjs/locale/lt';
 
 const props = defineProps({ plan: Object });
-
 const value = ref();
 const starttime = ref();
 const endtime = ref();
