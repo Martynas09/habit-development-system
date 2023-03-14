@@ -1,7 +1,6 @@
 <script setup>
 import { ref } from 'vue';
 import { Link } from '@inertiajs/vue3';
-import { UserOutlined } from '@ant-design/icons-vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
@@ -35,7 +34,8 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('Plan.PlanListView')" :active="route().current('Plan.PlanListView')">
                                     Planai
                                 </NavLink>
-                                <NavLink :href="route('Challenge.ChallengesListView')" :active="route().current('Challenge.ChallengesListView')">
+                                <NavLink :href="route('Challenge.ChallengesListView')"
+                                    :active="route().current('Challenge.ChallengesListView')">
                                     Iššūkiai
                                 </NavLink>
                             </div>
@@ -43,20 +43,19 @@ const showingNavigationDropdown = ref(false);
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
                             <UserStats :user="$page.props.auth.user"></UserStats>
+                            <a-divider type="vertical" style="height: 28px;margin:15px;background-color: #d9d9d9" />
                             <!-- Settings Dropdown -->
-                            <div class="ml-3 relative">
+                            <div class="relative">
                                 <Dropdown align="right" width="48">
                                     <template #trigger>
                                         <span>
                                             <button type="button"
-                                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                                                <a-avatar style="margin-right:6px">
-                                                    <template #icon>
-                                                        <UserOutlined />
-                                                    </template>
-                                                </a-avatar>
+                                                class="inline-flex items-center pr-2 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                                                 {{ $page.props.auth.user.username }}
-
+                                                <div class="flex items-center justify-center ml-2 w-10">
+                                                    <img :src="'/storage/' + $page.props.auth.user.avatar"
+                                                        class="rounded-sm border px-1 border-solid border-gray-300 shadow-sm" style="padding-top:1px;padding-bottom:1px">
+                                                </div>
                                                 <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
                                                     viewBox="0 0 20 20" fill="currentColor">
                                                     <path fill-rule="evenodd"

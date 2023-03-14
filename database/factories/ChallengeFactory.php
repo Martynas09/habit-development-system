@@ -20,7 +20,7 @@ class ChallengeFactory extends Factory
             'title' => $this->faker->sentence,
             'description' => $this->faker->paragraph,
             'duration' => $this->faker->numberBetween(0, 60),
-            'status' => $this->faker->randomElement(['new', 'in progress', 'completed']),
+            'xpGiven' => $this->faker->numberBetween(0, 10),
             'fk_user' => $this->faker->randomElement(\App\Models\User::pluck('id')),
         ];
     }

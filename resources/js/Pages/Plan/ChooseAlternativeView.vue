@@ -48,7 +48,7 @@
                             <p class="flex justify-center font-bold">Siūlomų planų alternatyva</p>
                             <p>Pasirinkus šią alternatyvą planas pasirenkamas iš siūlomų planų sąrašo. Siūlomus planus
                                 generuoja
-                                sistema, remdamasi naudotojų atsiliepimais ir istoriniais duomenimis. Vartotojai gali
+                                sistema, remdamasi naudotojų atsiliepimais ir istoriniais duomenimis. Naudotojai gali
                                 filtruoti sąrašą pagal įvairius kriterijus, pavyzdžiui, trukmę, sudėtingumo lygį ar
                                 konkrečius tikslus. Šis metodas idealiai tinka naudotojams, kurie žino, ko nori, bet jiems
                                 reikia patarimų ar įkvėpimo.
@@ -66,7 +66,7 @@
                         <a-divider type="vertical" style="height: 220px; margin: auto; background-color: #69c0ff" />
                         <div class="p-4 relative max-w-md">
                             <p class="flex justify-center font-bold">Kūrimo nuo nulio alternatyva</p>
-                            <p class="pb-4">Pasirinkus šią alternatyvą planas kuriamas nuo nulio. Vartotojas gali nurodyti plano parametrus,
+                            <p class="pb-4">Pasirinkus šią alternatyvą planas kuriamas nuo nulio. Naudotojas gali nurodyti plano parametrus,
                                 pavyzdžiui, trukmę, veiklą ir tikslus. Tada sistema pagal šiuos parametrus sukuria planą.
                                 Šis metodas idealiai tinka naudotojams, kurie turi aiškią idėją, ko nori, ir nori visiškai
                                 kontroliuoti planą.

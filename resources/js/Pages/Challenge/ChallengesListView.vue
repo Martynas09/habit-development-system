@@ -23,7 +23,7 @@
           <div class="flex-grow px-4 pt-2 pb-8 mx-auto max-w-7xl">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div v-for="challenge in props.challenges" :key="challenge" class="bg-white rounded-lg shadow p-6 relative">
-                <h2 class="text-xl font-bold text-gray-900 mb-2">{{ challenge.title }}</h2>
+                <h2 style="color:#0F4C81" class="text-xl font-bold mb-2">{{ challenge.title }}</h2>
                 <p class="text-gray-700 mb-8">{{ challenge.description }}</p>
                 <div class="flex justify-between">
                   <span class="text-gray-500 absolute left-6 bottom-4">{{ dayjs(challenge.created_at).format('YYYY-MM-DD')

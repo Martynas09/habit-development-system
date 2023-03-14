@@ -13,6 +13,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Users_character;
 use App\Models\Level;
+use App\Models\User;
 
 class ProfileController extends Controller
 {
@@ -68,7 +69,7 @@ class ProfileController extends Controller
     public function characterShow(Request $request)
     {
         $character=Users_character::where('fk_user', auth()->user()->id)->first()->load('getHead', 'getTop', 'getBottom', 'getShoes');
-        $level=Level::where('requiredXP', '<=', auth()->user()->experience_points)->orderBy('requiredXP', 'desc')->first();
+        $level=Level::where('requiredXP', '<=', auth()->user()->xp)->orderBy('requiredXP', 'desc')->first();
         $itemsHead=Character_item::where('fk_level', '<=', $level->id)->where('category', '=', 'head')->get();
         $itemsTop=Character_item::where('fk_level', '<=', $level->id)->where('category', '=', 'top')->get();
         $itemsBottom=Character_item::where('fk_level', '<=', $level->id)->where('category', '=', 'bottom')->get();
@@ -88,6 +89,10 @@ class ProfileController extends Controller
         $character->top=$request->top;
         $character->bottom=$request->bottom;
         $character->shoes=$request->shoes;
+        $user=User::where('id', auth()->user()->id)->first();
+        $avatarHead=Character_item::where('id', $request->head)->first();
+        $user->avatar=$avatarHead->picture;
+        $user->save();
         $character->save();
         return Redirect::route('profile.edit');
     }

@@ -24,7 +24,7 @@
                     </div>
                     <div class="pl-16">
                         <div class="flex items-center justify-center p-10">
-                            <img :src="'/storage/' + userAvatar.get_head[0].picture" class="w-36 rounded-full border-2 border-solid border-gray-800">
+                            <img :src="'/storage/' + userAvatar.get_head[0].picture" class="w-36 rounded-sm border px-2 py-1 border-solid border-gray-300 shadow-sm">
                         </div>
                         <div class="flex items-center justify-center pt-2">
                             <Link :href="route('profile.characterEdit')">

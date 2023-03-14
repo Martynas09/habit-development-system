@@ -2,7 +2,7 @@
     <div>
         <div class="flex relative" style="font-size: 12px; align-items: center;">
             <div style="margin-right: 6px;">
-                <div class="absolute top-2" style="font-size: 13px;"><span class="font-bold">{{ xp }}</span> patirties taškų</div>
+                <div class="absolute top-2" style="font-size: 13px;"><span class="font-bold">{{ xp }}</span> patirties taškai</div>
                 <div class="pt-5">
                     <a-progress :percent="percents" size="small" :status="status" :showInfo="false"
                         style="margin-bottom:0px;margin-top: 0px; width: 140px;" />
@@ -13,7 +13,9 @@
                     </div>
                 </div>
             </div>
+            <div>
             <img class="w-8" :src="'/storage/level'+level+'.png'">
+          </div>
         </div>
     </div>
 </template>
@@ -31,7 +33,7 @@ const isMaxLevel = ref(false);
 const xpStart = ref(0);
 const xpEnd = ref(0);
 onMounted(() => {
-  xp.value = props.user.experience_points;
+  xp.value = props.user.xp;
   if (xp.value < 100) {
     level.value = 1;
     xpStart.value = 0;

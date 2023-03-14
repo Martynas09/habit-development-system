@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description');
             $table->integer('duration');
-            $table->enum('status', ['new', 'in progress', 'completed']);
+            $table->integer('xpGiven');
             $table->foreignId('fk_user')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

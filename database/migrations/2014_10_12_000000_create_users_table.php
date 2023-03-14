@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->integer('experience_points')->default('0');
+            $table->integer('xp')->default('0');
+            $table->string('avatar')->default('head1.png');
             $table->rememberToken();
             $table->timestamps();
         });
