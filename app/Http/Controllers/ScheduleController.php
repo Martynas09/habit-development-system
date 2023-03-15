@@ -10,7 +10,7 @@ class ScheduleController extends Controller
 {
     public function showSchedule()
     {
-        $plan=Plan::where('fk_user', auth()->user()->id)->where('active', '=', 1)->get()->load('getTasks.getTask');
+        $plan = Plan::where('fk_user', auth()->user()->id)->where('active', '=', 1)->get()->load('getTasks.getTask');
         return inertia::render('Schedule', [
             'plan' => $plan
         ]);

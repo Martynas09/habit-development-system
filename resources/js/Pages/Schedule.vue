@@ -1,5 +1,5 @@
 <template>
-  <Head :title="'Planas ' + plan.title" />
+  <Head title="Tvarkaraštis" />
 
   <AuthenticatedLayout>
     <template #header>
@@ -10,19 +10,20 @@
           </Link>
         </a-breadcrumb-item>
         <a-breadcrumb-item class="text-xl">
-          <Link :href="route('Plan.PlanListView')">
-          <reconciliation-outlined style="font-size:20px" />
-          Planų valdymas
-          </Link>
-        </a-breadcrumb-item>
-        <a-breadcrumb-item class="text-xl">Planas ""</a-breadcrumb-item>
+          <calendar-outlined style="font-size:20px" />
+          Tvarkaraštis</a-breadcrumb-item>
       </a-breadcrumb>
     </template>
 
     <div class="py-12">
       <div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-          <h3 :style="{ margin: '16px' }">Planas:</h3>
+          <h3 class="m-3">Aktyvūs planai:</h3>
+          <div v-for="planName in plan" :key="planName.title">
+            <div class="pl-3 w-fit" >
+              <p class="px-2 rounded-sm" :style="{ backgroundColor: planName.color }">{{ planName.title }}</p>
+            </div>
+          </div>
           <div style="border: 1px solid #d9d9d9; border-radius: 4px; margin: 16px ">
             <a-config-provider :locale="ltLT">
               <a-calendar v-model:value="value">
@@ -77,7 +78,7 @@
 </template>
 <script setup>
 import { Head, Link, router } from '@inertiajs/vue3';
-import { ReconciliationOutlined, HomeOutlined } from '@ant-design/icons-vue';
+import { HomeOutlined, CalendarOutlined } from '@ant-design/icons-vue';
 import { ref } from 'vue';
 import dayjs from 'dayjs';
 import { message } from 'ant-design-vue';
