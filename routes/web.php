@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\ChallengeController;
+use App\Http\Controllers\ScheduleController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -44,8 +45,6 @@ Route::middleware('auth')->group(function () {
 //PLAN ROUTES
 Route::middleware('auth')->group(function () {
     Route::get('/plans', [PlanController::class, 'showPlans'])->name('Plan.PlanListView');
-    Route::get('/plans/view{id}', [PlanController::class, 'showPlan'])->name('Plan.PlanView');
-    Route::post('/plans/view{id}', [PlanController::class, 'taskDone'])->name('Plan.PlanView');
     Route::get('/plans/alternatives', [PlanController::class, 'showAlternatives'])->name('Plan.ChooseAlternativeView');
     Route::get('/plans/questionnaire', [PlanController::class, 'showQuestionnaire'])->name('Plan.QuestionnaireView');
     Route::get('/plans/custom', [PlanController::class, 'showCustom'])->name('Plan.CustomView');
@@ -55,6 +54,11 @@ Route::middleware('auth')->group(function () {
 //CHALLENGE ROUTES
 Route::middleware('auth')->group(function () {
     Route::get('/challenges', [ChallengeController::class, 'showChallengesList'])->name('Challenge.ChallengesListView');
+});
+
+//SCHEDULE ROUTES
+Route::middleware('auth')->group(function () {
+    Route::get('/schedule', [ScheduleController::class, 'showSchedule'])->name('Schedule');
 });
 
 

@@ -17,7 +17,7 @@ class ChallengeFactory extends Factory
     public function definition()
     {
         return [
-            'title' => $this->faker->sentence,
+            'title' => $this->faker->randomElement(['Šaltas dušas','Bėgiojimas','Meditacija','Knygos skaitymas']),
             'description' => $this->faker->paragraph,
             'duration' => $this->faker->numberBetween(0, 60),
             'xpGiven' => $this->faker->numberBetween(0, 10),

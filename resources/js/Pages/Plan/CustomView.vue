@@ -1,5 +1,5 @@
 <template>
-  <Head title="Dashboard" />
+  <Head title="Kūrimas nuo nulio" />
 
   <AuthenticatedLayout>
     <template #header>
@@ -31,11 +31,55 @@
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
           todo: Prizai, priminimai
           <a-form ref="formRef" name="dynamic_form_item" :model="dynamicValidateForm">
-            <div class="pl-6 pt-4"><a-form-item style="margin-top:0px;margin-bottom:0px" name="goal"
+            <div class="pl-6 pt-4"><a-form-item style="margin-top:0px;margin-bottom:0px" name="title"
                 label="Plano pavadinimas:" :rules="[{ required: true }]"></a-form-item></div>
             <div class="pl-4">
               <a-form-item style="margin-top:0px;margin-bottom:10px"><a-input v-model:value="planTitle"
-                  placeholder="Įrašykite pavadinimas" style="width: 40%; margin-left: 8px" /></a-form-item>
+                  placeholder="Įrašykite pavadinimą" style="width: 40%; margin-left: 8px" /></a-form-item>
+            </div>
+            <div class="pl-6 pt-4"><a-form-item style="margin-top:0px;margin-bottom:0px" name="color"
+                label="Plano spalva:" :rules="[{ required: true }]"></a-form-item></div>
+            <div class="pl-6">
+              <a-form-item style="margin-top:0px;margin-bottom:10px">
+                  <a-popover placement="right" trigger="click">
+                    <template #content>
+                      <div class="flex justify-center items-center">
+                        <div class="grid grid-cols-3 gap-3">
+                          <div class="w-6 h-6 border border-gray-400" style="backgroundColor: #ffccc7"
+                            @click="planColor = '#ffccc7'"></div>
+                          <div class="w-6 h-6 border border-gray-400" style="backgroundColor: #ffd8bf"
+                            @click="planColor = '#ffd8bf'"></div>
+                          <div class="w-6 h-6 border border-gray-400" style="backgroundColor: #ffe7ba"
+                            @click="planColor = '#ffe7ba'"></div>
+                          <div class="w-6 h-6 border border-gray-400" style="backgroundColor: #fff1b8"
+                            @click="planColor = '#fff1b8'"></div>
+                          <div class="w-6 h-6 border border-gray-400" style="backgroundColor: #ffffb8"
+                            @click="planColor = '#ffffb8'"></div>
+                          <div class="w-6 h-6 border border-gray-400" style="backgroundColor: #f4ffb8"
+                            @click="planColor = '#f4ffb8'"></div>
+                          <div class="w-6 h-6 border border-gray-400" style="backgroundColor: #d9f7be"
+                            @click="planColor = '#d9f7be'"></div>
+                          <div class="w-6 h-6 border border-gray-400" style="backgroundColor: #b5f5ec"
+                            @click="planColor = '#b5f5ec'"></div>
+                          <div class="w-6 h-6 border border-gray-400" style="backgroundColor: #bae0ff"
+                            @click="planColor = '#bae0ff'"></div>
+                          <div class="w-6 h-6 border border-gray-400" style="backgroundColor: #d6e4ff"
+                            @click="planColor = '#d6e4ff'"></div>
+                          <div class="w-6 h-6 border border-gray-400" style="backgroundColor: #efdbff"
+                            @click="planColor = '#efdbff'"></div>
+                          <div class="w-6 h-6 border border-gray-400" style="backgroundColor: #ffd6e7"
+                            @click="planColor = '#ffd6e7'"></div>
+                        </div>
+                      </div>
+                    </template>
+                    <template #title>
+                      <div class="text-center">
+                        <span>Pasirinkite spalvą</span>
+                      </div>
+                    </template>
+                    <a-button :style="{ backgroundColor: planColor }">Pasirinkti spalvą</a-button>
+                  </a-popover>
+              </a-form-item>
             </div>
             <!-- Tikslų forma -->
             <div class="pl-6 pt-4"><a-form-item style="margin-top:0px;margin-bottom:0px" name="goal"
@@ -103,7 +147,6 @@
                         <a-input style="width: 40%" v-model:value="element.task" placeholder="Užduoties pavadinimas" />
                         <a-input-number style="margin-left: 8px;margin-right: 5px" v-model:value="element.duration"
                           :min="1" :max="360" placeholder="Trukmė" /> min.
-                        <!-- todo: Jei taskas jau įdėtas neleist ištrint-->
                         <minus-circle-two-tone v-if="element.canDelete" two-tone-color="#ef4444" class="pl-2"
                           @click="removeTask(index)" />
                       </div>
@@ -119,7 +162,6 @@
               </div>
               <p class="pl-6 pt-4" style="margin-top:0px;margin-bottom:0px">Sudėkite užduotis į norimas savaitės dienas ir
                 nustatykite jų laiką.</p>
-              todo: duration ir laikus pasirinktus sutikrint kad nesipjautų
               <div class="grid grid-cols-7 py-4 px-6">
                 <div class="border border-zinc-300 min-h-[150px]">
                   <h3 style="margin-top:0px;margin-bottom:0px"
@@ -325,6 +367,7 @@ const defaultPercent = ref(0);
 const progressStatus = ref();
 const newPlanId = ref(0);
 const planTitle = ref('');
+const planColor = ref('white');
 let interval = null;
 
 const dynamicValidateForm = reactive({
@@ -389,6 +432,7 @@ function handleClone(item) {
 
 const form = useForm({
   title: planTitle,
+  color: planColor,
   goals: dynamicValidateForm.goals,
   habits: dynamicValidateForm.habits,
   tasks: listTasks.value,

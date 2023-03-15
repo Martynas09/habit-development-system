@@ -1,5 +1,5 @@
 <template>
-    <Head title="Dashboard" />
+    <Head title="Alternatyvos pasirinkimas" />
 
     <AuthenticatedLayout>
         <template #header>

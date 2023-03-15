@@ -19,6 +19,7 @@ class PlanFactory extends Factory
         return [
             'title' => $this->faker->word(),
             'active' => $this->faker->boolean(),
+            'color' => $this->faker->randomElement(['#ffccc7','#ffd8bf','#ffe7ba','#fff1b8','#ffffb8','#f4ffb8','#d9f7be','#b5f5ec','#bae0ff','#d6e4ff','#efdbff','#ffd6e7']),
             'fk_user' => $this->faker->randomElement(\App\Models\User::pluck('id')),
         ];
     }

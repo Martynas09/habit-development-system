@@ -1,5 +1,5 @@
 <template>
-    <Head title="Dashboard" />
+    <Head title="Planų valdymas" />
 
     <AuthenticatedLayout>
         <template #header>
@@ -32,7 +32,6 @@
                     <a-list>
                         <template v-for="plan in props.plans" v-bind:key="plan">
                             <div class="pl-4">
-                                <Link :href="route('Plan.PlanView', { id: plan.id })">
                                 <div class="flex pt-3">
                                     <a-list-item>
                                         <p class="text-lg">{{ plan.title }}</p>
@@ -40,7 +39,6 @@
                                         <p v-else class="text-red-500 pl-2">Neaktyvus</p>
                                     </a-list-item>
                                 </div>
-                                </Link>
                             </div>
                             <a-divider style="margin-top:0px;margin-bottom:0px" />
                         </template>

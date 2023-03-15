@@ -38,6 +38,10 @@ const showingNavigationDropdown = ref(false);
                                     :active="route().current('Challenge.ChallengesListView')">
                                     Iššūkiai
                                 </NavLink>
+                                <NavLink :href="route('Schedule')"
+                                    :active="route().current('Schedule')">
+                                    Tvarkaraštis
+                                </NavLink>
                             </div>
                         </div>
 

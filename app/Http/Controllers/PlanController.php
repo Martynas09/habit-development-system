@@ -19,19 +19,7 @@ class PlanController extends Controller
             'plans' => $plans
         ]);
     }
-    public function showPlan($id)
-    {
-        $plan = Plan::where('id', $id)->first()->load('getTasks.getTask');
-        return inertia::render('Plan/PlanView', [
-            'plan' => $plan
-        ]);
-    }
-    public function taskDone(Request $request)
-    {
-        $task = Plan_task::where('id', $request->id)->first();
-        $task->is_done = 1;
-        $task->save();
-    }
+    
     public function showAlternatives()
     {
         return inertia::render('Plan/ChooseAlternativeView');
@@ -50,6 +38,7 @@ class PlanController extends Controller
         $plan = new Plan();
         $plan->fk_user = auth()->user()->id;
         $plan->title = $request->title;
+        $plan->color= $request->color;
         $plan->active = 1;
         $plan->save();
         foreach ($request->tasks as $task) {
