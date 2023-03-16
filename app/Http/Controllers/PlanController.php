@@ -34,7 +34,7 @@ class PlanController extends Controller
     }
     public function createPlan(Request $request)
     {
-        //reikia validacijos
+        //todo reikia validacijos, priminimai ir prizai
         $plan = new Plan();
         $plan->fk_user = auth()->user()->id;
         $plan->title = $request->title;

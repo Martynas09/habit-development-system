@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('description');
             $table->integer('duration');
             $table->integer('xpGiven');
+            $table->enum('type', ['public', 'private']);
             $table->foreignId('fk_user')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

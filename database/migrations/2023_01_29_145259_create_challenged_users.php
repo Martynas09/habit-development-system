@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('fk_user')->references('id')->on('users')->onDelete('cascade');
             $table->foreignId('fk_challenge')->references('id')->on('challenges')->onDelete('cascade');
+            $table->enum('status', ['pending', 'accepted', 'rejected']);
             $table->timestamps();
         });
     }

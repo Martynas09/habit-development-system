@@ -18,9 +18,10 @@
     <div class="py-12">
       <div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+          <p>Dienos citata: {{ quote }}</p>
           <h3 class="m-3">Aktyvūs planai:</h3>
           <div v-for="planName in plan" :key="planName.title">
-            <div class="pl-3 w-fit" >
+            <div class="pl-3 w-fit">
               <p class="px-2 rounded-sm" :style="{ backgroundColor: planName.color }">{{ planName.title }}</p>
             </div>
           </div>
@@ -79,7 +80,7 @@
 <script setup>
 import { Head, Link, router } from '@inertiajs/vue3';
 import { HomeOutlined, CalendarOutlined } from '@ant-design/icons-vue';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import dayjs from 'dayjs';
 import { message } from 'ant-design-vue';
 import ltLT from 'ant-design-vue/es/locale/lt_LT';
@@ -94,7 +95,21 @@ const text = ref();
 const status = ref();
 const visible = ref(false);
 const taskID = ref();
+
 // const disabledDate = (current) => current && current < dayjs().endOf('day');
+const quote = ref('');
+
+async function getapi(url) {
+  const response = await fetch(url);
+  const data = await response.json();
+  quote.value = data.quote;
+}
+onMounted(async () => {
+  await getapi('https://quotes.free.beeceptor.com/quotes');
+});
+const batonas = () => {
+  console.log(Daugvinas.value.$props());
+};
 
 function getListData(current) {
   const events = [];

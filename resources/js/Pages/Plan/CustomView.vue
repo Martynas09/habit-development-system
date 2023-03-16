@@ -29,18 +29,78 @@
       <div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
         <h3 class="pb-2 text-xl">Plano parametrai:</h3>
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-          todo: Prizai, priminimai
-          <a-form ref="formRef" name="dynamic_form_item" :model="dynamicValidateForm">
-            <div class="pl-6 pt-4"><a-form-item style="margin-top:0px;margin-bottom:0px" name="title"
-                label="Plano pavadinimas:" :rules="[{ required: true }]"></a-form-item></div>
-            <div class="pl-4">
-              <a-form-item style="margin-top:0px;margin-bottom:10px"><a-input v-model:value="planTitle"
-                  placeholder="Įrašykite pavadinimą" style="width: 40%; margin-left: 8px" /></a-form-item>
-            </div>
-            <div class="pl-6 pt-4"><a-form-item style="margin-top:0px;margin-bottom:0px" name="color"
-                label="Plano spalva:" :rules="[{ required: true }]"></a-form-item></div>
-            <div class="pl-6">
-              <a-form-item style="margin-top:0px;margin-bottom:10px">
+          <a-config-provider :locale="ltLT">
+            <p class="text-lg pt-5 pl-6">Planavimas yra sunumeruotas, todėl norint išlaikyti sklandų plano kūrimą, reikia
+              laikytis numatytos eigos.</p>
+            <a-row>
+              <!-- Left side -->
+              <a-col :span="12">
+                <a-form ref="formRef" name="dynamic_form_item" :model="dynamicValidateForm"></a-form>
+                <div class="pl-6 pt-4"><a-form-item style="margin-top:0px;margin-bottom:0px" name="title"
+                    label="1. Plano pavadinimas:" :rules="[{ required: true }]"></a-form-item></div>
+                <div class="pl-4">
+                  <a-form-item style="margin-top:0px;margin-bottom:10px"><a-input v-model:value="planTitle"
+                      placeholder="Įrašykite pavadinimą" style="width: 50%; margin-left: 8px" /></a-form-item>
+                </div>
+
+                <!-- Tikslų forma -->
+                <div class="pl-6">
+                  <a-form ref="formRef" name="dynamic_form_item" :model="dynamicValidateForm">
+                    <div class="pt-4"><a-form-item style="margin-top:0px;margin-bottom:0px" name="goal"
+                        label="3. Tikslai kurių sieksite:" :rules="[{ required: true }]"></a-form-item></div>
+                    <div>
+                      <a-form-item v-for="(goal, index) in dynamicValidateForm.goals" :key="goal.key" v-bind="index === 0"
+                        :name="['goals', index, 'value']" :rules="{
+                          required: true
+                        }" style="margin-top:0px;margin-bottom:10px">
+                        <a-input v-model:value="goal.value" placeholder="Įrašykite tikslą"
+                          style="width: 50%; margin-left: 0px" />
+                        <minus-circle-two-tone two-tone-color="#ef4444" v-if="dynamicValidateForm.goals.length > 1"
+                          class="pl-2" :disabled="dynamicValidateForm.goals.length === 1" @click="removeGoal(goal)" />
+                      </a-form-item>
+                    </div>
+                    <a-form-item>
+                      <a-button type="primary" @click="addGoal">
+                        <PlusOutlined />
+                        Pridėti tikslą
+                      </a-button>
+                    </a-form-item>
+                  </a-form>
+                </div>
+                <!-- Tikslų formos pabaiga -->
+                <div class="pl-6 pt-4"><a-form-item style="margin-top:0px;margin-bottom:0px" name="tasks"
+                    label="5. Užduotys kurias vykdysite:" :rules="[{ required: true }]"></a-form-item></div>
+                <div class="pt-2 px-6 max-w-[630px]">
+                  <div class="border border-zinc-300 min-h-[150px]">
+                    <h3 class="text-center border-b border-zinc-300 font-bold bg-zinc-50">Užduočių sąrašas</h3>
+                    <draggable class="list-group" handle=".handle" itemKey="id" :list="listTasks" :clone="handleClone"
+                      :group="{ name: 'people', pull: 'clone', put: false }" @change="log">
+                      <template #item="{ element, index }">
+                        <div class="list-group-item flex p-1 items-center hover:bg-zinc-50">
+                          <i class="handle px-2"><unordered-list-outlined /></i>
+                          <a-input style="width: 40%" v-model:value="element.value" placeholder="Užduoties pavadinimas" />
+                          <a-input-number style="margin-left: 8px;margin-right: 5px" v-model:value="element.duration"
+                            :min="1" :max="360" placeholder="Trukmė" /> min.
+                          <minus-circle-two-tone v-if="element.canDelete" two-tone-color="#ef4444" class="pl-2"
+                            @click="removeTask(index)" />
+                        </div>
+                      </template>
+                    </draggable>
+                    <div class="pl-2 py-2">
+                      <a-button type="primary" @click="addTask">
+                        <PlusOutlined />
+                        Pridėti užduotį
+                      </a-button>
+                    </div>
+                  </div>
+                </div>
+              </a-col>
+              <!-- Right side -->
+              <a-col :span="12">
+                <div class="pl-6 pt-4"><a-form-item style="margin-top:0px;margin-bottom:0px" name="color"
+                    label="2. Plano spalva:" :rules="[{ required: true }]"></a-form-item>
+                </div>
+                <a-form-item style="margin-top:0px;margin-bottom:10px">
                   <a-popover placement="right" trigger="click">
                     <template #content>
                       <div class="flex justify-center items-center">
@@ -77,91 +137,44 @@
                         <span>Pasirinkite spalvą</span>
                       </div>
                     </template>
-                    <a-button :style="{ backgroundColor: planColor }">Pasirinkti spalvą</a-button>
+                    <div class="pl-6 w-[170px]">
+                      <a-button :style="{ backgroundColor: planColor }">Pasirinkti spalvą</a-button>
+                    </div>
                   </a-popover>
-              </a-form-item>
-            </div>
-            <!-- Tikslų forma -->
-            <div class="pl-6 pt-4"><a-form-item style="margin-top:0px;margin-bottom:0px" name="goal"
-                label="Tikslai kurių sieksite:" :rules="[{ required: true }]"></a-form-item></div>
-            <div class="pl-4">
-              <a-form-item v-for="(goal, index) in dynamicValidateForm.goals" :key="goal.key" v-bind="index === 0"
-                :name="['goals', index, 'value']" :rules="{
-                  required: true
-                }" style="margin-top:0px;margin-bottom:10px">
-                <a-input v-model:value="goal.value" placeholder="Įrašykite tikslą" style="width: 40%; margin-left: 8px" />
-                <minus-circle-two-tone two-tone-color="#ef4444" v-if="dynamicValidateForm.goals.length > 1" class="pl-2"
-                  :disabled="dynamicValidateForm.goals.length === 1" @click="removeGoal(goal)" />
-              </a-form-item>
-            </div>
-            <div class="pl-6">
-              <a-form-item>
-                <a-button type="primary" @click="addGoal">
-                  <PlusOutlined />
-                  Pridėti tikslą
-                </a-button>
-              </a-form-item>
-            </div>
-          </a-form>
-          <!-- Tikslų formos pabaiga -->
-          <!-- Įpročių forma -->
-          <a-form ref="formRef" name="dynamic_form_item" :model="dynamicValidateForm">
-            <div class="pl-6 pt-4"><a-form-item style="margin-top:0px;margin-bottom:0px" name="habit"
-                label="Įpročiai kuriuos ugdysite:" :rules="[{ required: true }]"></a-form-item></div>
-            <div class="pl-4">
-              <a-form-item v-for="(habit, index) in dynamicValidateForm.habits" :key="habit.key" v-bind="index === 0"
-                :name="['habits', index, 'value']" :rules="{
-                  required: true,
-                  message: 'habit can not be null',
-                  trigger: 'change',
-                }" style="margin-top:0px;margin-bottom:10px">
-                <a-input v-model:value="habit.value" placeholder="Įrašykite įprotį"
-                  style="width: 40%; margin-left: 8px" />
-                <minus-circle-two-tone two-tone-color="#ef4444" v-if="dynamicValidateForm.habits.length > 1" class="pl-2"
-                  :disabled="dynamicValidateForm.habits.length === 1" @click="removeHabit(habit)" />
-              </a-form-item>
-            </div>
-            <div class="pl-6">
-              <a-form-item>
-                <a-button type="primary" @click="addHabit">
-                  <PlusOutlined />
-                  Pridėti įprotį
-                </a-button>
-              </a-form-item>
-            </div>
-          </a-form>
-          <!-- Įpročių formos pabaiga -->
-          <!-- Tvarkaraščio forma -->
-          <a-config-provider :locale="ltLT">
-            <div class="">
-              <div class="pl-6 pt-4"><a-form-item style="margin-top:0px;margin-bottom:0px" name="habit"
-                  label="Užduotys kurias vykdysite:" :rules="[{ required: true }]"></a-form-item></div>
-              <div class="pt-2 px-6 max-w-[630px]">
-                <div class="border border-zinc-300 min-h-[150px]">
-                  <h3 class="text-center border-b border-zinc-300 font-bold bg-zinc-50">Užduočių sąrašas</h3>
-                  <draggable class="list-group" handle=".handle" itemKey="id" :list="listTasks" :clone="handleClone"
-                    :group="{ name: 'people', pull: 'clone', put: false }" @change="log">
-                    <template #item="{ element, index }">
-                      <div class="list-group-item flex p-1 items-center hover:bg-zinc-50">
-                        <i class="handle px-2"><unordered-list-outlined /></i>
-                        <a-input style="width: 40%" v-model:value="element.task" placeholder="Užduoties pavadinimas" />
-                        <a-input-number style="margin-left: 8px;margin-right: 5px" v-model:value="element.duration"
-                          :min="1" :max="360" placeholder="Trukmė" /> min.
-                        <minus-circle-two-tone v-if="element.canDelete" two-tone-color="#ef4444" class="pl-2"
-                          @click="removeTask(index)" />
-                      </div>
-                    </template>
-                  </draggable>
-                  <div class="pl-2 py-2">
-                    <a-button type="primary" @click="addTask">
-                      <PlusOutlined />
-                      Pridėti užduotį
-                    </a-button>
+                </a-form-item>
+                <!-- Įpročių forma -->
+                <a-form ref="formRef" name="dynamic_form_item" :model="dynamicValidateForm">
+                  <div class="pl-6 pt-3"><a-form-item style="margin-top:0px;margin-bottom:0px" name="habit"
+                      label="4. Įpročiai kuriuos ugdysite:" :rules="[{ required: true }]"></a-form-item></div>
+                  <div class="pl-4">
+                    <a-form-item v-for="(habit, index) in dynamicValidateForm.habits" :key="habit.key"
+                      v-bind="index === 0" :name="['habits', index, 'value']" :rules="{
+                        required: true,
+                      }" style="margin-top:0px;margin-bottom:10px">
+                      <a-input v-model:value="habit.value" placeholder="Įrašykite įprotį"
+                        style="width: 50%; margin-left: 8px" />
+                      <minus-circle-two-tone two-tone-color="#ef4444" v-if="dynamicValidateForm.habits.length > 1"
+                        class="pl-2" :disabled="dynamicValidateForm.habits.length === 1" @click="removeHabit(habit)" />
+                    </a-form-item>
                   </div>
-                </div>
-              </div>
-              <p class="pl-6 pt-4" style="margin-top:0px;margin-bottom:0px">Sudėkite užduotis į norimas savaitės dienas ir
-                nustatykite jų laiką.</p>
+                  <div class="pl-6">
+                    <a-form-item>
+                      <a-button type="primary" @click="addHabit">
+                        <PlusOutlined />
+                        Pridėti įprotį
+                      </a-button>
+                    </a-form-item>
+                  </div>
+                </a-form>
+                <!-- Įpročių formos pabaiga -->
+              </a-col>
+            </a-row>
+            <!-- Tvarkaraščio forma -->
+            <div class="">
+              <p style="margin-top:0px;margin-bottom:0px"></p>
+              <div class="pl-6 pt-4"><a-form-item style="margin-top:0px;margin-bottom:0px" name="category"
+                  label="6. Sudėkite aukščiau esančias užduotis į norimas savaitės dienas ir nustatykite jų atlikimo laiką"
+                  :rules="[{ required: true }]"></a-form-item></div>
               <div class="grid grid-cols-7 py-4 px-6">
                 <div class="border border-zinc-300 min-h-[150px]">
                   <h3 style="margin-top:0px;margin-bottom:0px"
@@ -171,7 +184,7 @@
                       <div class="list-group-item hover:bg-zinc-50">
                         <a-time-picker :minute-step="5"
                           style="width: 41%; margin-bottom:7px;margin-top:7px;margin-left:5px;margin-right:5px"
-                          v-model:value="element.time" format="HH:mm" placeholder="Laikas" />{{ element.task }}
+                          v-model:value="element.time" format="HH:mm" placeholder="Laikas" />{{ element.value }}
                         <button @click="removeFromDay(index, element.fatherId, 'listMonday')"><minus-circle-two-tone
                             two-tone-color="#ef4444" /></button>
                         <a-divider style="margin-top:0px;margin-bottom:0px" />
@@ -187,7 +200,7 @@
                       <div class="list-group-item hover:bg-zinc-50">
                         <a-time-picker
                           style="width: 41%; margin-bottom:7px;margin-top:7px;margin-left:5px;margin-right:5px"
-                          v-model:value="element.time" format="HH:mm" placeholder="Laikas" />{{ element.task }}
+                          v-model:value="element.time" format="HH:mm" placeholder="Laikas" />{{ element.value }}
                         <button @click="removeFromDay(index, element.fatherId, 'listTuesday')"><minus-circle-two-tone
                             two-tone-color="#ef4444" /></button>
                         <a-divider style="margin-top:0px;margin-bottom:0px" />
@@ -203,7 +216,7 @@
                       <div class="list-group-item hover:bg-zinc-50">
                         <a-time-picker
                           style="width: 41%; margin-bottom:7px;margin-top:7px;margin-left:5px;margin-right:5px"
-                          v-model:value="element.time" format="HH:mm" placeholder="Laikas" />{{ element.task }}
+                          v-model:value="element.time" format="HH:mm" placeholder="Laikas" />{{ element.value }}
                         <button @click="removeFromDay(index, element.fatherId, 'listWednesday')"><minus-circle-two-tone
                             two-tone-color="#ef4444" /></button>
                         <a-divider style="margin-top:0px;margin-bottom:0px" />
@@ -219,7 +232,7 @@
                       <div class="list-group-item hover:bg-zinc-50">
                         <a-time-picker
                           style="width: 41%; margin-bottom:7px;margin-top:7px;margin-left:5px;margin-right:5px"
-                          v-model:value="element.time" format="HH:mm" placeholder="Laikas" />{{ element.task }}
+                          v-model:value="element.time" format="HH:mm" placeholder="Laikas" />{{ element.value }}
                         <button @click="removeFromDay(index, element.fatherId, 'listThursday')"><minus-circle-two-tone
                             two-tone-color="#ef4444" /></button>
                         <a-divider style="margin-top:0px;margin-bottom:0px" />
@@ -235,7 +248,7 @@
                       <div class="list-group-item hover:bg-zinc-50">
                         <a-time-picker
                           style="width: 41%; margin-bottom:7px;margin-top:7px;margin-left:5px;margin-right:5px"
-                          v-model:value="element.time" format="HH:mm" placeholder="Laikas" />{{ element.task }}
+                          v-model:value="element.time" format="HH:mm" placeholder="Laikas" />{{ element.value }}
                         <button @click="removeFromDay(index, element.fatherId, 'listFriday')"><minus-circle-two-tone
                             two-tone-color="#ef4444" /></button>
                         <a-divider style="margin-top:0px;margin-bottom:0px" />
@@ -251,7 +264,7 @@
                       <div class="list-group-item hover:bg-zinc-50">
                         <a-time-picker
                           style="width: 41%; margin-bottom:7px;margin-top:7px;margin-left:5px;margin-right:5px"
-                          v-model:value="element.time" format="HH:mm" placeholder="Laikas" />{{ element.task }}
+                          v-model:value="element.time" format="HH:mm" placeholder="Laikas" />{{ element.value }}
                         <button @click="removeFromDay(index, element.fatherId, 'listSaturday')"><minus-circle-two-tone
                             two-tone-color="#ef4444" /></button>
                         <a-divider style="margin-top:0px;margin-bottom:0px" />
@@ -268,7 +281,7 @@
                         <a-time-picker
                           style="width: 41%; margin-bottom:7px;margin-top:7px;margin-left:5px;margin-right:5px"
                           v-model:value="element.time" format="HH:mm" valueFormat="HH:mm" placeholder="Laikas" />{{
-                            element.task }}
+                            element.value }}
                         <button @click="removeFromDay(index, element.fatherId, 'listSunday')"><minus-circle-two-tone
                             two-tone-color="#ef4444" /></button>
                         <a-divider style="margin-top:0px;margin-bottom:0px" />
@@ -278,11 +291,82 @@
                 </div>
               </div>
             </div>
+            <!-- Tvarkaraščio formavimo formos pabaiga -->
+            <div class="pl-6">
+              <a-form ref="formRef" name="dynamic_form_nest_item" :model="dynamicValidateForm">
+                <div class="pt-4"><a-form-item style="margin-top:0px;margin-bottom:0px" name="category"
+                    label="7. Plano prizai (neprivaloma, tačiau rekomenduojama)"
+                    :rules="[{ required: false }]"></a-form-item></div>
+                <a-space v-for="(prize, index) in dynamicValidateForm.prizes" :key="prize.id"
+                  style="display: flex; margin-bottom: 8px" align="baseline">
+                  <a-form-item :name="['prizes', index, 'title']" :rules="{ required: true, }">
+                    <div><a-form-item style="margin-top:0px;margin-bottom:0px" name="title" label="Prizo pavadinimas:"
+                        :rules="[{ required: true }]"></a-form-item></div>
+                    <a-input v-model:value="prize.title" placeholder="Įrašykite pavadinimą" />
+                  </a-form-item>
+                  <a-form-item :name="['prizes', index, 'category']" :rules="{ required: true, }">
+                    <div><a-form-item style="margin-top:0px;margin-bottom:0px" name="category" label="Skiriamas už:"
+                        :rules="[{ required: true }]"></a-form-item></div>
+                    <a-select v-model:value="prize.category" style="width: 200px" placeholder="Pasirinkite">
+                      <a-select-option value="goal">Tikslo pasiekimą</a-select-option>
+                      <a-select-option value="task">Užduoties įvykdymą</a-select-option>
+                      <a-select-option value="habit">Įpročio išsiugdymą</a-select-option>
+                      <a-select-option value="planFinished">Plano užbaigimą</a-select-option>
+                    </a-select>
+                    <minus-circle-two-tone v-if="prize.category === 'planFinished' || prize.title === ''" class="ml-2"
+                      two-tone-color="#ef4444" @click="removePrize(prize)" />
+                  </a-form-item>
+                  <a-form-item :name="['prizes', index, 'receiverTitle']" :rules="{ required: true, }">
+                    <div v-if="prize.category === 'goal'">
+                      <div>
+                        <a-form-item style="margin-top:0px;margin-bottom:0px" name="title" label="Tikslas:"
+                          :rules="[{ required: true }]"></a-form-item>
+                      </div>
+                      <a-select v-model:value="prize.receiverTitle" style="width: 200px"
+                        :options="dynamicValidateForm.goals" placeholder="Pasirinkite"></a-select>
+                      <minus-circle-two-tone class="ml-2" two-tone-color="#ef4444" @click="removePrize(prize)" />
+                    </div>
+                    <div v-if="prize.category === 'task'">
+                      <div>
+                        <a-form-item style="margin-top:0px;margin-bottom:0px" name="title" label="Užduotis:"
+                          :rules="[{ required: true }]"></a-form-item>
+                      </div>
+                      <a-select v-model:value="prize.receiverTitle" style="width: 200px" :options="listTasks"
+                        placeholder="Pasirinkite"></a-select>
+                      <minus-circle-two-tone class="ml-2" two-tone-color="#ef4444" @click="removePrize(prize)" />
+                    </div>
+                    <div v-if="prize.category === 'habit'">
+                      <div>
+                        <a-form-item style="margin-top:0px;margin-bottom:0px" name="title" label="Įprotis:"
+                          :rules="[{ required: true }]"></a-form-item>
+                      </div>
+                      <a-select v-model:value="prize.receiverTitle" style="width: 200px"
+                        :options="dynamicValidateForm.habits" placeholder="Pasirinkite"></a-select>
+                      <minus-circle-two-tone class="ml-2" two-tone-color="#ef4444" @click="removePrize(prize)" />
+                    </div>
+                  </a-form-item>
+                </a-space>
+                <a-form-item>
+                  <a-button type="primary" @click="addPrize">
+                    <PlusOutlined />
+                    Pridėti prizą
+                  </a-button>
+                </a-form-item>
+              </a-form>
+            </div>
+            <div class="pl-6">
+              <div><a-form-item style="margin-top:0px;margin-bottom:0px" name="category" label="8. Plano priminimai"
+                  :rules="[{ required: true }]"></a-form-item></div>
+              <a-select v-model:value="reminderType" style="width: 250px" placeholder="Pasirinkite">
+                <a-select-option value="self">Savarankiški</a-select-option>
+                <a-select-option value="system">Sisteminiai (<span
+                    class="text-sm text-green-500">rekomenduojama</span>)</a-select-option>
+              </a-select>
+            </div>
           </a-config-provider>
           <div class="text-end m-6">
             <a-button @click="saveToDB" type="primary">Sukurti planą</a-button>
           </div>
-          <!-- Tvarkaraščio formavimo formos pabaiga -->
           <!--Modalas-->
           <div>
             <a-modal v-model:visible="visible" title="" footer="" :closable="false" :maskClosable="false">
@@ -368,11 +452,13 @@ const progressStatus = ref();
 const newPlanId = ref(0);
 const planTitle = ref('');
 const planColor = ref('white');
+const reminderType = ref();
 let interval = null;
 
 const dynamicValidateForm = reactive({
   goals: [],
   habits: [],
+  prizes: [],
 });
 
 onMounted(() => {
@@ -393,6 +479,18 @@ const removeGoal = (item) => {
   const index = dynamicValidateForm.goals.indexOf(item);
   if (index !== -1) {
     dynamicValidateForm.goals.splice(index, 1);
+  }
+};
+const addPrize = () => {
+  dynamicValidateForm.prizes.push({
+    title: '',
+    key: Date.now(),
+  });
+};
+const removePrize = (item) => {
+  const index = dynamicValidateForm.prizes.indexOf(item);
+  if (index !== -1) {
+    dynamicValidateForm.prizes.splice(index, 1);
   }
 };
 const addGoal = () => {
@@ -418,7 +516,7 @@ const removeTask = (item) => {
 };
 const addTask = () => {
   listTasks.value.push({
-    id: uuidv4(), task: '', duration: '', canDelete: true,
+    id: uuidv4(), value: '', duration: '', canDelete: true,
   });
 };
 
@@ -426,7 +524,7 @@ function handleClone(item) {
   // eslint-disable-next-line no-param-reassign
   item.canDelete = false;
   return {
-    id: uuidv4(), task: item.task, duration: item.duration, fatherId: item.id,
+    id: uuidv4(), value: item.value, duration: item.duration, fatherId: item.id,
   };
 }
 
