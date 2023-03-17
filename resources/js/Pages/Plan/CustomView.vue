@@ -311,9 +311,9 @@
                       <a-select-option value="goal">Tikslo pasiekimą</a-select-option>
                       <a-select-option value="task">Užduoties įvykdymą</a-select-option>
                       <a-select-option value="habit">Įpročio išsiugdymą</a-select-option>
-                      <a-select-option value="planFinished">Plano užbaigimą</a-select-option>
+                      <a-select-option value="plan">Plano užbaigimą</a-select-option>
                     </a-select>
-                    <minus-circle-two-tone v-if="prize.category === 'planFinished' || prize.title === ''" class="ml-2"
+                    <minus-circle-two-tone v-if="prize.category === 'plan' ||  prize.category === undefined " class="ml-2"
                       two-tone-color="#ef4444" @click="removePrize(prize)" />
                   </a-form-item>
                   <a-form-item :name="['prizes', index, 'receiverTitle']" :rules="{ required: true, }">
@@ -376,9 +376,9 @@
                 <a-progress :percent="defaultPercent" :status="progressStatus" />
                 <p class="mt-2" v-if="defaultPercent < 100">Planas kuriamas...</p>
                 <p class="mt-2" v-else>Planas sukurtas</p>
-                <Link :href="route('Plan.PlanView', { id: newPlanId })">
+                <Link :href="route('Schedule')">
                 <a-button v-if="defaultPercent === 100" type="primary" class="mt-4">Peržiūrėti
-                  planą</a-button>
+                  tvarkaraštį</a-button>
                 </Link>
               </div>
             </a-modal>
@@ -529,6 +529,8 @@ function handleClone(item) {
 }
 
 const form = useForm({
+  reminder: reminderType,
+  prizes: dynamicValidateForm.prizes,
   title: planTitle,
   color: planColor,
   goals: dynamicValidateForm.goals,

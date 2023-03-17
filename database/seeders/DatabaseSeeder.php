@@ -92,14 +92,13 @@ class DatabaseSeeder extends Seeder
             'fk_user' => 1,
         ]);
         \App\Models\Plan::factory(20)->create();
-        \App\Models\Prize::factory(25)->create();
-        \App\Models\Plan_prize::factory(15)->create();
         \App\Models\Goal::factory(25)->create();
         \App\Models\Habit::factory(20)->create();
         \App\Models\Plan_habit::factory(10)->create();
         \App\Models\Plan_goal::factory(10)->create();
         \App\Models\Reminder::factory(100)->create();
         \App\Models\Task::factory(50)->create();
+        \App\Models\Prize::factory(25)->create();
         \App\Models\Plan_task::factory(70)->create();
 
         \App\Models\Users_character::factory()->create([

@@ -13,9 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('plan_prizes', function (Blueprint $table) {
+        Schema::create('prizes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('fk_prize')->references('id')->on('prizes')->onDelete('cascade');
+            $table->string('title');
+            $table->enum('category', ['task', 'goal', 'habit', 'plan']);
+            $table->foreignId('fk_task')->nullable()->references('id')->on('tasks')->onDelete('cascade');
+            $table->foreignId('fk_goal')->nullable()->references('id')->on('goals')->onDelete('cascade');
+            $table->foreignId('fk_habit')->nullable()->references('id')->on('habits')->onDelete('cascade');
             $table->foreignId('fk_plan')->references('id')->on('plans')->onDelete('cascade');
             $table->timestamps();
         });
@@ -28,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('plan_prizes');
+        Schema::dropIfExists('prizes');
     }
 };
