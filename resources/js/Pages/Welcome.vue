@@ -10,7 +10,7 @@ defineProps({
 </script>
 
 <template>
-    <Head title="Welcome" />
+    <Head title="Pagrindinis" />
 
     <div class="relative flex items-top justify-center min-h-screen bg-gray-100 sm:items-center sm:pt-0">
         <div v-if="canLogin" class="hidden px-6 py-4 sm:block">
@@ -24,7 +24,6 @@ defineProps({
                     class="ml-4 text-sm text-gray-700 dark:text-gray-500 underline">Registruotis</Link>
             </template>
         </div>
-
         <div class="ml-4 text-center text-sm text-gray-500 sm:text-right sm:ml-0">
             Laravel v{{ laravelVersion }} (PHP v{{ phpVersion }})
         </div>

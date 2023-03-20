@@ -37,6 +37,9 @@
                                         <p class="text-lg">{{ plan.title }}</p>
                                         <p v-if="plan.active === 1" class="text-green-500 pl-2">Aktyvus</p>
                                         <p v-else class="text-red-500 pl-2">Neaktyvus</p>
+                                        <Link :href="route('Plan.PlanEditView',plan.id)">
+                                        <a-button type="primary" class="ml-4">Redaguoti</a-button>
+                                        </Link>
                                     </a-list-item>
                                 </div>
                             </div>

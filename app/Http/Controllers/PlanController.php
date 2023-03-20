@@ -38,7 +38,7 @@ class PlanController extends Controller
     }
     public function createPlan(Request $request)
     {
-        //todo reikia validacijos
+        //todo reikia validacijos ir paduot esamus goals kurie nepradėti
         $goals = [];
         $habits = [];
         $tasks = [];
@@ -134,5 +134,11 @@ class PlanController extends Controller
             $newPrize->save();
         }
         return Inertia::render('Plan/CustomView');
+    }
+    public function showPlanEdit($id){
+        $plan = Plan::find($id);
+        return inertia::render('Plan/PlanEditView', [
+            'plan' => $plan
+        ]);
     }
 }

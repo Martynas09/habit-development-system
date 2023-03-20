@@ -107,9 +107,6 @@ async function getapi(url) {
 onMounted(async () => {
   await getapi('https://quotes.free.beeceptor.com/quotes');
 });
-const batonas = () => {
-  console.log(Daugvinas.value.$props());
-};
 
 function getListData(current) {
   const events = [];
