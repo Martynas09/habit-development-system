@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->dateTime('execution_date');
             $table->boolean('is_done');
-            $table->foreignId('fk_reminder')->references('id')->on('reminders')->onDelete('cascade');
+            $table->foreignId('fk_reminder')->nullable()->references('id')->on('reminders')->onDelete('cascade');
             $table->foreignId('fk_task')->references('id')->on('tasks')->onDelete('cascade');
             $table->foreignId('fk_plan')->references('id')->on('plans')->onDelete('cascade');
             $table->timestamps();

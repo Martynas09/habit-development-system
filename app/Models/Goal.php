@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Goal extends Model
 {
     use HasFactory;
+    public function plan_goal()
+    {
+        return $this->belongsTo(Plan_goal::class, 'fk_goal', 'id');
+    }
 }

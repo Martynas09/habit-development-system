@@ -11,7 +11,7 @@ class Challenge extends Model
 
     public function challenged_users()
     {
-        return $this->hasMany(challenged_users::class);
+        return $this->hasMany(challenged_user::class,'fk_challenge','id');
     }
     public function challenge_author()
     {

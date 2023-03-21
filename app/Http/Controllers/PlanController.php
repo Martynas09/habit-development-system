@@ -10,6 +10,8 @@ use App\Models\Task;
 use App\Models\Prize;
 use App\Models\Goal;
 use App\Models\Habit;
+use App\Models\Plan_goal;
+use App\Models\Plan_habit;
 use App\Models\Reminder;
 use DateTimeImmutable;
 use DateInterval;
@@ -80,7 +82,11 @@ class PlanController extends Controller
                         $newPlanTask = new Plan_task();
                         $newPlanTask->execution_date = DateTimeImmutable::createFromFormat('Y-m-d H:i', $tempDate);
                         $newPlanTask->is_done = 0;
-                        $newPlanTask->fk_reminder = $newReminder->id;
+                        if ($request->reminder == 'system') {
+                            $newPlanTask->fk_reminder = $newReminder->id;
+                        } else {
+                            $newPlanTask->fk_reminder = null;
+                        }
                         $newPlanTask->fk_task = $newTask->id;
                         $newPlanTask->fk_plan = $plan->id;
                         $newPlanTask->save();
@@ -93,12 +99,20 @@ class PlanController extends Controller
             $newGoal->title = $goal['value'];
             $newGoal->status = 'not in progress';
             $newGoal->save();
+            $newPlanGoal = new Plan_goal();
+            $newPlanGoal->fk_plan = $plan->id;
+            $newPlanGoal->fk_goal = $newGoal->id;
+            $newPlanGoal->save();
             $goals[$newGoal->id] = $newGoal;
         }
         foreach ($request->habits as $habit) {
             $newHabit = new Habit();
             $newHabit->title = $habit['value'];
             $newHabit->save();
+            $newPlanHabit = new Plan_habit();
+            $newPlanHabit->fk_plan = $plan->id;
+            $newPlanHabit->fk_habit = $newHabit->id;
+            $newPlanHabit->save();
             $habits[$newHabit->id] = $newHabit;
         }
         foreach ($request->prizes as $prize) {
@@ -135,10 +149,94 @@ class PlanController extends Controller
         }
         return Inertia::render('Plan/CustomView');
     }
-    public function showPlanEdit($id){
+    public function showPlanEdit($id)
+    {
+        $goals = array();
+        $habits = array();
+        $tasks = array();
+        $prizes = array();
         $plan = Plan::find($id);
+
+        //getting goals
+        $goalsTemp = Plan_goal::where('fk_plan', $plan->id)->get()->load('goals');
+        foreach ($goalsTemp as $goal) {
+            $goals[] = $goal->goals;
+        }
+        //getting habits
+        $habitsTemp = Plan_habit::where('fk_plan', $plan->id)->get()->load('habits');
+        foreach ($habitsTemp as $habit) {
+            $habits[] = $habit->habits;
+        }
+        //getting tasks list
+        foreach ($plan->getTasks as $task) {
+            $title = $task->getTask;
+            if (!in_array($title, $tasks)) {
+                $tasks[] = $task->getTask;
+            }
+        }
+        $prizesTemp=Prize::where('fk_plan',$plan->id)->get()->load('plan','task','habit','goal');
+        //getting tasks for each day
+        foreach($prizesTemp as $prize){
+            $prizes[] = $prize;
+        }
+        $tasksByWeekday = array(
+            'Monday' => array(),
+            'Tuesday' => array(),
+            'Wednesday' => array(),
+            'Thursday' => array(),
+            'Friday' => array(),
+            'Saturday' => array(),
+            'Sunday' => array(),
+        );
+
+        foreach ($plan->getTasks as $task) {
+            $weekday = date('l', strtotime($task['execution_date']));
+            $time = date('H:i', strtotime($task['execution_date']));
+            $existingTask = null;
+
+            // Look for existing task with same title, time and weekday
+            foreach ($tasksByWeekday[$weekday] as $existing) {
+                if (
+                    $existing['title'] === $task['title'] &&
+                    date('H:i', strtotime($existing['execution_date'])) === $time
+                ) {
+                    $existingTask = $existing;
+                    break;
+                }
+            }
+            if (!$existingTask) {
+                // Add task to weekday array
+                $tasksByWeekday[$weekday][] = $task;
+            }
+        }
+
+        //getting prizes list
+
         return inertia::render('Plan/PlanEditView', [
-            'plan' => $plan
+            'plan' => $plan,
+            'goals' => $goals,
+            'habits' => $habits,
+            'tasks' => $tasks,
+            'tasksByWeekday' => $tasksByWeekday,
+            'prizes' => $prizes,
+        ]);
+    }
+    public function editPlan(Request $request, $id)
+    {
+        $plan = Plan::find($id);
+        $plan->title = $request->title;
+        $plan->color = $request->color;
+        $plan->save();
+
+        //deleting only upcoming tasks
+        foreach ($plan->getTasks->where('execution_date', '>', now()) as $task) {
+            $task->getTask->delete();
+        }
+        $plan->getTasks()->where('execution_date', '>', now())->delete();
+
+
+        return inertia::render('Plan/PlanEditView', [
+            'plan' => $plan,
         ]);
     }
 }

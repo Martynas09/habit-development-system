@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Plan_habit extends Model
 {
     use HasFactory;
+
+    public function habits()
+    {
+        return $this->belongsTo(Habit::class, 'fk_habit', 'id');
+    }
 }

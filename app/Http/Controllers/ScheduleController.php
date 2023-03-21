@@ -10,9 +10,17 @@ class ScheduleController extends Controller
 {
     public function showSchedule()
     {
+        $tasks = collect();
+
         $plan = Plan::where('fk_user', auth()->user()->id)->where('active', '=', 1)->get()->load('getTasks.getTask');
+        foreach ($plan as $planItem) {
+            $tasks = $tasks->merge($planItem->getTasks->load('getTask'));
+        }
+        $tasks = $tasks->sortBy('execution_date');
+        $allTasksArray = array_values($tasks->toArray());
         return inertia::render('Schedule', [
-            'plan' => $plan
+            'plan' => $plan,
+            'tasks' => $allTasksArray
         ]);
     }
     //TODO TASK DONE

@@ -18,11 +18,13 @@
     <div class="py-12">
       <div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-          <p>Dienos citata: {{ quote }}</p>
+          <p class="pt-2 pl-3 text-lg">Dienos citata: <span class="text-xl">"{{ quote }}"</span></p>
           <h3 class="m-3">Aktyvūs planai:</h3>
-          <div v-for="planName in plan" :key="planName.title">
-            <div class="pl-3 w-fit">
-              <p class="px-2 rounded-sm" :style="{ backgroundColor: planName.color }">{{ planName.title }}</p>
+          <div class="flex">
+            <div v-for="planName in plan" :key="planName.title">
+              <div class="pl-3 w-fit">
+                <p class="px-2 rounded-sm" :style="{ backgroundColor: planName.color }">{{ planName.title }}</p>
+              </div>
             </div>
           </div>
           <div style="border: 1px solid #d9d9d9; border-radius: 4px; margin: 16px ">
@@ -87,7 +89,7 @@ import ltLT from 'ant-design-vue/es/locale/lt_LT';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import 'dayjs/locale/lt';
 
-const props = defineProps({ plan: Object });
+const props = defineProps({ plan: Object, tasks: Object });
 const value = ref();
 const starttime = ref();
 const endtime = ref();
@@ -105,35 +107,38 @@ async function getapi(url) {
   quote.value = data.quote;
 }
 onMounted(async () => {
-  await getapi('https://quotes.free.beeceptor.com/quotes');
+  await getapi('https://iq.orm.ovh/');
+  console.log(props.tasks);
 });
 
 function getListData(current) {
   const events = [];
+  const colors = [];
   props.plan.forEach((plan) => {
-    plan.get_tasks.forEach((task) => {
-      if (dayjs(task.execution_date).format('D') === dayjs(current).format('D') && dayjs(task.execution_date).format('M') === dayjs(current).format('M')) {
-        if (task.is_done === 1) {
-          events.push({
-            id: task.id,
-            type: 'success',
-            content: task.get_task[0].title,
-            time: task.execution_date,
-            duration: task.get_task[0].duration,
-            color: plan.color,
-          });
-        } else {
-          events.push({
-            id: task.id,
-            type: 'error',
-            content: task.get_task[0].title,
-            time: task.execution_date,
-            duration: task.get_task[0].duration,
-            color: plan.color,
-          });
-        }
+    colors[plan.id] = plan.color;
+  });
+  props.tasks.forEach((task) => {
+    if (dayjs(task.execution_date).format('D') === dayjs(current).format('D') && dayjs(task.execution_date).format('M') === dayjs(current).format('M')) {
+      if (task.is_done === 1) {
+        events.push({
+          id: task.id,
+          type: 'success',
+          content: task.get_task.title,
+          time: task.execution_date,
+          duration: task.get_task.duration,
+          color: colors[task.fk_plan],
+        });
+      } else {
+        events.push({
+          id: task.id,
+          type: 'error',
+          content: task.get_task.title,
+          time: task.execution_date,
+          duration: task.get_task.duration,
+          color: colors[task.fk_plan],
+        });
       }
-    });
+    }
   });
   return events;
 }

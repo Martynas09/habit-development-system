@@ -11,6 +11,11 @@ class Plan extends Model
 
     public function getTasks()
     {
-        return $this->hasMany(Plan_task::class, 'fk_plan', 'id')->orderBy('execution_date', 'asc');;
+        return $this->hasMany(Plan_task::class, 'fk_plan', 'id');
     }
+    public function getPrizes()
+    {
+        return $this->hasMany(Prize::class, 'fk_plan', 'id');
+    }
+
 }

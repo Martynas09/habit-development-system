@@ -55,6 +55,8 @@ Route::middleware('auth')->group(function () {
 //CHALLENGE ROUTES
 Route::middleware('auth')->group(function () {
     Route::get('/challenges', [ChallengeController::class, 'showChallengesList'])->name('Challenge.ChallengesListView');
+    Route::get('/challenges/send', [ChallengeController::class, 'showChallengeSend'])->name('Challenge.ChallengeSendView');
+    Route::post('/challenges/send', [ChallengeController::class, 'challengeSend'])->name('Challenge.ChallengeSendView');
 });
 
 //SCHEDULE ROUTES
