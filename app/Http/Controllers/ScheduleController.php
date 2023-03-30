@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Plan;
+use App\Models\Plan_task;
 
 class ScheduleController extends Controller
 {
@@ -23,11 +24,10 @@ class ScheduleController extends Controller
             'tasks' => $allTasksArray
         ]);
     }
-    //TODO TASK DONE
     public function taskDone(Request $request)
     {
-        // $task = Plan_task::where('id', $request->id)->first();
-        // $task->is_done = 1;
-        // $task->save();
+        $task = Plan_task::where('id', $request->id)->first();
+        $task->is_done = 1;
+        $task->save();
     }
 }

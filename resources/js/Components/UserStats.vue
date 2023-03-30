@@ -26,7 +26,7 @@ const props = defineProps({
   user: Object,
 });
 const percents = ref(0);
-const level = ref(0);
+const level = ref();
 const xp = ref(0);
 const status = ref('active');
 const isMaxLevel = ref(false);

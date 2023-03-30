@@ -12,4 +12,12 @@ class Plan_task extends Model
     {
         return $this->belongsTo(Task::class, 'fk_task', 'id');
     }
+    public function getPlan()
+    {
+        return $this->belongsTo(Plan::class, 'fk_plan', 'id');
+    }
+    public function getReminder()
+    {
+        return $this->hasOne(Reminder::class, 'fk_reminder', 'id');
+    }
 }

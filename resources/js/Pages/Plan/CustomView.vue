@@ -313,7 +313,7 @@
                       <a-select-option value="habit">Įpročio išsiugdymą</a-select-option>
                       <a-select-option value="plan">Plano užbaigimą</a-select-option>
                     </a-select>
-                    <minus-circle-two-tone v-if="prize.category === 'plan' ||  prize.category === undefined " class="ml-2"
+                    <minus-circle-two-tone v-if="prize.category === 'plan' || prize.category === undefined" class="ml-2"
                       two-tone-color="#ef4444" @click="removePrize(prize)" />
                   </a-form-item>
                   <a-form-item :name="['prizes', index, 'receiverTitle']" :rules="{ required: true, }">
@@ -322,8 +322,11 @@
                         <a-form-item style="margin-top:0px;margin-bottom:0px" name="title" label="Tikslas:"
                           :rules="[{ required: true }]"></a-form-item>
                       </div>
-                      <a-select v-model:value="prize.receiverTitle" style="width: 200px"
-                        :options="dynamicValidateForm.goals" placeholder="Pasirinkite"></a-select>
+                      <a-select v-model:value="prize.receiverTitle" style="width: 200px" placeholder="Pasirinkite">
+                        <a-select-option v-for="goal in dynamicValidateForm.goals" :key="goal.key" :value="goal.value">
+                          {{ goal.value }}
+                        </a-select-option>
+                      </a-select>
                       <minus-circle-two-tone class="ml-2" two-tone-color="#ef4444" @click="removePrize(prize)" />
                     </div>
                     <div v-if="prize.category === 'task'">
@@ -331,8 +334,11 @@
                         <a-form-item style="margin-top:0px;margin-bottom:0px" name="title" label="Užduotis:"
                           :rules="[{ required: true }]"></a-form-item>
                       </div>
-                      <a-select v-model:value="prize.receiverTitle" style="width: 200px" :options="listTasks"
-                        placeholder="Pasirinkite"></a-select>
+                      <a-select v-model:value="prize.receiverTitle" style="width: 200px" placeholder="Pasirinkite">
+                        <a-select-option v-for="task in listTasks" :key="task.id" :value="task.value">
+                          {{ task.value }}
+                        </a-select-option>
+                      </a-select>
                       <minus-circle-two-tone class="ml-2" two-tone-color="#ef4444" @click="removePrize(prize)" />
                     </div>
                     <div v-if="prize.category === 'habit'">
@@ -340,8 +346,11 @@
                         <a-form-item style="margin-top:0px;margin-bottom:0px" name="title" label="Įprotis:"
                           :rules="[{ required: true }]"></a-form-item>
                       </div>
-                      <a-select v-model:value="prize.receiverTitle" style="width: 200px"
-                        :options="dynamicValidateForm.habits" placeholder="Pasirinkite"></a-select>
+                      <a-select v-model:value="prize.receiverTitle" style="width: 200px" placeholder="Pasirinkite">
+                        <a-select-option v-for="habit in dynamicValidateForm.habits" :key="habit.key" :value="habit.value">
+                          {{ habit.value }}
+                        </a-select-option>
+                      </a-select>
                       <minus-circle-two-tone class="ml-2" two-tone-color="#ef4444" @click="removePrize(prize)" />
                     </div>
                   </a-form-item>

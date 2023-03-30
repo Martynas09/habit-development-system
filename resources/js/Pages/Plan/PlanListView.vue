@@ -32,14 +32,18 @@
                     <a-list>
                         <template v-for="plan in props.plans" v-bind:key="plan">
                             <div class="pl-4">
-                                <div class="flex pt-3">
+                                <div class="flex items-center pt-3">
                                     <a-list-item>
                                         <p class="text-lg">{{ plan.title }}</p>
                                         <p v-if="plan.active === 1" class="text-green-500 pl-2">Aktyvus</p>
                                         <p v-else class="text-red-500 pl-2">Neaktyvus</p>
-                                        <Link :href="route('Plan.PlanEditView',plan.id)">
-                                        <a-button type="primary" class="ml-4">Redaguoti</a-button>
+                                        <Link :href="route('Plan.PlanEditView', plan.id)">
+                                        <a-button type="primary" class="ml-4"><edit-outlined />Redaguoti</a-button>
                                         </Link>
+                                        <a-popconfirm title="Ar tikrai norite pašalinti planą?" ok-text="Taip" cancel-text="Ne"
+                                            @confirm="confirm" @cancel="cancel">
+                                        <a-button type="danger" class="ml-4"><delete-outlined />Pašalinti</a-button>
+                                        </a-popconfirm>
                                     </a-list-item>
                                 </div>
                             </div>
@@ -54,10 +58,34 @@
 </template>
 
 <script setup>
-import { Head, Link } from '@inertiajs/vue3';
-import { ReconciliationOutlined, HomeOutlined } from '@ant-design/icons-vue';
+import { Head, Link, router } from '@inertiajs/vue3';
+import {
+  ReconciliationOutlined, HomeOutlined, EditOutlined, DeleteOutlined,
+} from '@ant-design/icons-vue';
+import { message } from 'ant-design-vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 const props = defineProps({ plans: Object });
+
+const confirm = (e) => {
+  router.post(
+    '/planDelete/',
+    {
+      head: headID.value,
+      top: topID.value,
+      bottom: bottomID.value,
+      shoes: shoesID.value,
+    },
+    {
+      preserveScroll: true,
+      onSuccess: () => message.success('Personažas atnaujintas sėkmingai'),
+      onError: () => message.error('Klaida atnaujinant personažą'),
+    },
+  );
+};
+const cancel = (e) => {
+  console.log(e);
+  message.error('Click on No');
+};
 </script>
 <style></style>

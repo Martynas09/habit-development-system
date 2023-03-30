@@ -322,8 +322,11 @@
                         <a-form-item style="margin-top:0px;margin-bottom:0px" name="title" label="Tikslas:"
                           :rules="[{ required: true }]"></a-form-item>
                       </div>
-                      <a-select v-model:value="prize.receiverTitle" style="width: 200px"
-                        :options="dynamicValidateForm.goals" placeholder="Pasirinkite"></a-select>
+                      <a-select v-model:value="prize.receiverTitle" style="width: 200px" placeholder="Pasirinkite">
+                        <a-select-option v-for="goal in dynamicValidateForm.goals" :key="goal.key" :value="goal.value">
+                          {{ goal.value }}
+                        </a-select-option>
+                      </a-select>
                       <minus-circle-two-tone class="ml-2" two-tone-color="#ef4444" @click="removePrize(prize)" />
                     </div>
                     <div v-if="prize.category === 'task'">
@@ -331,8 +334,11 @@
                         <a-form-item style="margin-top:0px;margin-bottom:0px" name="title" label="Užduotis:"
                           :rules="[{ required: true }]"></a-form-item>
                       </div>
-                      <a-select v-model:value="prize.receiverTitle" style="width: 200px" :options="listTasks"
-                        placeholder="Pasirinkite"></a-select>
+                      <a-select v-model:value="prize.receiverTitle" style="width: 200px" placeholder="Pasirinkite">
+                        <a-select-option v-for="task in listTasks" :key="task.key" :value="task.value">
+                          {{ task.value }}
+                        </a-select-option>
+                      </a-select>
                       <minus-circle-two-tone class="ml-2" two-tone-color="#ef4444" @click="removePrize(prize)" />
                     </div>
                     <div v-if="prize.category === 'habit'">
@@ -340,8 +346,11 @@
                         <a-form-item style="margin-top:0px;margin-bottom:0px" name="title" label="Įprotis:"
                           :rules="[{ required: true }]"></a-form-item>
                       </div>
-                      <a-select v-model:value="prize.receiverTitle" style="width: 200px"
-                        :options="dynamicValidateForm.habits" placeholder="Pasirinkite"></a-select>
+                      <a-select v-model:value="prize.receiverTitle" style="width: 200px" placeholder="Pasirinkite">
+                        <a-select-option v-for="habit in dynamicValidateForm.habits" :key="habit.key" :value="habit.value">
+                          {{ habit.value }}
+                        </a-select-option>
+                      </a-select>
                       <minus-circle-two-tone class="ml-2" two-tone-color="#ef4444" @click="removePrize(prize)" />
                     </div>
                   </a-form-item>
@@ -365,7 +374,7 @@
             </div>
           </a-config-provider>
           <div class="text-end m-6">
-            <a-button @click="saveToDB" type="primary">Sukurti planą</a-button>
+            <a-button @click="saveToDB" type="primary">Redaguoti planą</a-button>
           </div>
           <!--Modalas-->
           <div>
@@ -374,8 +383,8 @@
                 <check-circle-filled v-if="defaultPercent === 100" style="font-size: 40px; color: #52c41a;" />
                 <a-spin size="large" v-else />
                 <a-progress :percent="defaultPercent" :status="progressStatus" />
-                <p class="mt-2" v-if="defaultPercent < 100">Planas kuriamas...</p>
-                <p class="mt-2" v-else>Planas sukurtas</p>
+                <p class="mt-2" v-if="defaultPercent < 100">Planas redaguojamas...</p>
+                <p class="mt-2" v-else>Planas paredaguotas</p>
                 <Link :href="route('Schedule')">
                 <a-button v-if="defaultPercent === 100" type="primary" class="mt-4">Peržiūrėti
                   tvarkaraštį</a-button>
@@ -405,7 +414,7 @@ import dayjs from 'dayjs';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 const props = defineProps({
-  plan: Object, goals: Array, habits: Array, tasks: Array, tasksByWeekday: Object, prizes: Array,
+  plan: Object, goals: Array, habits: Array, tasks: Array, tasksByWeekday: Object, prizes: Array, reminders: Boolean,
 });
 
 const listTasks = ref([
@@ -521,16 +530,23 @@ onMounted(() => {
   });
   props.prizes.forEach((prize) => {
     let temp = '';
-    if (prize.goal !== null) { temp = prize.goal.title; }
-    if (prize.habit !== null) { temp = prize.habit.title; }
-    if (prize.task !== null) { temp = prize.task.title; }
+    let temp2 = '';
+    if (prize.goal !== null) { temp = prize.fk_goal; temp2 = prize.goal.title; }
+    if (prize.habit !== null) { temp = prize.fk_habit; temp2 = prize.habit.title; }
+    if (prize.task !== null) { temp = prize.fk_task; temp2 = prize.task.title; }
     dynamicValidateForm.prizes.push({
       title: prize.title,
-      key: prize.id,
+      key: temp,
       category: prize.category,
-      receiverTitle: temp,
+      receiverTitle: temp2,
     });
   });
+  if (props.reminders === true) {
+    reminderType.value = 'system';
+  }
+  if (props.reminders === false) {
+    reminderType.value = 'self';
+  }
 });
 
 onUnmounted(() => {
@@ -610,7 +626,7 @@ const form = useForm({
 const saveToDB = () => {
   visible.value = true;
   form.post(
-    '/plans/custom',
+    route('Plan.PlanEditView', props.plan.id),
     {
       preserveScroll: true,
       onSuccess: () => { },

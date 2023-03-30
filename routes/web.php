@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\ChallengeController;
 use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -50,6 +51,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/plans/custom', [PlanController::class, 'showCustom'])->name('Plan.CustomView');
     Route::post('/plans/custom', [PlanController::class, 'createPlan'])->name('Plan.CustomView');
     Route::get('/planedit/{id}', [PlanController::class, 'showPlanEdit'])->name('Plan.PlanEditView');
+    Route::post('/planedit/{id}', [PlanController::class, 'editPlan'])->name('Plan.PlanEditView');
+    Route::post('/planDelete/{id}', [PlanController::class, 'deletePlan']);
 });
 
 //CHALLENGE ROUTES
@@ -57,11 +60,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/challenges', [ChallengeController::class, 'showChallengesList'])->name('Challenge.ChallengesListView');
     Route::get('/challenges/send', [ChallengeController::class, 'showChallengeSend'])->name('Challenge.ChallengeSendView');
     Route::post('/challenges/send', [ChallengeController::class, 'challengeSend'])->name('Challenge.ChallengeSendView');
+    Route::get('/challenge/accept/{id}', [ChallengeController::class, 'challengeAcceptView'])->name('Challenge.ChallengeAcceptView');
+    Route::post('/challenge/accept/{id}', [ChallengeController::class, 'challengeAccept'])->name('Challenge.ChallengeAcceptView');
 });
 
 //SCHEDULE ROUTES
 Route::middleware('auth')->group(function () {
     Route::get('/schedule', [ScheduleController::class, 'showSchedule'])->name('Schedule');
+    Route::post('/schedule', [ScheduleController::class, 'taskDone'])->name('Schedule');
+});
+
+//LEADERBOARD ROUTES
+Route::middleware('auth')->group(function () {
+    Route::get('/leaderboard', [UserController::class, 'leaderboardView'])->name('Leaderboard');
 });
 
 

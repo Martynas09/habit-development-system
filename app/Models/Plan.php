@@ -17,5 +17,13 @@ class Plan extends Model
     {
         return $this->hasMany(Prize::class, 'fk_plan', 'id');
     }
+    public function getPlanGoals()
+    {
+        return $this->hasMany(Plan_goal::class, 'fk_plan', 'id');
+    }
+    public function getPlanHabits()
+    {
+        return $this->hasMany(Plan_habit::class, 'fk_plan', 'id');
+    }
 
 }

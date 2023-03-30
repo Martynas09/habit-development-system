@@ -42,6 +42,9 @@ const showingNavigationDropdown = ref(false);
                                     :active="route().current('Schedule')">
                                     Tvarkaraštis
                                 </NavLink>
+                                <NavLink :href="route('Leaderboard')" :active="route().current('Leaderboard')">
+                                    Lyderių lentelė
+                                </NavLink>
                             </div>
                         </div>
 

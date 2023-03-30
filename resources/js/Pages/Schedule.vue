@@ -153,7 +153,12 @@ function handleClick(item) {
     status.value = 'neatlikta';
   }
   taskID.value = item.id;
-  visible.value = true;
+  // if endtime is less than current time, then show button
+  if (dayjs(item.time).add(item.duration, 'minute').isBefore(dayjs())) {
+    visible.value = true;
+  } else {
+    visible.value = false;
+  }
 }
 // const handleOk = () => {
 //   visible.value = false;
@@ -178,7 +183,7 @@ function getMonthData(current) {
 }
 const taskDone = () => {
   router.post(
-    '/plans/view{id}',
+    'schedule',
     {
       id: taskID.value,
     },
