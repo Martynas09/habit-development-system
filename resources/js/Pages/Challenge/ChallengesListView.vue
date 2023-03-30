@@ -24,7 +24,7 @@
             <a-button type="primary">Mesti naują iššūkį<send-outlined /></a-button>
             </Link>
           </div>
-          Privatūs iššūkiai
+          <span class="text-xl font-bold">Privatūs iššūkiai</span>
           <a-tabs v-model:activeKey="activeKey">
             <!-- Privatūs mesti iššūkiai -->
             <a-tab-pane key="1">
@@ -38,6 +38,7 @@
               <div class="flex flex-col">
                 <div class="flex-grow px-4 pt-2 pb-8 mx-auto max-w-7xl">
                   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <span v-if="props.receivedChallenges.length === 0">Neturite gautų iššūkių</span>
                     <div v-for="challenge in props.receivedChallenges" :key="challenge"
                       class="bg-white rounded-lg shadow p-6 relative min-w-[380px] min-h-[220px]">
                       <h2 style="color:#0F4C81" class="text-xl font-bold mb-2">{{ challenge.challenge.title }}</h2>
@@ -52,7 +53,8 @@
                       <p class="text-gray-700 mb-8">{{ challenge.challenge.description }}</p>
                       <div class="flex justify-between">
                         <div class="absolute right-4 bottom-4">
-                          <a-button v-if="challenge.status==='pending'" type="primary" @click="showModal(challenge.challenge)">Plačiau</a-button>
+                          <a-button v-if="challenge.status === 'pending'" type="primary"
+                            @click="showModal(challenge.challenge)">Plačiau</a-button>
                           <span v-else>Iššūkis priimtas</span>
                         </div>
                       </div>
@@ -67,6 +69,7 @@
               <div class="flex flex-col">
                 <div class="flex-grow px-4 pt-2 pb-8 mx-auto max-w-7xl">
                   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <span v-if="props.authorPrivateChallenges.length === 0">Neturite mestų iššūkių</span>
                     <div v-for="challenge in props.authorPrivateChallenges" :key="challenge"
                       class="bg-white rounded-lg shadow p-6 relative min-w-[380px] min-h-[220px]">
                       <h2 style="color:#0F4C81" class="text-xl font-bold mb-2">{{ challenge.title }}</h2>
@@ -96,7 +99,7 @@
           </a-tabs>
         </div>
         <!-- Vieši iššūkiai -->
-        <div>Vieši iššūkiai
+        <div><span class="text-xl font-bold mb-2">Vieši iššūkiai</span>
           <div class="flex flex-col">
             <div class="flex-grow px-4 pt-2 pb-8 mx-auto max-w-7xl">
               <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -109,8 +112,14 @@
                       challenge.xpGiven }}</span> <span v-if="challenge.xpGiven === 1">patirties taškas</span><span
                         v-if="challenge.xpGiven === 10">patirties taškų</span><span
                         v-if="challenge.xpGiven !== 1 && challenge.xpGiven !== 10">patirties taškai</span></span>
-                    <div class="absolute right-4 bottom-4">
+                    <div v-if="challenge.challenged_users.length === 0" class="absolute right-4 bottom-4">
                       <a-button type="primary" @click="showModal(challenge)">Plačiau</a-button>
+                    </div>
+                    <div v-else class="absolute right-6 bottom-4">
+                      <span v-if="challenge.challenged_users[0].status === 'accepted'"
+                        class="text-yellow-500">Vykdomas</span>
+                      <span v-if="challenge.challenged_users[0].status === 'completed'"
+                        class="text-green-500">Įvykdytas</span>
                     </div>
                   </div>
                 </div>
@@ -146,9 +155,7 @@ const description = ref('');
 const activeKey = ref('1');
 const created_at = ref();
 const id = ref();
-
 const showModal = (challenge) => {
-  console.log(props.authorPrivateChallenges);
   title.value = challenge.title;
   description.value = challenge.description;
   id.value = challenge.id;

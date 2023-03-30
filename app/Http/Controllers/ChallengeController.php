@@ -19,9 +19,18 @@ class ChallengeController extends Controller
 {
     public function showChallengesList()
     {
-        $publicChallenges = Challenge::where('type', 'public')->get();
+        $publicChallenges = Challenge::where('type', 'public')
+            ->with(['challenged_users' => function ($query) {
+                $query->where('fk_user', auth()->user()->id);
+            }])
+            ->get();
         $authorPrivateChallenges = Challenge::where('fk_user', auth()->user()->id)->where('type', 'private')->get()->load('challenged_users', 'challenged_users.user');
-        $receivedChallenges = Challenged_user::where('fk_user', auth()->user()->id)->get()->load('challenge', 'challenge.challenge_author');
+        $receivedChallenges = Challenged_user::where('fk_user', auth()->user()->id)
+            ->whereHas('challenge', function ($query) {
+                $query->where('type', '<>', 'public');
+            })
+            ->with(['challenge', 'challenge.challenge_author'])
+            ->get();
 
         return inertia::render('Challenge/ChallengesListView', [
             'publicChallenges' => $publicChallenges,
@@ -77,13 +86,11 @@ class ChallengeController extends Controller
     public function challengeAccept($id, Request $request)
     {
         $challenge = Challenge::where('id', $id)->first();
-        if ($challenge->type == 'private') 
-        {
+        if ($challenge->type == 'private') {
             $challenged_user = Challenged_user::where('fk_challenge', $id)->where('fk_user', auth()->user()->id)->first();
             $challenged_user->status = 'accepted';
             $challenged_user->save();
-        }
-        else{
+        } else {
             $challenged_user = new Challenged_user();
             $challenged_user->fk_challenge = $id;
             $challenged_user->fk_user = auth()->user()->id;
@@ -91,44 +98,44 @@ class ChallengeController extends Controller
             $challenged_user->save();
         }
 
-            $plan = new Plan();
-            $plan->fk_user = auth()->user()->id;
-            $plan->title = "Iššūkis";
-            $plan->color = "#CA33FF";
-            $plan->active = 1;
-            $plan->save();
+        $plan = new Plan();
+        $plan->fk_user = auth()->user()->id;
+        $plan->title = "Iššūkis";
+        $plan->color = "#CA33FF";
+        $plan->active = 1;
+        $plan->save();
 
-            $newTask = new Task();
-            $newTask->title = $request->title;
-            $newTask->duration = $request->duration;
-            $newTask->save();
+        $newTask = new Task();
+        $newTask->title = $request->title;
+        $newTask->duration = $request->duration;
+        $newTask->save();
 
-            foreach ($request->days as $day) {
-                $taskTime = $request->time;
-                $dateTime = DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s.u\Z', $taskTime)
-                    ->add(new DateInterval('PT2H'));
-                $hoursAndMinutes = $dateTime->format('H:i');
-                for ($i = 0; $i < 1; $i++) {
-                    $upcomingDay = new DateTimeImmutable('next ' . ucfirst($day) . ' +' . $i . ' week');
-                    $tempDate = $upcomingDay->format('Y-m-d') . ' ' . $hoursAndMinutes;
-                    if ($request->reminder == 'system') {
-                        $newReminder = new Reminder();
-                        $newReminder->remind_time = DateTimeImmutable::createFromFormat('Y-m-d H:i', $tempDate);
-                        $newReminder->save();
-                    }
-                    $newPlanTask = new Plan_task();
-                    $newPlanTask->execution_date = DateTimeImmutable::createFromFormat('Y-m-d H:i', $tempDate);
-                    $newPlanTask->is_done = 0;
-                    if ($request->reminder == 'system') {
-                        $newPlanTask->fk_reminder = $newReminder->id;
-                    } else {
-                        $newPlanTask->fk_reminder = null;
-                    }
-                    $newPlanTask->fk_task = $newTask->id;
-                    $newPlanTask->fk_plan = $plan->id;
-                    $newPlanTask->save();
+        foreach ($request->days as $day) {
+            $taskTime = $request->time;
+            $dateTime = DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s.u\Z', $taskTime)
+                ->add(new DateInterval('PT2H'));
+            $hoursAndMinutes = $dateTime->format('H:i');
+            for ($i = 0; $i < 1; $i++) {
+                $upcomingDay = new DateTimeImmutable('next ' . ucfirst($day) . ' +' . $i . ' week');
+                $tempDate = $upcomingDay->format('Y-m-d') . ' ' . $hoursAndMinutes;
+                if ($request->reminder == 'system') {
+                    $newReminder = new Reminder();
+                    $newReminder->remind_time = DateTimeImmutable::createFromFormat('Y-m-d H:i', $tempDate);
+                    $newReminder->save();
                 }
+                $newPlanTask = new Plan_task();
+                $newPlanTask->execution_date = DateTimeImmutable::createFromFormat('Y-m-d H:i', $tempDate);
+                $newPlanTask->is_done = 0;
+                if ($request->reminder == 'system') {
+                    $newPlanTask->fk_reminder = $newReminder->id;
+                } else {
+                    $newPlanTask->fk_reminder = null;
+                }
+                $newPlanTask->fk_task = $newTask->id;
+                $newPlanTask->fk_plan = $plan->id;
+                $newPlanTask->save();
             }
+        }
         return Redirect::route('Challenge.ChallengesListView');
     }
 }
