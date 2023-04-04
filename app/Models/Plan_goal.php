@@ -13,4 +13,8 @@ class Plan_goal extends Model
     {
         return $this->belongsTo(Goal::class, 'fk_goal', 'id');
     }
+    public function plan()
+    {
+        return $this->belongsTo(Plan::class, 'fk_plan', 'id');
+    }
 }

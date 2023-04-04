@@ -5,6 +5,8 @@ use App\Http\Controllers\PlanController;
 use App\Http\Controllers\ChallengeController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\GoalController;
+use App\Http\Controllers\JournalController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -72,7 +74,18 @@ Route::middleware('auth')->group(function () {
 
 //LEADERBOARD ROUTES
 Route::middleware('auth')->group(function () {
-    Route::get('/leaderboard', [UserController::class, 'leaderboardView'])->name('Leaderboard');
+    Route::get('/leaderboard', [UserController::class, 'showLeaderboard'])->name('Leaderboard');
+});
+
+//GOALS ROUTES
+Route::middleware('auth')->group(function () {
+    Route::get('/goals', [GoalController::class, 'showGoalsList'])->name('MyGoals');
+});
+
+//JOURNAL ROUTES
+Route::middleware('auth')->group(function () {
+    Route::get('/journal', [JournalController::class, 'showJournal'])->name('Journal');
+    Route::post('/journal', [JournalController::class, 'addNote'])->name('Journal');
 });
 
 

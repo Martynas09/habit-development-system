@@ -99,7 +99,7 @@ class PlanController extends Controller
         foreach ($request->goals as $goal) {
             $newGoal = new Goal();
             $newGoal->title = $goal['value'];
-            $newGoal->status = 'not in progress';
+            $newGoal->status = 'in progress';
             $newGoal->save();
             $newPlanGoal = new Plan_goal();
             $newPlanGoal->fk_plan = $plan->id;
@@ -314,7 +314,7 @@ class PlanController extends Controller
             if (!$existingGoal) {
                 $newGoal = new Goal();
                 $newGoal->title = $goal['value'];
-                $newGoal->status = 'not in progress';
+                $newGoal->status = 'in progress';
                 $newGoal->save();
             } else {
                 $newGoal = $existingGoal;

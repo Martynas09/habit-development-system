@@ -10,6 +10,6 @@ class Goal extends Model
     use HasFactory;
     public function plan_goal()
     {
-        return $this->belongsTo(Plan_goal::class, 'fk_goal', 'id');
+        return $this->hasMany(Plan_goal::class, 'fk_goal', 'id');
     }
 }

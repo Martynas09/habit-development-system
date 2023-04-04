@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { Link } from '@inertiajs/vue3';
+import { DownOutlined } from '@ant-design/icons-vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
@@ -31,19 +32,39 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Pagrindinis
                                 </NavLink>
-                                <NavLink :href="route('Plan.PlanListView')" :active="route().current('Plan.PlanListView')">
-                                    Planai
+                                <NavLink :active="route().current('Plan.PlanListView') || route().current('MyGoals')">
+                                    <a-dropdown>
+                                        <span class="ant-dropdown-link" @click.prevent>Mano planai
+                                            <DownOutlined />
+                                        </span>
+                                        <template #overlay>
+                                            <a-menu>
+                                                <a-menu-item>
+                                                    <Link :href="route('Plan.PlanListView')">
+                                                    Planų valdymas
+                                                    </Link>
+                                                </a-menu-item>
+                                                <a-menu-item>
+                                                    <Link :href="route('MyGoals')">
+                                                    Tikslų valdymas
+                                                    </Link>
+                                                </a-menu-item>
+                                            </a-menu>
+                                        </template>
+                                    </a-dropdown>
+                                </NavLink>
+                                <NavLink :href="route('Schedule')" :active="route().current('Schedule')">
+                                    Tvarkaraštis
                                 </NavLink>
                                 <NavLink :href="route('Challenge.ChallengesListView')"
                                     :active="route().current('Challenge.ChallengesListView')">
                                     Iššūkiai
                                 </NavLink>
-                                <NavLink :href="route('Schedule')"
-                                    :active="route().current('Schedule')">
-                                    Tvarkaraštis
-                                </NavLink>
                                 <NavLink :href="route('Leaderboard')" :active="route().current('Leaderboard')">
                                     Lyderių lentelė
+                                </NavLink>
+                                <NavLink :href="route('Journal')" :active="route().current('Journal')">
+                                    Žurnalas
                                 </NavLink>
                             </div>
                         </div>
@@ -61,7 +82,8 @@ const showingNavigationDropdown = ref(false);
                                                 {{ $page.props.auth.user.username }}
                                                 <div class="flex items-center justify-center ml-2 w-10">
                                                     <img :src="'/storage/' + $page.props.auth.user.avatar"
-                                                        class="rounded-sm border px-1 border-solid border-gray-300 shadow-sm" style="padding-top:1px;padding-bottom:1px">
+                                                        class="rounded-sm border px-1 border-solid border-gray-300 shadow-sm"
+                                                        style="padding-top:1px;padding-bottom:1px">
                                                 </div>
                                                 <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
                                                     viewBox="0 0 20 20" fill="currentColor">

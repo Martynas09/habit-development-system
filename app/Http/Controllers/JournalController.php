@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+use App\Models\Note;
+
+class JournalController extends Controller
+{
+    public function showJournal()
+    {
+        $notes=Note::where('fk_user', auth()->user()->id)->orderBy('updated_at','desc')->paginate(4);
+        return Inertia::render('Journal', ['notes' => $notes]);
+    }
+    // public function showNoteEdit($id)
+    // {
+    //     $note=Note::where('id', $id)->first();
+    //     return Inertia::render('NoteEdit', ['note' => $note]);
+    // }
+    // public function editNote()
+    // {
+    //     $note=Note::where('id', request('id'))->first();
+    //     $note->title=request('title');
+    //     $note->content=request('content');
+    //     $note->save();
+    //     return redirect()->route('Journal.JournalView');
+    // }
+    public function addNote(Request $request)
+    {
+        $note=new Note();
+        $note->description=$request->value;
+        $note->fk_user=auth()->user()->id;
+        $note->save();
+
+    }
+}

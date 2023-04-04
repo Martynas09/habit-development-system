@@ -8,7 +8,7 @@ use Inertia\Inertia;
 
 class UserController extends Controller
 {
-    public function leaderboardView()
+    public function showLeaderboard()
     {
         $top10 = User::orderBy('xp', 'desc')->take(10)->get();
         $currentUserXP = auth()->user()->xp;
