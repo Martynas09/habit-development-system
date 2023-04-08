@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->enum('status', ['not in progress', 'in progress', 'completed']);
+            $table->foreignId('fk_user')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

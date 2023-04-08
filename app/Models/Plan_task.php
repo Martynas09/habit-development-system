@@ -18,6 +18,6 @@ class Plan_task extends Model
     }
     public function getReminder()
     {
-        return $this->hasOne(Reminder::class, 'fk_reminder', 'id');
+        return $this->belongsTo(Reminder::class, 'fk_reminder', 'id');
     }
 }

@@ -16,4 +16,22 @@ class UserController extends Controller
         $user=User::where('id', auth()->user()->id)->first();
         return Inertia::render('Leaderboard', ['top10' => $top10, 'rank' => $rank, 'user' => $user]);
     }
+    public function showUsersList()
+    {
+        $users = User::where('is_admin', 0)->orderBy('created_at','desc')->get();
+        return Inertia::render('Users', ['users' => $users]);
+    }
+    public function editUser(Request $request)
+    {
+        $user = User::find($request->id);
+        $user->username = $request->username;
+        $user->email = $request->email;
+        $user->xp=$request->xp;
+        $user->save();
+    }
+    public function deleteUser(Request $request)
+    {
+        $user = User::find($request->id);
+        $user->delete();
+    }
 }

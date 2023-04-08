@@ -19,6 +19,7 @@ class GoalFactory extends Factory
         return [
             'title' => $this->faker->word,
             'status' => $this->faker->randomElement(['not in progress', 'in progress', 'completed']),
+            'fk_user' => $this->faker->randomElement(\App\Models\User::pluck('id')),
         ];
     }
 }

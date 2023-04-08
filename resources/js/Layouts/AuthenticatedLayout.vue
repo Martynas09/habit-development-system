@@ -27,8 +27,8 @@ const showingNavigationDropdown = ref(false);
                                 </Link>
                             </div>
 
-                            <!-- Navigation Links -->
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <!-- Navigation Links User-->
+                            <div v-if="!$page.props.auth.user.is_admin" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Pagrindinis
                                 </NavLink>
@@ -67,11 +67,26 @@ const showingNavigationDropdown = ref(false);
                                     Žurnalas
                                 </NavLink>
                             </div>
+                             <!-- Navigation Links Admin-->
+                             <div v-if="$page.props.auth.user.is_admin" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
+                                    Pagrindinis
+                                </NavLink>
+                                <NavLink :href="route('Achievements')" :active="route().current('Achievements')">
+                                    Pasiekimų valdymas
+                                </NavLink>
+                                <NavLink :href="route('Users')" :active="route().current('Users')">
+                                    Naudotojų valdymas
+                                </NavLink>
+                                <NavLink :href="route('CharacterItems')" :active="route().current('CharacterItems')">
+                                    Personažo daiktų valdymas
+                                </NavLink>
+                            </div>
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
-                            <UserStats :user="$page.props.auth.user"></UserStats>
-                            <a-divider type="vertical" style="height: 28px;margin:15px;background-color: #d9d9d9" />
+                            <UserStats v-if="!$page.props.auth.user.is_admin" :user="$page.props.auth.user"></UserStats>
+                            <a-divider v-if="!$page.props.auth.user.is_admin" type="vertical" style="height: 28px;margin:15px;background-color: #d9d9d9" />
                             <!-- Settings Dropdown -->
                             <div class="relative">
                                 <Dropdown align="right" width="48">
@@ -80,7 +95,7 @@ const showingNavigationDropdown = ref(false);
                                             <button type="button"
                                                 class="inline-flex items-center pr-2 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                                                 {{ $page.props.auth.user.username }}
-                                                <div class="flex items-center justify-center ml-2 w-10">
+                                                <div v-if="!$page.props.auth.user.is_admin" class="flex items-center justify-center ml-2 w-10">
                                                     <img :src="'/storage/' + $page.props.auth.user.avatar"
                                                         class="rounded-sm border px-1 border-solid border-gray-300 shadow-sm"
                                                         style="padding-top:1px;padding-bottom:1px">

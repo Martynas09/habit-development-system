@@ -100,6 +100,7 @@ class PlanController extends Controller
             $newGoal = new Goal();
             $newGoal->title = $goal['value'];
             $newGoal->status = 'in progress';
+            $newGoal->fk_user = auth()->user()->id;
             $newGoal->save();
             $newPlanGoal = new Plan_goal();
             $newPlanGoal->fk_plan = $plan->id;
@@ -110,6 +111,7 @@ class PlanController extends Controller
         foreach ($request->habits as $habit) {
             $newHabit = new Habit();
             $newHabit->title = $habit['value'];
+            $newHabit->fk_user = auth()->user()->id;
             $newHabit->save();
             $newPlanHabit = new Plan_habit();
             $newPlanHabit->fk_plan = $plan->id;
@@ -315,6 +317,7 @@ class PlanController extends Controller
                 $newGoal = new Goal();
                 $newGoal->title = $goal['value'];
                 $newGoal->status = 'in progress';
+                $newGoal->fk_user = auth()->user()->id;
                 $newGoal->save();
             } else {
                 $newGoal = $existingGoal;
@@ -338,6 +341,7 @@ class PlanController extends Controller
             if (!$existingHabit) {
                 $newHabit = new Habit();
                 $newHabit->title = $habit['value'];
+                $newHabit->fk_user = auth()->user()->id;
                 $newHabit->save();
             } else {
                 $newHabit = $existingHabit;

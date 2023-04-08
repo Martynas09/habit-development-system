@@ -18,6 +18,7 @@ class HabitFactory extends Factory
     {
         return [
             'title' => $this->faker->word,
+            'fk_user' => $this->faker->randomElement(\App\Models\User::pluck('id')),
         ];
     }
 }

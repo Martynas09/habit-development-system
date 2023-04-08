@@ -47,6 +47,16 @@ class DatabaseSeeder extends Seeder
             'xp' => 344,
             'avatar' => 'head1.png',
          ]);
+         \App\Models\User::factory()->create([
+            'username' => 'ADMINISTRATOR',
+            'email' => 'admin@admin',
+            'email_verified_at' => now(),
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'remember_token' => 'ZbwWAZpB5n',
+            'xp' => 9999,
+            'is_admin' => 1,
+            'avatar' => 'head1.png',
+         ]);
         \App\Models\User::factory(15)->create();
         \App\Models\Reflection_question::factory(10)->create();
         \App\Models\Reflection_answer::factory(100)->create();

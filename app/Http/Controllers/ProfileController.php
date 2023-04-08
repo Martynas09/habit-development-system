@@ -66,34 +66,5 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
-    public function characterShow(Request $request)
-    {
-        $character=Users_character::where('fk_user', auth()->user()->id)->first()->load('getHead', 'getTop', 'getBottom', 'getShoes');
-        $level=Level::where('requiredXP', '<=', auth()->user()->xp)->orderBy('requiredXP', 'desc')->first();
-        $itemsHead=Character_item::where('fk_level', '<=', $level->id)->where('category', '=', 'head')->get();
-        $itemsTop=Character_item::where('fk_level', '<=', $level->id)->where('category', '=', 'top')->get();
-        $itemsBottom=Character_item::where('fk_level', '<=', $level->id)->where('category', '=', 'bottom')->get();
-        $itemsShoes=Character_item::where('fk_level', '<=', $level->id)->where('category', '=', 'shoes')->get();
-        return inertia::render('Profile/CharacterEdit', [
-            'character' => $character,
-            'itemsHead' => $itemsHead,
-            'itemsTop' => $itemsTop,
-            'itemsBottom' => $itemsBottom,
-            'itemsShoes' => $itemsShoes,
-        ]);
-    }
-    public function characterEdit(Request $request)
-    {
-        $character=Users_character::where('fk_user', auth()->user()->id)->first();
-        $character->head=$request->head;
-        $character->top=$request->top;
-        $character->bottom=$request->bottom;
-        $character->shoes=$request->shoes;
-        $user=User::where('id', auth()->user()->id)->first();
-        $avatarHead=Character_item::where('id', $request->head)->first();
-        $user->avatar=$avatarHead->picture;
-        $user->save();
-        $character->save();
-        return Redirect::route('profile.edit');
-    }
+    
 }

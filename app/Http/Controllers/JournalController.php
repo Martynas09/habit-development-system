@@ -13,19 +13,6 @@ class JournalController extends Controller
         $notes=Note::where('fk_user', auth()->user()->id)->orderBy('updated_at','desc')->paginate(4);
         return Inertia::render('Journal', ['notes' => $notes]);
     }
-    // public function showNoteEdit($id)
-    // {
-    //     $note=Note::where('id', $id)->first();
-    //     return Inertia::render('NoteEdit', ['note' => $note]);
-    // }
-    // public function editNote()
-    // {
-    //     $note=Note::where('id', request('id'))->first();
-    //     $note->title=request('title');
-    //     $note->content=request('content');
-    //     $note->save();
-    //     return redirect()->route('Journal.JournalView');
-    // }
     public function addNote(Request $request)
     {
         $note=new Note();
@@ -33,5 +20,16 @@ class JournalController extends Controller
         $note->fk_user=auth()->user()->id;
         $note->save();
 
+    }
+    public function editNote(Request $request)
+    {
+        $note=Note::find($request->id);
+        $note->description=$request->description;
+        $note->save();
+    }
+    public function deleteNote(Request $request)
+    {
+        $note=Note::find($request->id);
+        $note->delete();
     }
 }

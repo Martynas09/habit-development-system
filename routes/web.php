@@ -7,6 +7,8 @@ use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GoalController;
 use App\Http\Controllers\JournalController;
+use App\Http\Controllers\AchievementController;
+use App\Http\Controllers\CharacterController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -41,8 +43,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('profile/characterEdit', [ProfileController::class, 'characterShow'])->name('profile.characterEdit');
-    Route::post('profile/characterEdit', [ProfileController::class, 'characterEdit'])->name('profile.characterEdit');
+    Route::get('profile/characterEdit', [CharacterController::class, 'characterShow'])->name('profile.characterEdit');
+    Route::post('profile/characterEdit', [CharacterController::class, 'characterEdit'])->name('profile.characterEdit');
 });
 
 //PLAN ROUTES
@@ -80,12 +82,41 @@ Route::middleware('auth')->group(function () {
 //GOALS ROUTES
 Route::middleware('auth')->group(function () {
     Route::get('/goals', [GoalController::class, 'showGoalsList'])->name('MyGoals');
+    Route::post('/goalEdit', [GoalController::class, 'editGoal']);
+    Route::post('/goalDelete', [GoalController::class, 'deleteGoal']);
+    Route::post('/goalAdd', [GoalController::class, 'addGoal']);
 });
 
 //JOURNAL ROUTES
 Route::middleware('auth')->group(function () {
     Route::get('/journal', [JournalController::class, 'showJournal'])->name('Journal');
     Route::post('/journal', [JournalController::class, 'addNote'])->name('Journal');
+    Route::post('/noteDelete', [JournalController::class, 'deleteNote']);
+    Route::post('/noteEdit', [JournalController::class, 'editNote']);
+});
+
+//ADMIN ROUTES
+//ACHIEVEMENTS ROUTES
+Route::middleware('auth')->group(function () {
+    Route::get('/achievements', [AchievementController::class, 'showAchievementsList'])->name('Achievements');
+    Route::post('/achievementEdit', [AchievementController::class, 'editAchievement']);
+    Route::post('/achievementDelete', [AchievementController::class, 'deleteAchievement']);
+    Route::post('/achievementAdd', [AchievementController::class, 'addAchievement']);
+});
+//USERS ROUTES
+Route::middleware('auth')->group(function () {
+    Route::get('/users', [UserController::class, 'showUsersList'])->name('Users');
+    Route::post('/userEdit', [UserController::class, 'editUser']);
+    Route::post('/userDelete', [UserController::class, 'deleteUser']);
+    Route::post('/userAdd', [UserController::class, 'addUser']);
+});
+//CHARACTER ITEMS ROUTES
+Route::middleware('auth')->group(function () {
+    Route::get('/characterItems', [CharacterController::class, 'showCharacterItemsList'])->name('CharacterItems');
+    Route::post('/characterItemEdit', [CharacterController::class, 'editCharacterItem']);
+    Route::post('/characterItemDelete', [CharacterController::class, 'deleteCharacterItem']);
+    Route::post('/characterItemAdd', [CharacterController::class, 'addCharacterItem']);
+    Route::post('/api/addImage', [CharacterController::class, 'pictureUpload'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);;
 });
 
 

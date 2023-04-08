@@ -67,7 +67,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 const props = defineProps({ plans: Object });
 
-const confirm = (e) => {
+const confirm = () => {
   router.post(
     '/planDelete/',
     {
@@ -83,8 +83,7 @@ const confirm = (e) => {
     },
   );
 };
-const cancel = (e) => {
-  console.log(e);
+const cancel = () => {
   message.error('Click on No');
 };
 </script>
