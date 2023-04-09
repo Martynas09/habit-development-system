@@ -9,6 +9,7 @@ use App\Http\Controllers\GoalController;
 use App\Http\Controllers\JournalController;
 use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\CharacterController;
+use App\Http\Controllers\QuestionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -96,6 +97,7 @@ Route::middleware('auth')->group(function () {
 });
 
 //ADMIN ROUTES
+
 //ACHIEVEMENTS ROUTES
 Route::middleware('auth')->group(function () {
     Route::get('/achievements', [AchievementController::class, 'showAchievementsList'])->name('Achievements');
@@ -117,6 +119,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/characterItemDelete', [CharacterController::class, 'deleteCharacterItem']);
     Route::post('/characterItemAdd', [CharacterController::class, 'addCharacterItem']);
     Route::post('/api/addImage', [CharacterController::class, 'pictureUpload'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);;
+});
+//REFLECTION QUESTIONS ROUTES
+Route::middleware('auth')->group(function () {
+    Route::get('/reflectionQuestions', [QuestionController::class, 'showReflectionQuestionsList'])->name('Questions');
+    Route::post('/reflectionQuestionEdit', [QuestionController::class, 'editReflectionQuestion']);
+    Route::post('/reflectionQuestionDelete', [QuestionController::class, 'deleteReflectionQuestion']);
+    Route::post('/reflectionQuestionAdd', [QuestionController::class, 'addReflectionQuestion']);
 });
 
 

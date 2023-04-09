@@ -16,8 +16,6 @@ return new class extends Migration
         Schema::create('reflection_answers', function (Blueprint $table) {
             $table->id();
             $table->string('content');
-            $table->boolean('answer');
-            $table->foreignId('fk_user')->references('id')->on('users')->onDelete('cascade');
             $table->foreignId('fk_question')->references('id')->on('reflection_questions')->onDelete('cascade');
             $table->timestamps();
         });

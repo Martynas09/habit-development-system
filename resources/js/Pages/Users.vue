@@ -20,24 +20,6 @@
             <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
                 <div class="flex pb-1">
                     <h3 class="pl-2 text-xl flex-grow">Naudotojai:</h3>
-                    <div class="flex-shrink-0 justify-end pr-2">
-                        <a-button @click="showModal" type="primary">Pridėti naudotoją</a-button>
-                        <a-modal v-model:visible="visible" title="Naujas pasiekimas" @ok="handleOk" ok-text="Sukurti"
-                            cancel-text="Atšaukti">
-                            <!-- <a-form>
-                                <a-form-item label="Pavadinimas" :label-col="{ span: 7 }" :wrapper-col="{ span: 12 }">
-                                    <a-input v-model:value="achievementTitle" />
-                                </a-form-item>
-                                <a-form-item label="Aprašymas" :label-col="{ span: 7 }" :wrapper-col="{ span: 12 }">
-                                    <a-textarea v-model:value="achievementDescription" />
-                                </a-form-item>
-                                <a-form-item label="Skiriami patirties taškai" :label-col="{ span: 7 }"
-                                    :wrapper-col="{ span: 12 }">
-                                    <a-input-number v-model:value="achievementRewardXP" />
-                                </a-form-item>
-                            </a-form> -->
-                        </a-modal>
-                    </div>
                 </div>
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg flex flex-col">
                     <div class="p-4 flex justify-center">
@@ -161,33 +143,6 @@ onMounted(() => {
 // const triggerPagination = (page) => {
 //   router.get('/achievements', { page });
 // };
-const visible = ref(false);
-const achievementTitle = ref('');
-const achievementDescription = ref('');
-const achievementRewardXP = ref();
-const showModal = () => {
-  visible.value = true;
-};
-const handleOk = () => {
-  router.post(
-    '/achievementAdd',
-    {
-      title: achievementTitle.value,
-      description: achievementDescription.value,
-      rewardXP: achievementRewardXP.value,
-    },
-    {
-      preserveScroll: true,
-      onSuccess: () => message.success('Pasiekimas sėkmingai pridėtas'),
-      onError: () => message.error('Klaida pridedant pasiekimą'),
-    },
-  );
-  achievementTitle.value = '';
-  achievementDescription.value = '';
-  achievementRewardXP.value = 0;
-  editingList.value.push(false);
-  visible.value = false;
-};
 const confirm = (id) => {
   router.post(
     '/userDelete/',
@@ -196,8 +151,8 @@ const confirm = (id) => {
     },
     {
       preserveScroll: true,
-      onSuccess: () => message.success('Pasiekimas pašalintas sėkmingai'),
-      onError: () => message.error('Klaida pašalinant pasiekimą'),
+      onSuccess: () => message.success('Naudotojas pašalintas sėkmingai'),
+      onError: () => message.error('Klaida pašalinant naudotoją'),
     },
   );
 };
@@ -215,8 +170,8 @@ const handleEdit = (username, email, xp, id, index) => {
     },
     {
       preserveScroll: true,
-      onSuccess: () => message.success('Pasiekimas sėkmingai paredaguotas'),
-      onError: () => message.error('Klaida redaguojant pasiekimą'),
+      onSuccess: () => message.success('Naudotojas sėkmingai paredaguotas'),
+      onError: () => message.error('Klaida redaguojant naudotoją'),
     },
   );
   editingList.value[index] = false;

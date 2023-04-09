@@ -81,6 +81,9 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('CharacterItems')" :active="route().current('CharacterItems')">
                                     Personažo daiktų valdymas
                                 </NavLink>
+                                <NavLink :href="route('Questions')" :active="route().current('Questions')">
+                                    Klausimų valdymas
+                                </NavLink>
                             </div>
                         </div>
 

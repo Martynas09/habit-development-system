@@ -14,10 +14,11 @@ class Reflection_questionFactory extends Factory
      *
      * @return array<string, mixed>
      */
+    private $sequence = 0;
     public function definition()
     {
         return [
-            'number' => $this->faker->numberBetween(1, 10),
+            'number' => ++$this->sequence,
             'content' => $this->faker->word,
             'required' => $this->faker->boolean(),
         ];

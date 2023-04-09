@@ -59,7 +59,7 @@ class DatabaseSeeder extends Seeder
          ]);
         \App\Models\User::factory(15)->create();
         \App\Models\Reflection_question::factory(10)->create();
-        \App\Models\Reflection_answer::factory(100)->create();
+        \App\Models\Reflection_answer::factory(30)->create();
         \App\Models\Achievement::factory(10)->create();
         \App\Models\User_achievement::factory(15)->create();
 
