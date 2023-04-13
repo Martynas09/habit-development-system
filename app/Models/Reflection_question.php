@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Reflection_question extends Model
 {
+    use HasFactory;
+    
     public function answers()
     {
         return $this->hasMany(Reflection_answer::class, 'fk_question', 'id');

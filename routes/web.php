@@ -10,6 +10,7 @@ use App\Http\Controllers\JournalController;
 use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\CharacterController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -95,6 +96,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/noteDelete', [JournalController::class, 'deleteNote']);
     Route::post('/noteEdit', [JournalController::class, 'editNote']);
 });
+//REPORT ROUTES
+Route::middleware('auth')->group(function () {
+    Route::get('/report', [ReportController::class, 'showReport'])->name('Report');
+});
+//REFLECTION ROUTES
+Route::middleware('auth')->group(function () {
+    Route::get('/reflection', [JournalController::class, 'showReflection'])->name('Reflection');
+});
 
 //ADMIN ROUTES
 
@@ -126,6 +135,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/reflectionQuestionEdit', [QuestionController::class, 'editReflectionQuestion']);
     Route::post('/reflectionQuestionDelete', [QuestionController::class, 'deleteReflectionQuestion']);
     Route::post('/reflectionQuestionAdd', [QuestionController::class, 'addReflectionQuestion']);
+    Route::post('/reflectionAnswerEdit', [QuestionController::class, 'editReflectionAnswer']);
+    Route::post('/reflectionAnswerDelete', [QuestionController::class, 'deleteReflectionAnswer']);
 });
 
 

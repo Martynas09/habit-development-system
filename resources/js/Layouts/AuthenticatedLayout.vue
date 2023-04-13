@@ -66,12 +66,12 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('Journal')" :active="route().current('Journal')">
                                     Žurnalas
                                 </NavLink>
+                                <NavLink :href="route('Report')" :active="route().current('Report')">
+                                    Ataskaita
+                                </NavLink>
                             </div>
                              <!-- Navigation Links Admin-->
                              <div v-if="$page.props.auth.user.is_admin" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Pagrindinis
-                                </NavLink>
                                 <NavLink :href="route('Achievements')" :active="route().current('Achievements')">
                                     Pasiekimų valdymas
                                 </NavLink>

@@ -144,7 +144,8 @@
                 </a-form-item>
                 <!-- Įpročių forma -->
                 <a-form ref="formRef" name="dynamic_form_item" :model="dynamicValidateForm">
-                  <div class="pl-6 pt-3"><a-form-item style="margin-top:0px;margin-bottom:0px" name="habit"
+                  <div class="pl-6 pt-3">
+                    <a-form-item style="margin-top:0px;margin-bottom:0px" name="habit"
                       label="4. Įpročiai kuriuos ugdysite:" :rules="[{ required: true }]"></a-form-item></div>
                   <div class="pl-4">
                     <a-form-item v-for="(habit, index) in dynamicValidateForm.habits" :key="habit.key"

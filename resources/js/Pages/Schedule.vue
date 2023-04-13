@@ -66,12 +66,10 @@
                 </template>
               </a-calendar>
             </a-config-provider>
-            <!-- <a-modal v-model:visible="visible" :title='text' okText="Uždaryti" @ok="handleOk">
-                <p>Atlikimo laikas: {{ time }}</p>
-                <p>Užduotis {{ status }}</p>
-                <template #footer>
-                </template>
-              </a-modal> -->
+            <a-modal v-model:visible="visible" title='Refleksija' okText="Atlikti" cancelText="Priminti vėliau"
+              @ok="handleOk" @cancel="handleCancel" :closable="false" :maskClosable="false">
+              Praėjo savaitė laiko nuo paskutinės refleksijos. Ar norite atlikti refleksiją?
+            </a-modal>
           </div>
         </div>
       </div>
@@ -80,7 +78,9 @@
   </AuthenticatedLayout>
 </template>
 <script setup>
-import { Head, Link, router } from '@inertiajs/vue3';
+import {
+  Head, Link, router,
+} from '@inertiajs/vue3';
 import { HomeOutlined, CalendarOutlined } from '@ant-design/icons-vue';
 import { ref, onMounted } from 'vue';
 import dayjs from 'dayjs';
@@ -89,7 +89,7 @@ import ltLT from 'ant-design-vue/es/locale/lt_LT';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import 'dayjs/locale/lt';
 
-const props = defineProps({ plan: Object, tasks: Object });
+const props = defineProps({ plan: Object, tasks: Object, oneWeekPassed: Boolean });
 const value = ref();
 const starttime = ref();
 const endtime = ref();
@@ -108,7 +108,18 @@ async function getapi(url) {
 }
 onMounted(async () => {
   await getapi('https://iq.orm.ovh/');
-  console.log(props.tasks);
+  const cancelTimestamp = parseInt(localStorage.getItem('cancelTimestamp'), 10);
+  if (!isNaN(cancelTimestamp)) {
+    const now = Date.now();
+    const timeDiff = now - cancelTimestamp;
+    const fifteenMinutesInMs = 15 * 60 * 1000;
+    if (timeDiff >= fifteenMinutesInMs) {
+      visible.value = true;
+      localStorage.removeItem('cancelTimestamp');
+    }
+  } else {
+    visible.value = true;
+  }
 });
 
 function getListData(current) {
@@ -160,9 +171,15 @@ function handleClick(item) {
     visible.value = false;
   }
 }
-// const handleOk = () => {
-//   visible.value = false;
-// };
+const handleOk = () => {
+  visible.value = false;
+  router.visit('dashboard');
+};
+const handleCancel = () => {
+  visible.value = false;
+  const timestamp = Date.now();
+  localStorage.setItem('cancelTimestamp', timestamp);
+};
 function getMonthData(current) {
   let total = 0;
   let done = 0;

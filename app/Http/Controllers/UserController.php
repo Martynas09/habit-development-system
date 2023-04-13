@@ -10,9 +10,9 @@ class UserController extends Controller
 {
     public function showLeaderboard()
     {
-        $top10 = User::orderBy('xp', 'desc')->take(10)->get();
+        $top10 = User::where('is_admin', 0)->orderBy('xp', 'desc')->take(10)->get();
         $currentUserXP = auth()->user()->xp;
-        $rank = User::where('xp', '>', $currentUserXP)->count() + 1;
+        $rank = User::where('is_admin', 0)->where('xp', '>', $currentUserXP)->count() + 1;
         $user=User::where('id', auth()->user()->id)->first();
         return Inertia::render('Leaderboard', ['top10' => $top10, 'rank' => $rank, 'user' => $user]);
     }
