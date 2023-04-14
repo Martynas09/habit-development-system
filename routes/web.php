@@ -11,6 +11,7 @@ use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\CharacterController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ReflectionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -59,6 +60,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/planedit/{id}', [PlanController::class, 'showPlanEdit'])->name('Plan.PlanEditView');
     Route::post('/planedit/{id}', [PlanController::class, 'editPlan'])->name('Plan.PlanEditView');
     Route::post('/planDelete/{id}', [PlanController::class, 'deletePlan']);
+    Route::get('/plans/recommended', [PlanController::class, 'showRecommended'])->name('Plan.RecommendedView');
+    Route::post('/plans/recommended', [PlanController::class, 'selectRecommended']);
+
 });
 
 //CHALLENGE ROUTES
@@ -102,7 +106,8 @@ Route::middleware('auth')->group(function () {
 });
 //REFLECTION ROUTES
 Route::middleware('auth')->group(function () {
-    Route::get('/reflection', [JournalController::class, 'showReflection'])->name('Reflection');
+    Route::get('/reflection', [ReflectionController::class, 'showReflection'])->name('Reflection');
+    Route::post('/reflection', [ReflectionController::class, 'reflectionFinished'])->name('Reflection');
 });
 
 //ADMIN ROUTES

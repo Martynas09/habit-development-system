@@ -66,7 +66,7 @@
                 </template>
               </a-calendar>
             </a-config-provider>
-            <a-modal v-model:visible="visible" title='Refleksija' okText="Atlikti" cancelText="Priminti vėliau"
+            <a-modal v-model:visible="visibleReflection" title='Refleksija' okText="Atlikti" cancelText="Priminti vėliau"
               @ok="handleOk" @cancel="handleCancel" :closable="false" :maskClosable="false">
               Praėjo savaitė laiko nuo paskutinės refleksijos. Ar norite atlikti refleksiją?
             </a-modal>
@@ -96,6 +96,7 @@ const endtime = ref();
 const text = ref();
 const status = ref();
 const visible = ref(false);
+const visibleReflection = ref(false);
 const taskID = ref();
 
 // const disabledDate = (current) => current && current < dayjs().endOf('day');
@@ -109,16 +110,18 @@ async function getapi(url) {
 onMounted(async () => {
   await getapi('https://iq.orm.ovh/');
   const cancelTimestamp = parseInt(localStorage.getItem('cancelTimestamp'), 10);
-  if (!isNaN(cancelTimestamp)) {
-    const now = Date.now();
-    const timeDiff = now - cancelTimestamp;
-    const fifteenMinutesInMs = 15 * 60 * 1000;
-    if (timeDiff >= fifteenMinutesInMs) {
-      visible.value = true;
-      localStorage.removeItem('cancelTimestamp');
+  if (props.oneWeekPassed === true) {
+    if (!isNaN(cancelTimestamp)) {
+      const now = Date.now();
+      const timeDiff = now - cancelTimestamp;
+      const fifteenMinutesInMs = 15 * 60 * 1000;
+      if (timeDiff >= fifteenMinutesInMs) {
+        visibleReflection.value = true;
+        localStorage.removeItem('cancelTimestamp');
+      }
+    } else {
+      visibleReflection.value = true;
     }
-  } else {
-    visible.value = true;
   }
 });
 
@@ -172,11 +175,11 @@ function handleClick(item) {
   }
 }
 const handleOk = () => {
-  visible.value = false;
-  router.visit('dashboard');
+  visibleReflection.value = false;
+  router.visit('reflection');
 };
 const handleCancel = () => {
-  visible.value = false;
+  visibleReflection.value = false;
   const timestamp = Date.now();
   localStorage.setItem('cancelTimestamp', timestamp);
 };

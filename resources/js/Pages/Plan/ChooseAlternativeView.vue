@@ -58,7 +58,7 @@
                                 <li><plus-square-two-tone class="pr-3" />Pateikiamas siūlomų planų sąrašas, pagrįstas naudotojų atsiliepimais ir istoriniais duomenimis.</li>
                             </ul>
                             <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                                <Link>
+                                <Link :href="route('Plan.RecommendedView')">
                                 <a-button type="primary">Pasirinkti</a-button>
                                 </Link>
                             </div>

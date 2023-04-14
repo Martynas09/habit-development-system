@@ -180,7 +180,7 @@ class PlanController extends Controller
                 $reminders = true;
             }
             $title = $task->getTask;
-            if (!in_array($title, $tasks)) {
+            if ($title->title !== "Refleksija" && !in_array($title, $tasks)) {
                 $tasks[] = $task->getTask;
             }
         }
@@ -213,7 +213,8 @@ class PlanController extends Controller
             }
             if (!$existingTask) {
                 // Add task to weekday array
-                $tasksByWeekday[$weekday][] = $task;
+                if ($task->getTask->title !== "Refleksija")
+                    $tasksByWeekday[$weekday][] = $task;
             }
         }
 
@@ -411,5 +412,90 @@ class PlanController extends Controller
         $plan->getPrizes()->delete();
         $plan->delete();
         return Inertia::render('Plan/PlanListView');
+    }
+    public function showRecommended()
+    {
+        $plans = Plan::where('fk_user', 2)->get();
+        return inertia::render('Plan/RecommendedView', [
+            'plans' => $plans
+        ]);
+    }
+    public function selectRecommended(Request $request)
+    {
+        $goalsArray = [];
+        $habitsArray = [];
+        $tasksArray = [];
+        $originalPlan = Plan::find($request->id);
+        dd($originalPlan->getPrizes);
+        $newPlan = new Plan;
+        $newPlan->name = $originalPlan->title;
+        $newPlan->active = 1;
+        $newPlan->color = $originalPlan->color;
+        $newPlan->fk_user = auth()->user()->id;
+        $newPlan->save();
+        //TASKS GOALS HABITS PRIZES plan_tasks plan_goals plan_habits reminders
+
+        //tasks plan_tasks reminders
+        foreach ($originalPlan->getTasks as $task) {
+            $newTask = new Task;
+            $newTask->title = $task->title;
+            $newTask->duration = $task->duration;
+            $newTask->save();
+            $tasksArray[$task->id] = $newTask->id;
+            foreach ($task->getTask as $planTask) {
+                $newReminder = new Reminder();
+                $newReminder->remind_time = $planTask->execution_date;
+                $newReminder->save();
+                $newPlanTask = new Plan_task;
+                $newPlanTask->execution_date = $planTask->execution_date;
+                $newPlanTask->is_done = 0;
+                $newPlanTask->fk_task = $newTask->id;
+                $newPlanTask->fk_plan = $newPlan->id;
+                $newPlanTask->fk_reminder = $newReminder->id;
+                $newPlanTask->save();
+            }
+        }
+        //goals and plan_goals
+        foreach($originalPlan->getPlanGoals as $plangoals){
+            $newGoal= new Goal();
+            $newGoal->title=$plangoals->goals->title;
+            $newGoal->status='in progress';
+            $newGoal->fk_user=auth()->user()->id;
+            $newGoal->save();
+            $newPlanGoal= new Plan_goal();
+            $newPlanGoal->fk_plan=$newPlan->id;
+            $newPlanGoal->fk_goal=$newGoal->id;
+            $newPlanGoal->save();
+            $goalsArray[$plangoals->goals->id]=$newGoal->id;
+        }
+        //habits and plan_habits
+        foreach($originalPlan->getPlanHabits as $planhabits){
+            $newHabit= new Habit();
+            $newHabit->title=$planhabits->habits->title;
+            $newHabit->fk_user=auth()->user()->id;
+            $newHabit->save();
+            $newPlanHabit= new Plan_habit();
+            $newPlanHabit->fk_plan=$newPlan->id;
+            $newPlanHabit->fk_habit=$newHabit->id;
+            $newPlanHabit->save();
+            $habitsArray[$planhabits->habits->id]=$newHabit->id;
+        }
+        //prizes
+        foreach($originalPlan->getPrizes as $prize){
+            $newPrize = new Prize;
+            $newPrize->title = $prize->title;
+            $newPrize->category = $prize->category;
+            if($prize->category=='task'){
+                $newPrize->fk_task=$tasksArray[$prize->fk_task];
+            }
+            if($prize->category=='goal'){
+                $newPrize->fk_goal=$goalsArray[$prize->fk_goal];
+            }
+            if($prize->category=='habit'){
+                $newPrize->fk_habit=$habitsArray[$prize->fk_habit];
+            }
+            $newPrize->fk_plan=$newPlan->id;
+            $newPrize->save();
+        }
     }
 }
