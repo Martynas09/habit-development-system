@@ -47,20 +47,17 @@
       </div>
     </div>
     <a-modal v-model:visible="visible" title="" footer="" :closable="false" :maskClosable="false">
-              <div class="flex flex-col items-center justify-center p-2">
-                <check-circle-filled style="font-size: 40px; color: #52c41a;" />
-                <p class="mt-2">Apklausa baigta</p>
-                <Link :href="route('Schedule')">
-                <a-button type="primary" class="mt-4">Peržiūrėti
-                  sugeneruotą planą</a-button>
-                </Link>
-              </div>
-            </a-modal>
+      <div class="flex flex-col items-center justify-center p-2">
+        <check-circle-filled style="font-size: 40px; color: #52c41a;" />
+        <p class="mt-2">Apklausa baigta</p>
+        <a-button @click="handleSubmit" type="primary" class="mt-4">Sugeneruoti planą</a-button>
+      </div>
+    </a-modal>
 
   </AuthenticatedLayout>
 </template>
 <script setup>
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import {
   ReconciliationOutlined, HomeOutlined, GoldOutlined, CheckCircleFilled,
 } from '@ant-design/icons-vue';
@@ -75,33 +72,41 @@ const questions = [
   {
     text: 'Kaip dažnai per savaitę mankštinatės?',
     answers: [
-      { text: 'Rečiau nei kartą per savaitę', value: 1 },
-      { text: '1-2 kartus per savaitę', value: 2 },
-      { text: '3-4 kartus per savaitę ir daugiau', value: 3 },
+      { text: 'Rečiau nei kartą per savaitę', value: -1 },
+      { text: '1-2 kartus per savaitę', value: 0 },
+      { text: '3-4 kartus per savaitę ir daugiau', value: 1 },
     ],
   },
   {
     text: 'Kaip dažnai valgote vaisius ir daržoves?',
     answers: [
-      { text: 'Retai arba niekada', value: 1 },
-      { text: '1-2 kartus per dieną', value: 2 },
-      { text: '3-4 kartus per dieną', value: 3 },
+      { text: 'Retai arba niekada', value: -1 },
+      { text: '1-2 kartus per dieną', value: 0 },
+      { text: '3-4 kartus per dieną', value: 1 },
     ],
   },
   {
     text: 'Kaip dažnai užsiimate veikla, kuri jums teikia džiaugsmo ar atpalaiduoja, pavyzdžiui, hobiu ar meditacija?',
     answers: [
-      { text: 'Retai arba niekada', value: 1 },
-      { text: '1-2 kartus per savaitę', value: 2 },
-      { text: '3 ar daugiau kartų per savaitę', value: 3 },
+      { text: 'Retai arba niekada', value: -1 },
+      { text: '1-2 kartus per savaitę', value: 0 },
+      { text: '3 ar daugiau kartų per savaitę', value: 1 },
     ],
   },
   {
     text: 'Kaip dažnai dalyvaujate socialinėje veikloje su draugais ar šeima?',
     answers: [
-      { text: 'Retai arba niekada', value: 1 },
-      { text: '1-2 kartus per savaitę', value: 2 },
-      { text: '3 ar daugiau kartų per savaitę', value: 3 },
+      { text: 'Retai arba niekada', value: -1 },
+      { text: '1-2 kartus per savaitę', value: 0 },
+      { text: '3 ar daugiau kartų per savaitę', value: 1 },
+    ],
+  },
+  {
+    text: 'Kaip dažnai dalyvaujate socialinėje veikloje su draugais ar šeima?',
+    answers: [
+      { text: 'Retai arba niekada', value: -1 },
+      { text: '1-2 kartus per savaitę', value: 0 },
+      { text: '3 ar daugiau kartų per savaitę', value: 1 },
     ],
   },
 ];
@@ -111,6 +116,17 @@ const nextQuestion = () => {
   } else {
     currentQuestionIndex.value += 1;
   }
+};
+const handleSubmit = () => {
+  router.post(
+    '/plans/questionnaire',
+    {
+      selectedAnswerValue,
+    },
+    {
+      preserveScroll: true,
+    },
+  );
 };
 </script>
 <style></style>

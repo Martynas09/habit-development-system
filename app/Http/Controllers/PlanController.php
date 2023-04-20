@@ -15,6 +15,8 @@ use App\Models\Plan_habit;
 use App\Models\Reminder;
 use DateTimeImmutable;
 use DateInterval;
+use Illuminate\Support\Facades\Redirect;
+use Carbon\Carbon;
 
 class PlanController extends Controller
 {
@@ -392,9 +394,9 @@ class PlanController extends Controller
 
         return Inertia::render('Plan/PlanEditView');
     }
-    public function deletePlan($id)
+    public function deletePlan(Request $request)
     {
-        $plan = Plan::find($id);
+        $plan = Plan::find($request->id);
         //deleting all reminders
         foreach ($plan->getTasks as $task) {
             if ($task->fk_reminder != null) {
@@ -411,7 +413,6 @@ class PlanController extends Controller
         $plan->getPlanHabits()->delete();
         $plan->getPrizes()->delete();
         $plan->delete();
-        return Inertia::render('Plan/PlanListView');
     }
     public function showRecommended()
     {
@@ -425,24 +426,27 @@ class PlanController extends Controller
         $goalsArray = [];
         $habitsArray = [];
         $tasksArray = [];
+        $tempTaskArray = [];
         $originalPlan = Plan::find($request->id);
-        dd($originalPlan->getPrizes);
         $newPlan = new Plan;
-        $newPlan->name = $originalPlan->title;
+        $newPlan->title = $originalPlan->title;
         $newPlan->active = 1;
         $newPlan->color = $originalPlan->color;
         $newPlan->fk_user = auth()->user()->id;
         $newPlan->save();
-        //TASKS GOALS HABITS PRIZES plan_tasks plan_goals plan_habits reminders
 
-        //tasks plan_tasks reminders
         foreach ($originalPlan->getTasks as $task) {
+            $tempTaskArray[] = $task->getTask;
+        }
+        $tasks = array_unique($tempTaskArray);
+        //tasks plan_tasks reminders
+        foreach ($tasks as $task) {
             $newTask = new Task;
             $newTask->title = $task->title;
             $newTask->duration = $task->duration;
             $newTask->save();
             $tasksArray[$task->id] = $newTask->id;
-            foreach ($task->getTask as $planTask) {
+            foreach ($task->getPlanTasks as $planTask) {
                 $newReminder = new Reminder();
                 $newReminder->remind_time = $planTask->execution_date;
                 $newReminder->save();
@@ -456,46 +460,272 @@ class PlanController extends Controller
             }
         }
         //goals and plan_goals
-        foreach($originalPlan->getPlanGoals as $plangoals){
-            $newGoal= new Goal();
-            $newGoal->title=$plangoals->goals->title;
-            $newGoal->status='in progress';
-            $newGoal->fk_user=auth()->user()->id;
+        foreach ($originalPlan->getPlanGoals as $plangoals) {
+            $newGoal = new Goal();
+            $newGoal->title = $plangoals->goals->title;
+            $newGoal->status = 'in progress';
+            $newGoal->fk_user = auth()->user()->id;
             $newGoal->save();
-            $newPlanGoal= new Plan_goal();
-            $newPlanGoal->fk_plan=$newPlan->id;
-            $newPlanGoal->fk_goal=$newGoal->id;
+            $newPlanGoal = new Plan_goal();
+            $newPlanGoal->fk_plan = $newPlan->id;
+            $newPlanGoal->fk_goal = $newGoal->id;
             $newPlanGoal->save();
-            $goalsArray[$plangoals->goals->id]=$newGoal->id;
+            $goalsArray[$plangoals->goals->id] = $newGoal->id;
         }
         //habits and plan_habits
-        foreach($originalPlan->getPlanHabits as $planhabits){
-            $newHabit= new Habit();
-            $newHabit->title=$planhabits->habits->title;
-            $newHabit->fk_user=auth()->user()->id;
+        foreach ($originalPlan->getPlanHabits as $planhabits) {
+            $newHabit = new Habit();
+            $newHabit->title = $planhabits->habits->title;
+            $newHabit->fk_user = auth()->user()->id;
             $newHabit->save();
-            $newPlanHabit= new Plan_habit();
-            $newPlanHabit->fk_plan=$newPlan->id;
-            $newPlanHabit->fk_habit=$newHabit->id;
+            $newPlanHabit = new Plan_habit();
+            $newPlanHabit->fk_plan = $newPlan->id;
+            $newPlanHabit->fk_habit = $newHabit->id;
             $newPlanHabit->save();
-            $habitsArray[$planhabits->habits->id]=$newHabit->id;
+            $habitsArray[$planhabits->habits->id] = $newHabit->id;
         }
         //prizes
-        foreach($originalPlan->getPrizes as $prize){
+        foreach ($originalPlan->getPrizes as $prize) {
             $newPrize = new Prize;
             $newPrize->title = $prize->title;
             $newPrize->category = $prize->category;
-            if($prize->category=='task'){
-                $newPrize->fk_task=$tasksArray[$prize->fk_task];
+            if ($prize->category == 'task') {
+                $newPrize->fk_task = $tasksArray[$prize->fk_task];
             }
-            if($prize->category=='goal'){
-                $newPrize->fk_goal=$goalsArray[$prize->fk_goal];
+            if ($prize->category == 'goal') {
+                $newPrize->fk_goal = $goalsArray[$prize->fk_goal];
             }
-            if($prize->category=='habit'){
-                $newPrize->fk_habit=$habitsArray[$prize->fk_habit];
+            if ($prize->category == 'habit') {
+                $newPrize->fk_habit = $habitsArray[$prize->fk_habit];
             }
-            $newPrize->fk_plan=$newPlan->id;
+            $newPrize->fk_plan = $newPlan->id;
             $newPrize->save();
         }
+        return Redirect::to('/planedit/' . $newPlan->id);
+    }
+    public function questionnaireFinished(Request $request)
+    {
+        $plan = new Plan();
+        $plan->fk_user = auth()->user()->id;
+        $plan->title = 'Pavadinimas';
+        $plan->color = '#fff1b8';
+        $plan->active = 1;
+        $plan->save();
+        //first answer
+        if ($request->selectedAnswerValue['_value'][0] == -1) {
+            $newTask = new Task();
+            $newTask->title = 'Pirmas atsakymas';
+            $newTask->duration = 30;
+            $newTask->save();
+
+            $newPlanTask = new Plan_task();
+            $newPlanTask->execution_date = Carbon::now()->addDays(1);
+            $newPlanTask->is_done = 0;
+            $newPlanTask->fk_reminder = null;
+            $newPlanTask->fk_task = $newTask->id;
+            $newPlanTask->fk_plan = $plan->id;
+            $newPlanTask->save();
+
+            $newGoal = new Goal();
+            $newGoal->title = 'Pirmas atsakymas';
+            $newGoal->status = 'in progress';
+            $newGoal->fk_user = auth()->user()->id;
+            $newGoal->save();
+
+            $newPlanGoal = new Plan_goal();
+            $newPlanGoal->fk_plan = $plan->id;
+            $newPlanGoal->fk_goal = $newGoal->id;
+            $newPlanGoal->save();
+
+            $newHabit = new Habit();
+            $newHabit->title = 'Pirmas atsakymas';
+            $newHabit->fk_user = auth()->user()->id;
+            $newHabit->save();
+
+            $newPlanHabit = new Plan_habit();
+            $newPlanHabit->fk_plan = $plan->id;
+            $newPlanHabit->fk_habit = $newHabit->id;
+            $newPlanHabit->save();
+
+            $newPrize = new Prize();
+            $newPrize->title = 'Pirmas atsakymas';
+            $newPrize->category = 'task';
+            $newPrize->fk_task = $newTask->id;
+            $newPrize->fk_plan = $plan->id;
+            $newPrize->save();
+        }
+        //second answer
+        if ($request->selectedAnswerValue['_value'][1] == -1) {
+            $newTask = new Task();
+            $newTask->title = 'Antras atsakymas';
+            $newTask->duration = 30;
+            $newTask->save();
+
+            $newPlanTask = new Plan_task();
+            $newPlanTask->execution_date = Carbon::now()->addDays(1);
+            $newPlanTask->is_done = 0;
+            $newPlanTask->fk_reminder = null;
+            $newPlanTask->fk_task = $newTask->id;
+            $newPlanTask->fk_plan = $plan->id;
+            $newPlanTask->save();
+
+            $newGoal = new Goal();
+            $newGoal->title = 'Antras atsakymas';
+            $newGoal->status = 'in progress';
+            $newGoal->fk_user = auth()->user()->id;
+            $newGoal->save();
+
+            $newPlanGoal = new Plan_goal();
+            $newPlanGoal->fk_plan = $plan->id;
+            $newPlanGoal->fk_goal = $newGoal->id;
+            $newPlanGoal->save();
+
+            $newHabit = new Habit();
+            $newHabit->title = 'Antras atsakymas';
+            $newHabit->fk_user = auth()->user()->id;
+            $newHabit->save();
+
+            $newPlanHabit = new Plan_habit();
+            $newPlanHabit->fk_plan = $plan->id;
+            $newPlanHabit->fk_habit = $newHabit->id;
+            $newPlanHabit->save();
+
+            $newPrize = new Prize();
+            $newPrize->title = 'Antras atsakymas';
+            $newPrize->category = 'task';
+            $newPrize->fk_task = $newTask->id;
+            $newPrize->fk_plan = $plan->id;
+            $newPrize->save();
+        }
+        //third answer
+        if ($request->selectedAnswerValue['_value'][2] == -1) {
+            $newTask = new Task();
+            $newTask->title = 'Trečias atsakymas';
+            $newTask->duration = 30;
+            $newTask->save();
+
+            $newPlanTask = new Plan_task();
+            $newPlanTask->execution_date = Carbon::now()->addDays(1);
+            $newPlanTask->is_done = 0;
+            $newPlanTask->fk_reminder = null;
+            $newPlanTask->fk_task = $newTask->id;
+            $newPlanTask->fk_plan = $plan->id;
+            $newPlanTask->save();
+
+            $newGoal = new Goal();
+            $newGoal->title = 'Trečias atsakymas';
+            $newGoal->status = 'in progress';
+            $newGoal->fk_user = auth()->user()->id;
+            $newGoal->save();
+
+            $newPlanGoal = new Plan_goal();
+            $newPlanGoal->fk_plan = $plan->id;
+            $newPlanGoal->fk_goal = $newGoal->id;
+            $newPlanGoal->save();
+
+            $newHabit = new Habit();
+            $newHabit->title = 'Trečias atsakymas';
+            $newHabit->fk_user = auth()->user()->id;
+            $newHabit->save();
+
+            $newPlanHabit = new Plan_habit();
+            $newPlanHabit->fk_plan = $plan->id;
+            $newPlanHabit->fk_habit = $newHabit->id;
+            $newPlanHabit->save();
+
+            $newPrize = new Prize();
+            $newPrize->title = 'Trečias atsakymas';
+            $newPrize->category = 'task';
+            $newPrize->fk_task = $newTask->id;
+            $newPrize->fk_plan = $plan->id;
+            $newPrize->save();
+        }
+        //fourth answer
+        if ($request->selectedAnswerValue['_value'][3] == -1) {
+            $newTask = new Task();
+            $newTask->title = 'Ketvirtas atsakymas';
+            $newTask->duration = 30;
+            $newTask->save();
+
+            $newPlanTask = new Plan_task();
+            $newPlanTask->execution_date = Carbon::now()->addDays(1);
+            $newPlanTask->is_done = 0;
+            $newPlanTask->fk_reminder = null;
+            $newPlanTask->fk_task = $newTask->id;
+            $newPlanTask->fk_plan = $plan->id;
+            $newPlanTask->save();
+
+            $newGoal = new Goal();
+            $newGoal->title = 'Ketvirtas atsakymas';
+            $newGoal->status = 'in progress';
+            $newGoal->fk_user = auth()->user()->id;
+            $newGoal->save();
+
+            $newPlanGoal = new Plan_goal();
+            $newPlanGoal->fk_plan = $plan->id;
+            $newPlanGoal->fk_goal = $newGoal->id;
+            $newPlanGoal->save();
+
+            $newHabit = new Habit();
+            $newHabit->title = 'Ketvirtas atsakymas';
+            $newHabit->fk_user = auth()->user()->id;
+            $newHabit->save();
+
+            $newPlanHabit = new Plan_habit();
+            $newPlanHabit->fk_plan = $plan->id;
+            $newPlanHabit->fk_habit = $newHabit->id;
+            $newPlanHabit->save();
+
+            $newPrize = new Prize();
+            $newPrize->title = 'Ketvirtas atsakymas';
+            $newPrize->category = 'task';
+            $newPrize->fk_task = $newTask->id;
+            $newPrize->fk_plan = $plan->id;
+            $newPrize->save();
+        }
+        //fifth answer
+        if ($request->selectedAnswerValue['_value'][4] == -1) {
+            $newTask = new Task();
+            $newTask->title = 'Penktas atsakymas';
+            $newTask->duration = 30;
+            $newTask->save();
+
+            $newPlanTask = new Plan_task();
+            $newPlanTask->execution_date = Carbon::now()->addDays(1);
+            $newPlanTask->is_done = 0;
+            $newPlanTask->fk_reminder = null;
+            $newPlanTask->fk_task = $newTask->id;
+            $newPlanTask->fk_plan = $plan->id;
+            $newPlanTask->save();
+
+            $newGoal = new Goal();
+            $newGoal->title = 'Penktas atsakymas';
+            $newGoal->status = 'in progress';
+            $newGoal->fk_user = auth()->user()->id;
+            $newGoal->save();
+
+            $newPlanGoal = new Plan_goal();
+            $newPlanGoal->fk_plan = $plan->id;
+            $newPlanGoal->fk_goal = $newGoal->id;
+            $newPlanGoal->save();
+
+            $newHabit = new Habit();
+            $newHabit->title = 'Penktas atsakymas';
+            $newHabit->fk_user = auth()->user()->id;
+            $newHabit->save();
+
+            $newPlanHabit = new Plan_habit();
+            $newPlanHabit->fk_plan = $plan->id;
+            $newPlanHabit->fk_habit = $newHabit->id;
+            $newPlanHabit->save();
+
+            $newPrize = new Prize();
+            $newPrize->title = 'Penktas atsakymas';
+            $newPrize->category = 'task';
+            $newPrize->fk_task = $newTask->id;
+            $newPrize->fk_plan = $plan->id;
+            $newPrize->save();
+        }
+        return Redirect::to('/planedit/' . $plan->id);
     }
 }

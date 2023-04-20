@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Achievement;
+use App\Models\User_achievement;
 
 class AchievementController extends Controller
 {
@@ -33,5 +34,10 @@ class AchievementController extends Controller
         $achievement->description = $request->description;
         $achievement->rewardXP = $request->rewardXP;
         $achievement->save();
+    }
+    public function showUserAchievements()
+    {
+        $achievements= User_achievement::where('fk_user',auth()->user()->id)->get()->load('getAchievement');
+        return Inertia::render('Profile/Achievements', ['achievements' => $achievements]);
     }
 }

@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Task extends Model
 {
     use HasFactory;
+    public function getPlanTasks()
+    {
+        return $this->hasMany(Plan_task::class, 'fk_task', 'id');
+    }
 }

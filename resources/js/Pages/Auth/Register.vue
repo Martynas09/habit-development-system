@@ -1,5 +1,6 @@
 <script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import { message } from 'ant-design-vue';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
@@ -15,9 +16,17 @@ const form = useForm({
 });
 
 const submit = () => {
-  form.post(route('register'), {
-    onFinish: () => form.reset('password', 'password_confirmation'),
-  });
+  form.post(
+    route('register'),
+    {
+      onFinish: () => form.reset('password', 'password_confirmation'),
+    },
+    {
+      preserveScroll: true,
+      onSuccess: () => message.success('Paskyra sukurta sėkmingai'),
+      onError: () => message.error('Klaida sukuriant paskyrą'),
+    },
+  );
 };
 </script>
 

@@ -88,6 +88,7 @@ import { message } from 'ant-design-vue';
 import ltLT from 'ant-design-vue/es/locale/lt_LT';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import 'dayjs/locale/lt';
+import useExperience from '../Composables/useExperience';
 
 const props = defineProps({ plan: Object, tasks: Object, oneWeekPassed: Boolean });
 const value = ref();
@@ -98,7 +99,7 @@ const status = ref();
 const visible = ref(false);
 const visibleReflection = ref(false);
 const taskID = ref();
-
+const { pullXP } = useExperience();
 // const disabledDate = (current) => current && current < dayjs().endOf('day');
 const quote = ref('');
 
@@ -209,7 +210,7 @@ const taskDone = () => {
     },
     {
       preserveScroll: true,
-      onSuccess: () => message.success('Užduotis pažymėta kaip atlikta', 1).then(() => message.info('Gavote 200 patirties taškų!', 2.5)),
+      onSuccess: () => { pullXP(); message.success('Užduotis pažymėta kaip atlikta', 1).then(() => message.info('Gavote 5 patirties taškus!', 2.5)); },
       onError: () => message.error('Klaida pažymėjant užduotį kaip atliktą'),
     },
   );

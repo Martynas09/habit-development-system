@@ -347,7 +347,8 @@
                           :rules="[{ required: true }]"></a-form-item>
                       </div>
                       <a-select v-model:value="prize.receiverTitle" style="width: 200px" placeholder="Pasirinkite">
-                        <a-select-option v-for="habit in dynamicValidateForm.habits" :key="habit.key" :value="habit.value">
+                        <a-select-option v-for="habit in dynamicValidateForm.habits" :key="habit.key"
+                          :value="habit.value">
                           {{ habit.value }}
                         </a-select-option>
                       </a-select>
@@ -389,6 +390,17 @@
                 <a-button v-if="defaultPercent === 100" type="primary" class="mt-4">Peržiūrėti
                   tvarkaraštį</a-button>
                 </Link>
+              </div>
+            </a-modal>
+            <a-modal v-model:visible="visibleQuestions" title="Individualus planas sukurtas" footer="">
+              <div class="flex flex-col items-center justify-center">
+                <h1 class="font-bold text-lg">Prašome pasikeisti:</h1>
+                <ul class="list-disc">
+                  <li>Plano pavadinimą</li>
+                  <li>Plano spalvą</li>
+                  <li>Susidėti užduotis jums tinkamais laikais</li>
+                  <li>Pasirinkti norimus priminimus</li>
+                </ul>
               </div>
             </a-modal>
           </div>
@@ -459,6 +471,7 @@ const removeFromDay = (idx, fatherId, listName) => {
 
 const formRef = ref();
 const visible = ref(false);
+const visibleQuestions = ref(false);
 const defaultPercent = ref(0);
 const progressStatus = ref();
 const newPlanId = ref(0);
@@ -493,41 +506,45 @@ onMounted(() => {
       id: task.id, value: task.title, duration: task.duration, canDelete: false,
     });
   });
-  props.tasksByWeekday.Monday.forEach((task) => {
-    listMonday.value.push({
-      id: task.id, value: task.get_task.title, duration: task.get_task.duration, fatherId: task.get_task.id, time: dayjs(task.execution_date),
+  if (props.plan.title !== 'Pavadinimas' && props.plan.color !== '#fff1b8') {
+    props.tasksByWeekday.Monday.forEach((task) => {
+      listMonday.value.push({
+        id: task.id, value: task.get_task.title, duration: task.get_task.duration, fatherId: task.get_task.id, time: dayjs(task.execution_date),
+      });
     });
-  });
-  props.tasksByWeekday.Tuesday.forEach((task) => {
-    listTuesday.value.push({
-      id: task.id, value: task.get_task.title, duration: task.get_task.duration, fatherId: task.get_task.id, time: dayjs(task.execution_date),
+    props.tasksByWeekday.Tuesday.forEach((task) => {
+      listTuesday.value.push({
+        id: task.id, value: task.get_task.title, duration: task.get_task.duration, fatherId: task.get_task.id, time: dayjs(task.execution_date),
+      });
     });
-  });
-  props.tasksByWeekday.Wednesday.forEach((task) => {
-    listWednesday.value.push({
-      id: task.id, value: task.get_task.title, duration: task.get_task.duration, fatherId: task.get_task.id, time: dayjs(task.execution_date),
+    props.tasksByWeekday.Wednesday.forEach((task) => {
+      listWednesday.value.push({
+        id: task.id, value: task.get_task.title, duration: task.get_task.duration, fatherId: task.get_task.id, time: dayjs(task.execution_date),
+      });
     });
-  });
-  props.tasksByWeekday.Thursday.forEach((task) => {
-    listThursday.value.push({
-      id: task.id, value: task.get_task.title, duration: task.get_task.duration, fatherId: task.get_task.id, time: dayjs(task.execution_date),
+    props.tasksByWeekday.Thursday.forEach((task) => {
+      listThursday.value.push({
+        id: task.id, value: task.get_task.title, duration: task.get_task.duration, fatherId: task.get_task.id, time: dayjs(task.execution_date),
+      });
     });
-  });
-  props.tasksByWeekday.Friday.forEach((task) => {
-    listFriday.value.push({
-      id: task.id, value: task.get_task.title, duration: task.get_task.duration, fatherId: task.get_task.id, time: dayjs(task.execution_date),
+    props.tasksByWeekday.Friday.forEach((task) => {
+      listFriday.value.push({
+        id: task.id, value: task.get_task.title, duration: task.get_task.duration, fatherId: task.get_task.id, time: dayjs(task.execution_date),
+      });
     });
-  });
-  props.tasksByWeekday.Saturday.forEach((task) => {
-    listSaturday.value.push({
-      id: task.id, value: task.get_task.title, duration: task.get_task.duration, fatherId: task.get_task.id, time: dayjs(task.execution_date),
+    props.tasksByWeekday.Saturday.forEach((task) => {
+      listSaturday.value.push({
+        id: task.id, value: task.get_task.title, duration: task.get_task.duration, fatherId: task.get_task.id, time: dayjs(task.execution_date),
+      });
     });
-  });
-  props.tasksByWeekday.Sunday.forEach((task) => {
-    listSunday.value.push({
-      id: task.id, value: task.get_task.title, duration: task.get_task.duration, fatherId: task.get_task.id, time: dayjs(task.execution_date),
+    props.tasksByWeekday.Sunday.forEach((task) => {
+      listSunday.value.push({
+        id: task.id, value: task.get_task.title, duration: task.get_task.duration, fatherId: task.get_task.id, time: dayjs(task.execution_date),
+      });
     });
-  });
+  } else {
+    visibleQuestions.value = true;
+  }
   props.prizes.forEach((prize) => {
     let temp = '';
     let temp2 = '';

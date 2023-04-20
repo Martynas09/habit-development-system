@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Plan;
 use App\Models\Plan_task;
+use App\Models\User;
 use Carbon\Carbon;
 
 class ScheduleController extends Controller
@@ -54,8 +55,12 @@ class ScheduleController extends Controller
     }
     public function taskDone(Request $request)
     {
+        $user = User::where('id', auth()->user()->id)->first();
+        $user->xp += 5;
+        $user->save();
         $task = Plan_task::where('id', $request->id)->first();
         $task->is_done = 1;
         $task->save();
+        
     }
 }

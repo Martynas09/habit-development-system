@@ -46,8 +46,7 @@
                                             }}</span></template>
                                             <template #avatar>
                                                 <img :src="'/storage/' + $page.props.auth.user.avatar"
-                                                    class="rounded-sm border px-1 border-solid border-gray-300 shadow-sm"
-                                                    style="padding-top:1px;padding-bottom:1px">
+                                                   >
                                             </template>
                                             <template #content>
                                                 <div v-if="editingList[index] === false">{{ item.description }}</div>

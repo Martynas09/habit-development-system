@@ -41,6 +41,7 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/getUserXp', [UserController::class, 'getUserXp']);
 //PROFILE ROUTES
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -48,6 +49,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('profile/characterEdit', [CharacterController::class, 'characterShow'])->name('profile.characterEdit');
     Route::post('profile/characterEdit', [CharacterController::class, 'characterEdit'])->name('profile.characterEdit');
+    Route::get('profile/achievements', [AchievementController::class, 'showUserAchievements'])->name('profile.achievements');
 });
 
 //PLAN ROUTES
@@ -55,11 +57,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/plans', [PlanController::class, 'showPlans'])->name('Plan.PlanListView');
     Route::get('/plans/alternatives', [PlanController::class, 'showAlternatives'])->name('Plan.ChooseAlternativeView');
     Route::get('/plans/questionnaire', [PlanController::class, 'showQuestionnaire'])->name('Plan.QuestionnaireView');
+    Route::post('/plans/questionnaire', [PlanController::class, 'questionnaireFinished']);
     Route::get('/plans/custom', [PlanController::class, 'showCustom'])->name('Plan.CustomView');
     Route::post('/plans/custom', [PlanController::class, 'createPlan'])->name('Plan.CustomView');
     Route::get('/planedit/{id}', [PlanController::class, 'showPlanEdit'])->name('Plan.PlanEditView');
     Route::post('/planedit/{id}', [PlanController::class, 'editPlan'])->name('Plan.PlanEditView');
-    Route::post('/planDelete/{id}', [PlanController::class, 'deletePlan']);
+    Route::post('/planDelete', [PlanController::class, 'deletePlan']);
     Route::get('/plans/recommended', [PlanController::class, 'showRecommended'])->name('Plan.RecommendedView');
     Route::post('/plans/recommended', [PlanController::class, 'selectRecommended']);
 

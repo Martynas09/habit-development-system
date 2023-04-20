@@ -41,7 +41,7 @@
                                         <a-button type="primary" class="ml-4"><edit-outlined />Redaguoti</a-button>
                                         </Link>
                                         <a-popconfirm title="Ar tikrai norite pašalinti planą?" ok-text="Taip" cancel-text="Ne"
-                                            @confirm="confirm" @cancel="cancel">
+                                            @confirm="confirm(plan.id)" @cancel="cancel">
                                         <a-button type="danger" class="ml-4"><delete-outlined />Pašalinti</a-button>
                                         </a-popconfirm>
                                     </a-list-item>
@@ -67,19 +67,16 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 const props = defineProps({ plans: Object });
 
-const confirm = () => {
+const confirm = (id) => {
   router.post(
     '/planDelete/',
     {
-      head: headID.value,
-      top: topID.value,
-      bottom: bottomID.value,
-      shoes: shoesID.value,
+      id,
     },
     {
       preserveScroll: true,
-      onSuccess: () => message.success('Personažas atnaujintas sėkmingai'),
-      onError: () => message.error('Klaida atnaujinant personažą'),
+      onSuccess: () => message.success('Planas pašalintas'),
+      onError: () => message.error('Klaida pašalinant planą'),
     },
   );
 };

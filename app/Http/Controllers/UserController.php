@@ -34,4 +34,9 @@ class UserController extends Controller
         $user = User::find($request->id);
         $user->delete();
     }
+    public function getUserXp()
+    {
+        $user = User::where('id', auth()->user()->id)->first();
+        return response()->json($user->xp);
+    }
 }

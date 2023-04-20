@@ -88,7 +88,7 @@ const showingNavigationDropdown = ref(false);
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
-                            <UserStats v-if="!$page.props.auth.user.is_admin" :user="$page.props.auth.user"></UserStats>
+                            <UserStats v-if="!$page.props.auth.user.is_admin"></UserStats>
                             <a-divider v-if="!$page.props.auth.user.is_admin" type="vertical" style="height: 28px;margin:15px;background-color: #d9d9d9" />
                             <!-- Settings Dropdown -->
                             <div class="relative">

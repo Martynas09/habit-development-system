@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Plan_task;
+use App\Models\Plan;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
@@ -11,7 +12,14 @@ class ReportController extends Controller
 {
     public function showReport()
     {
-        $tasks = Plan_task::all();
+        //$tasks = Plan_task::all();
+        $tasks = collect();
+
+        $plan = Plan::where('fk_user', auth()->user()->id)->where('active', '=', 1)->get()->load('getTasks.getTask');
+        foreach ($plan as $planItem) {
+            $tasks = $tasks->merge($planItem->getTasks->load('getTask'));
+        }
+        $tasks = $tasks->where('is_done', 1);
 
         // Initialize an array to hold the task counts for each month
         $taskCounts = array_fill(0, 12, 0);
