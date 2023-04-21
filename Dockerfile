@@ -14,6 +14,9 @@ RUN apt-get update && \
   apt-get install -y curl gnupg2 && \
   curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
 
+# Install MariaDB driver
+RUN pecl install pdo_mysql && docker-php-ext-enable pdo_mysql
+
 # Enable mod_rewrite
 RUN a2enmod rewrite
 
@@ -43,6 +46,8 @@ RUN npm run build
 
 # Create symbolic link
 RUN php artisan storage:link
+
+RUN php artisan key:generate
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
