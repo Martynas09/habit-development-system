@@ -32,7 +32,7 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Pagrindinis
                                 </NavLink>
-                                <NavLink :active="route().current('Plan.PlanListView') || route().current('MyGoals')">
+                                <NavLink :href="''" :active="route().current('Plan.PlanListView') || route().current('MyGoals')">
                                     <a-dropdown>
                                         <span class="ant-dropdown-link" @click.prevent>Mano planai
                                             <DownOutlined />

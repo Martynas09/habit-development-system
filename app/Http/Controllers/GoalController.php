@@ -14,7 +14,7 @@ class GoalController extends Controller
         // $goals = Goal::whereHas('plan_goal.plan', function ($query) {
         //     $query->where('fk_user', auth()->user()->id);
         // })->with('plan_goal.plan')->get();
-        $goals=Goal::where('fk_user', auth()->user()->id)->orderBy('created_at','desc')->paginate(99)->load('plan_goal.plan');
+        $goals=Goal::where('fk_user', auth()->user()->id)->orderBy('created_at','desc')->get()->load('plan_goal.plan');
         return Inertia::render('MyGoals', ['goals' => $goals]);
     }
     public function addGoal(Request $request)

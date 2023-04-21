@@ -60,13 +60,13 @@
                   </div>
                 </template>
                 <template v-if="column.key === 'status'">
-                  <span class="text-red-500" v-if="record.status = 'not in progress'">
+                  <span class="text-red-500" v-if="record.status === 'not in progress'">
                     Nevykdomas
                   </span>
-                  <span class="text-yellow-500" v-else-if="record.status = 'in progress'">
+                  <span class="text-yellow-500" v-else-if="record.status === 'in progress'">
                     Vykdomas
                   </span>
-                  <span class="text-green-500" v-else-if="record.status = 'completed'">
+                  <span class="text-green-500" v-else-if="record.status === 'completed'">
                     Užbaigtas
                   </span>
                 </template>
@@ -130,6 +130,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 const props = defineProps({
   goals: Object,
 });
+
 const columns = [{
   title: 'Pavadinimas',
   dataIndex: 'title',
@@ -157,7 +158,6 @@ const triggerPagination = (page) => {
 };
 onMounted(() => {
   editingList.value = props.goals.map(() => false);
-  console.log(props.goals);
 });
 function formatDate(date) {
   return dayjs(date).format('YYYY-MM-DD');

@@ -61,6 +61,15 @@ class ScheduleController extends Controller
         $task = Plan_task::where('id', $request->id)->first();
         $task->is_done = 1;
         $task->save();
-        
+    }
+    public function isPrize(Request $request){
+        $task = Plan_task::where('id', $request->id)->first()->load('getTask');
+        $plan=Plan::where('id',$task->fk_plan)->first()->load('getPrizes');
+        foreach($plan->getPrizes as $prize){
+            if($prize->fk_task==$task->getTask->id){
+                return response()->json($prize);
+                break;
+            }
+        }
     }
 }

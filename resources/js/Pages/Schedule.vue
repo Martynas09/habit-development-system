@@ -86,6 +86,7 @@ import { ref, onMounted } from 'vue';
 import dayjs from 'dayjs';
 import { message } from 'ant-design-vue';
 import ltLT from 'ant-design-vue/es/locale/lt_LT';
+import axios from 'axios';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import 'dayjs/locale/lt';
 import useExperience from '../Composables/useExperience';
@@ -202,6 +203,19 @@ function getMonthData(current) {
   });
   return [total, done, undone];
 }
+function axijos() {
+  axios.get('/api/isPrize', {
+    params: {
+      id: taskID.value,
+    },
+  })
+    .then((response) => {
+      if (response.data.title !== undefined) { message.success(`Jums priklauso prizas: ${response.data.title}`, 2); }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
 const taskDone = () => {
   router.post(
     'schedule',
@@ -210,11 +224,14 @@ const taskDone = () => {
     },
     {
       preserveScroll: true,
-      onSuccess: () => { pullXP(); message.success('Užduotis pažymėta kaip atlikta', 1).then(() => message.info('Gavote 5 patirties taškus!', 2.5)); },
+      onSuccess: () => {
+        pullXP(); message.success('Užduotis pažymėta kaip atlikta', 1).then(() => message.info('Gavote 5 patirties taškus!', 2.5)); axijos();
+      },
       onError: () => message.error('Klaida pažymėjant užduotį kaip atliktą'),
     },
   );
 };
+
 function handleTaskDone() {
   visible.value = false;
   status.value = 'atlikta';

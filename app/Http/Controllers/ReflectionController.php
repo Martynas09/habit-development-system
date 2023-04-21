@@ -36,6 +36,6 @@ class ReflectionController extends Controller
         $reflection->execution_date = Carbon::now();
         $reflection->is_done = 1;
         $reflection->save();
-        return Redirect::route('schedule');
+        return Redirect::route('Schedule');
     }
 }

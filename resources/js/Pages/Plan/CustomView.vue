@@ -51,8 +51,8 @@
                     <div>
                       <a-form-item v-for="(goal, index) in dynamicValidateForm.goals" :key="goal.key" v-bind="index === 0"
                         :name="['goals', index, 'value']" :rules="{
-                          required: true
-                        }" style="margin-top:0px;margin-bottom:10px">
+                            required: true
+                          }" style="margin-top:0px;margin-bottom:10px">
                         <a-input v-model:value="goal.value" placeholder="Įrašykite tikslą"
                           style="width: 50%; margin-left: 0px" />
                         <minus-circle-two-tone two-tone-color="#ef4444" v-if="dynamicValidateForm.goals.length > 1"
@@ -146,12 +146,13 @@
                 <a-form ref="formRef" name="dynamic_form_item" :model="dynamicValidateForm">
                   <div class="pl-6 pt-3">
                     <a-form-item style="margin-top:0px;margin-bottom:0px" name="habit"
-                      label="4. Įpročiai kuriuos ugdysite:" :rules="[{ required: true }]"></a-form-item></div>
+                      label="4. Įpročiai kuriuos ugdysite:" :rules="[{ required: true }]"></a-form-item>
+                  </div>
                   <div class="pl-4">
                     <a-form-item v-for="(habit, index) in dynamicValidateForm.habits" :key="habit.key"
                       v-bind="index === 0" :name="['habits', index, 'value']" :rules="{
-                        required: true,
-                      }" style="margin-top:0px;margin-bottom:10px">
+                          required: true,
+                        }" style="margin-top:0px;margin-bottom:10px">
                       <a-input v-model:value="habit.value" placeholder="Įrašykite įprotį"
                         style="width: 50%; margin-left: 8px" />
                       <minus-circle-two-tone two-tone-color="#ef4444" v-if="dynamicValidateForm.habits.length > 1"
@@ -348,7 +349,8 @@
                           :rules="[{ required: true }]"></a-form-item>
                       </div>
                       <a-select v-model:value="prize.receiverTitle" style="width: 200px" placeholder="Pasirinkite">
-                        <a-select-option v-for="habit in dynamicValidateForm.habits" :key="habit.key" :value="habit.value">
+                        <a-select-option v-for="habit in dynamicValidateForm.habits" :key="habit.key"
+                          :value="habit.value">
                           {{ habit.value }}
                         </a-select-option>
                       </a-select>
@@ -411,8 +413,11 @@ import {
 import draggable from 'vuedraggable';
 import ltLT from 'ant-design-vue/es/locale/lt_LT';
 import 'dayjs/locale/lt';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
+dayjs.extend(relativeTime);
+dayjs.locale('lt');
 const props = defineProps({ plan_id: Number });
 
 const listTasks = ref([
