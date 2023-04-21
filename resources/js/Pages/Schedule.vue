@@ -32,7 +32,7 @@
               <a-calendar v-model:value="value">
                 <template #dateCellRender="{ current }">
                   <ul class="events">
-                    <li v-for="item in getListData(current)" :key="item.content">
+                    <li v-for="item in   getListData(current)  " :key="item.content">
                       <a-popover trigger="click">
                         <template #title>
                           <span class="font-bold">{{ text }}</span>
@@ -45,17 +45,17 @@
                             class="w-full" @click="handleTaskDone(); taskDone()">Pažymėti atlikta</a-button>
                         </template>
                         <div class="pb-1">
-                          <div class="rounded-sm max-h-[22px] pl-1" :style="{ backgroundColor: item.color }">
-                            <a-badge @click=handleClick(item) :status="item.type"
-                              :text="dayjs(item.time).format('HH:mm') + ' ' + item.content" />
+                          <div class="rounded-sm max-h-[22px] pl-1" :style=" { backgroundColor: item.color } ">
+                            <a-badge @click= handleClick(item)  :status=" item.type "
+                              :text=" dayjs(item.time).format('HH:mm') + ' ' + item.content " />
                           </div>
                         </div>
                       </a-popover>
                     </li>
                   </ul>
                 </template>
-                <template #monthCellRender="{ current }">
-                  <div v-if="getMonthData(current)[0]" class="notes-month">
+                <template #monthCellRender=" { current } ">
+                  <div v-if=" getMonthData(current)[0] " class="notes-month">
                     <p class="text-sm p-0 m-0">Išviso užduočių: {{ getMonthData(current)[0] }}</p>
                     <p class="text-sm p-0 m-0 text-green-600">Atlikta: {{ getMonthData(current)[1] }}</p>
                     <p class="text-sm p-0 m-0 text-red-600">Neatlikta: {{ getMonthData(current)[2] }}</p>
@@ -66,8 +66,9 @@
                 </template>
               </a-calendar>
             </a-config-provider>
-            <a-modal v-model:visible="visibleReflection" title='Refleksija' okText="Atlikti" cancelText="Priminti vėliau"
-              @ok="handleOk" @cancel="handleCancel" :closable="false" :maskClosable="false">
+            <a-modal v-model:visible=" visibleReflection " title='Refleksija' okText="Atlikti"
+              cancelText="Priminti vėliau" @ok=" handleOk " @cancel=" handleCancel " :closable=" false "
+              :maskClosable=" false ">
               Praėjo savaitė laiko nuo paskutinės refleksijos. Ar norite atlikti refleksiją?
             </a-modal>
           </div>
@@ -82,9 +83,9 @@ import {
   Head, Link, router,
 } from '@inertiajs/vue3';
 import { HomeOutlined, CalendarOutlined } from '@ant-design/icons-vue';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, h } from 'vue';
 import dayjs from 'dayjs';
-import { message } from 'ant-design-vue';
+import { message, Modal } from 'ant-design-vue';
 import ltLT from 'ant-design-vue/es/locale/lt_LT';
 import axios from 'axios';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
@@ -210,7 +211,12 @@ function axijos() {
     },
   })
     .then((response) => {
-      if (response.data.title !== undefined) { message.success(`Jums priklauso prizas: ${response.data.title}`, 2); }
+      if (response.data.title !== undefined) {
+        Modal.success({
+          title: 'Priminimas',
+          content: h('div', {}, [h('p', 'Jums priklauso prizas:'), h('p', response.data.title)]),
+        });
+      }
     })
     .catch((error) => {
       console.log(error);
@@ -259,5 +265,4 @@ function handleTaskDone() {
 
 .notes-month section {
   font-size: 28px;
-}
-</style>
+}</style>

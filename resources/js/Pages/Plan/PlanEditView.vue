@@ -423,8 +423,11 @@ import draggable from 'vuedraggable';
 import ltLT from 'ant-design-vue/es/locale/lt_LT';
 import 'dayjs/locale/lt';
 import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
+dayjs.extend(relativeTime);
+dayjs.locale('lt');
 const props = defineProps({
   plan: Object, goals: Array, habits: Array, tasks: Array, tasksByWeekday: Object, prizes: Array, reminders: Boolean,
 });

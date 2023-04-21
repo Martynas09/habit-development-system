@@ -23,7 +23,7 @@ class PlanController extends Controller
     public function showPlans()
     {
         $plans = Plan::where('fk_user', auth()->user()->id)
-            ->whereNotIn('title', ['Iššūkis'])
+            ->whereNotIn('title', ['Iššūkis'])->orderBy('created_at', 'desc')
             ->get();
         return inertia::render('Plan/PlanListView', [
             'plans' => $plans

@@ -15,7 +15,7 @@ RUN apt-get update && \
   curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
 
 # Install MariaDB driver
-RUN pecl install pdo_mysql && docker-php-ext-enable pdo_mysql
+RUN docker-php-ext-install pdo pdo_mysql
 
 # Enable mod_rewrite
 RUN a2enmod rewrite
