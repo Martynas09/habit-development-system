@@ -28,6 +28,63 @@
                 </div>
 
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-4 flex justify-center">
+            <a-table :columns="columns" :data-source="plans" :pagination="false">
+              <template #bodyCell="{ column, record, index }">
+                <template v-if="column.key === 'title'">
+                  <div v-if="editingList[index] === false">{{ record.title }}</div>
+                  <div v-else>
+                    <a-textarea v-model:value="record.title" style="margin-left: 0px;margin-top:0px" />
+                  </div>
+                </template>
+                <template v-if="column.key === 'description'">
+                  <div v-if="editingList[index] === false">{{
+                    record.description }}</div>
+                  <div v-else>
+                    <a-textarea v-model:value="record.description" style="margin-left: 0px;margin-top:0px" />
+                  </div>
+                </template>
+                <template v-if="column.key === 'rewardXP'">
+                  <div v-if="editingList[index] === false">{{ record.rewardXP }} XP</div>
+                  <div v-else class="flex items-center gap-2">
+                    <a-input-number v-model:value="record.rewardXP" style="margin-left: 0px;margin-top:0px;" />XP
+                  </div>
+                </template>
+                <template v-if="column.key === 'created_at'">
+                  <div class="min-w-[78px]">
+                    <span>
+                      {{ formatDate(record.created_at) }}
+                    </span>
+                  </div>
+                </template>
+                <template v-if="column.key === 'action'">
+                  <div class="flex">
+                    <div class="pr-2">
+                      <a-button v-if="editingList[index] === false" @click="editingList[index] = true" type="primary"
+                        shape="circle">
+                        <template #icon>
+                          <edit-outlined />
+                        </template>
+                      </a-button>
+                      <a-button v-else html-type="submit" type="primary" shape="circle"
+                        @click="handleEdit(record.rewardXP, record.description, record.title, record.id, index)"><template
+                          #icon>
+                          <save-outlined />
+                        </template></a-button>
+                    </div>
+                    <a-popconfirm title="Ar tikrai norite pašalinti tikslą?" ok-text="Taip" cancel-text="Ne"
+                      @confirm="confirm(record.id)" @cancel="cancel">
+                      <a-button type="danger" shape="circle">
+                        <template #icon>
+                          <delete-outlined />
+                        </template>
+                      </a-button>
+                    </a-popconfirm>
+                  </div>
+                </template>
+              </template>
+            </a-table>
+          </div>
                     <a-divider style="margin-top:0px;margin-bottom:0px" />
                     <a-list>
                         <template v-for="plan in props.plans" v-bind:key="plan">
@@ -66,6 +123,27 @@ import { message } from 'ant-design-vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 const props = defineProps({ plans: Object });
+
+const columns = [{
+  title: 'Pavadinimas',
+  dataIndex: 'title',
+  key: 'title',
+}, {
+  title: 'Aprašymas',
+  dataIndex: 'description',
+  key: 'description',
+}, {
+  title: 'Skiriami patirties taškai',
+  dataIndex: 'rewardXP',
+  key: 'rewardXP',
+}, {
+  title: 'Sukūrimo data',
+  dataIndex: 'created_at',
+  key: 'created_at',
+}, {
+  title: 'Veiksmai',
+  key: 'action',
+}];
 
 const confirm = (id) => {
   router.post(
