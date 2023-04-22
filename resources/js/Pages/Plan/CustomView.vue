@@ -411,6 +411,7 @@ import {
   onMounted, reactive, ref, onUnmounted,
 } from 'vue';
 import draggable from 'vuedraggable';
+import dayjs from 'dayjs';
 import ltLT from 'ant-design-vue/es/locale/lt_LT';
 import 'dayjs/locale/lt';
 import relativeTime from 'dayjs/plugin/relativeTime';
