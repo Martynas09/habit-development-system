@@ -36,11 +36,12 @@
               <!-- Left side -->
               <a-col :span="12">
                 <a-form ref="formRef" name="dynamic_form_item" :model="dynamicValidateForm"></a-form>
-                <div class="pl-6 pt-4"><a-form-item style="margin-top:0px;margin-bottom:0px" name="title"
-                    label="1. Plano pavadinimas:" :rules="[{ required: true }]"></a-form-item></div>
+                <div class="pl-6 pt-4"><a-form-item style="margin-top:0px;margin-bottom:0px" label="1. Plano pavadinimas:"
+                    :rules="[{ required: true }]"></a-form-item></div>
                 <div class="pl-4">
                   <a-form-item style="margin-top:0px;margin-bottom:10px"><a-input v-model:value="planTitle"
                       placeholder="Įrašykite pavadinimą" style="width: 50%; margin-left: 8px" /></a-form-item>
+                  <span v-if="planTitleError != ''" class="text-red-500 pl-3">{{ planTitleError }}</span>
                 </div>
 
                 <!-- Tikslų forma -->
@@ -50,9 +51,7 @@
                         label="3. Tikslai kurių sieksite:" :rules="[{ required: true }]"></a-form-item></div>
                     <div>
                       <a-form-item v-for="(goal, index) in dynamicValidateForm.goals" :key="goal.key" v-bind="index === 0"
-                        :name="['goals', index, 'value']" :rules="{
-                            required: true
-                          }" style="margin-top:0px;margin-bottom:10px">
+                        :name="['goals', index, 'value']" style="margin-top:0px;margin-bottom:10px">
                         <a-input v-model:value="goal.value" placeholder="Įrašykite tikslą"
                           style="width: 50%; margin-left: 0px" />
                         <minus-circle-two-tone two-tone-color="#ef4444" v-if="dynamicValidateForm.goals.length > 1"
@@ -66,34 +65,39 @@
                       </a-button>
                     </a-form-item>
                   </a-form>
+                  <span v-if="planGoalsError != ''" class="text-red-500">{{ planGoalsError }}</span>
                 </div>
                 <!-- Tikslų formos pabaiga -->
                 <div class="pl-6 pt-4"><a-form-item style="margin-top:0px;margin-bottom:0px" name="tasks"
                     label="5. Užduotys kurias vykdysite:" :rules="[{ required: true }]"></a-form-item></div>
-                <div class="pt-2 px-6 max-w-[630px]">
-                  <div class="border border-zinc-300 min-h-[150px]">
-                    <h3 class="text-center border-b border-zinc-300 font-bold bg-zinc-50">Užduočių sąrašas</h3>
-                    <draggable class="list-group" handle=".handle" itemKey="id" :list="listTasks" :clone="handleClone"
-                      :group="{ name: 'people', pull: 'clone', put: false }" @change="log">
-                      <template #item="{ element, index }">
-                        <div class="list-group-item flex p-1 items-center hover:bg-zinc-50">
-                          <i class="handle px-2"><unordered-list-outlined /></i>
-                          <a-input style="width: 40%" v-model:value="element.value" placeholder="Užduoties pavadinimas" />
-                          <a-input-number style="margin-left: 8px;margin-right: 5px" v-model:value="element.duration"
-                            :min="1" :max="360" placeholder="Trukmė" /> min.
-                          <minus-circle-two-tone v-if="element.canDelete" two-tone-color="#ef4444" class="pl-2"
-                            @click="removeTask(index)" />
-                        </div>
-                      </template>
-                    </draggable>
-                    <div class="pl-2 py-2">
-                      <a-button type="primary" @click="addTask">
-                        <PlusOutlined />
-                        Pridėti užduotį
-                      </a-button>
+                <a-form-item>
+                  <div class="pt-2 px-6 max-w-[630px]">
+                    <div class="border border-zinc-300 min-h-[150px]">
+                      <h3 class="text-center border-b border-zinc-300 font-bold bg-zinc-50">Užduočių sąrašas</h3>
+                      <draggable class="list-group" handle=".handle" itemKey="id" :list="listTasks" :clone="handleClone"
+                        :group="{ name: 'people', pull: 'clone', put: false }" @change="log">
+                        <template #item="{ element, index }">
+                          <div class="list-group-item flex p-1 items-center hover:bg-zinc-50">
+                            <i class="handle px-2"><unordered-list-outlined /></i>
+                            <a-input style="width: 40%" v-model:value="element.value"
+                              placeholder="Užduoties pavadinimas" />
+                            <a-input-number style="margin-left: 8px;margin-right: 5px" v-model:value="element.duration"
+                              :min="1" :max="360" placeholder="Trukmė" /> min.
+                            <minus-circle-two-tone v-if="element.canDelete" two-tone-color="#ef4444" class="pl-2"
+                              @click="removeTask(index)" />
+                          </div>
+                        </template>
+                      </draggable>
+                      <div class="pl-2 py-2">
+                        <a-button type="primary" @click="addTask">
+                          <PlusOutlined />
+                          Pridėti užduotį
+                        </a-button>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </a-form-item>
+                <span v-if="planTasksListError != ''" class="text-red-500 pl-6">{{ planTasksListError }}</span>
               </a-col>
               <!-- Right side -->
               <a-col :span="12">
@@ -142,6 +146,7 @@
                     </div>
                   </a-popover>
                 </a-form-item>
+                <span v-if="planColorError != ''" class="text-red-500 pl-6">{{ planColorError }}</span>
                 <!-- Įpročių forma -->
                 <a-form ref="formRef" name="dynamic_form_item" :model="dynamicValidateForm">
                   <div class="pl-6 pt-3">
@@ -150,9 +155,7 @@
                   </div>
                   <div class="pl-4">
                     <a-form-item v-for="(habit, index) in dynamicValidateForm.habits" :key="habit.key"
-                      v-bind="index === 0" :name="['habits', index, 'value']" :rules="{
-                          required: true,
-                        }" style="margin-top:0px;margin-bottom:10px">
+                      v-bind="index === 0" :name="['habits', index, 'value']" style="margin-top:0px;margin-bottom:10px">
                       <a-input v-model:value="habit.value" placeholder="Įrašykite įprotį"
                         style="width: 50%; margin-left: 8px" />
                       <minus-circle-two-tone two-tone-color="#ef4444" v-if="dynamicValidateForm.habits.length > 1"
@@ -166,6 +169,7 @@
                         Pridėti įprotį
                       </a-button>
                     </a-form-item>
+                    <span v-if="planHabitsError != ''" class="text-red-500">{{ planHabitsError }}</span>
                   </div>
                 </a-form>
                 <!-- Įpročių formos pabaiga -->
@@ -292,6 +296,7 @@
                   </draggable>
                 </div>
               </div>
+              <span v-if="planTasksError!=''" class="text-red-500 pl-6">{{planTasksError}}</span>
             </div>
             <!-- Tvarkaraščio formavimo formos pabaiga -->
             <div class="pl-6">
@@ -301,7 +306,8 @@
                     :rules="[{ required: false }]"></a-form-item></div>
                 <a-space v-for="(prize, index) in dynamicValidateForm.prizes" :key="prize.id"
                   style="display: flex; margin-bottom: 8px" align="baseline">
-                  <a-form-item :name="['prizes', index, 'title']" :rules="{ required: true, }">
+                  <a-form-item :name="['prizes', index, 'title']"
+                    :rules="{ required: true, message: 'Prašome įvesti prizo pavadinimą' }">
                     <div><a-form-item style="margin-top:0px;margin-bottom:0px" name="title" label="Prizo pavadinimas:"
                         :rules="[{ required: true }]"></a-form-item></div>
                     <a-input v-model:value="prize.title" placeholder="Įrašykite pavadinimą" />
@@ -375,6 +381,7 @@
                     class="text-sm text-green-500">rekomenduojama</span>)</a-select-option>
               </a-select>
             </div>
+            <span v-if="planRemindersError!=''" class="text-red-500 pl-6">{{planRemindersError}}</span>
           </a-config-provider>
           <div class="text-end m-6">
             <a-button @click="saveToDB" type="primary">Sukurti planą</a-button>
@@ -415,6 +422,7 @@ import dayjs from 'dayjs';
 import ltLT from 'ant-design-vue/es/locale/lt_LT';
 import 'dayjs/locale/lt';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { message } from 'ant-design-vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 dayjs.extend(relativeTime);
@@ -469,27 +477,53 @@ const newPlanId = ref(0);
 const planTitle = ref('');
 const planColor = ref('white');
 const reminderType = ref();
-let interval = null;
+const interval = null;
 
 const dynamicValidateForm = reactive({
   goals: [],
   habits: [],
   prizes: [],
 });
+// VALIDATION
+const planTitleError = ref('');
+const planColorError = ref('');
+const planGoalsError = ref('');
+const planHabitsError = ref('');
+const planTasksListError = ref('');
+const planTasksError = ref('');
+const planRemindersError = ref('');
 
 onMounted(() => {
-  dynamicValidateForm.goals.push({
-    value: '',
-    key: Date.now(),
-  });
-  dynamicValidateForm.habits.push({
-    value: '',
-    key: Date.now(),
-  });
 });
 onUnmounted(() => {
   clearInterval(interval);
 });
+
+// VALIDATION
+const validateBeforeSubmit = () => {
+  planTitleError.value = planTitle.value.length < 3 ? 'Pavadinimas turi būti ilgesnis nei 3 simboliai' : '';
+  planTitleError.value = planTitle.value.length < 1 ? 'Pavadinimas yra privalomas' : '';
+  planColorError.value = planColor.value === 'white' ? 'Pasirinkite plano spalvą' : '';
+  planGoalsError.value = dynamicValidateForm.goals.length < 1 ? 'Planas turi turėti bent vieną tikslą' : '';
+  planHabitsError.value = dynamicValidateForm.habits.length < 1 ? 'Planas turi turėti bent vieną įprotį' : '';
+  planTasksListError.value = listTasks.value.length < 1 ? 'Planas turi turėti bent vieną užduotį' : '';
+  planRemindersError.value = reminderType.value === undefined ? 'Pasirinkite priminimų tipą' : '';
+
+  const hasItem = (list) => list.value.length > 0;
+
+  const hasPlanItem = !!((
+    hasItem(listMonday)
+  || hasItem(listTuesday)
+  || hasItem(listWednesday)
+  || hasItem(listThursday)
+  || hasItem(listFriday)
+  || hasItem(listSaturday)
+  || hasItem(listSunday)
+  ));
+
+  planTasksError.value = hasPlanItem ? '' : 'Tvarkaraštis turi turėti bent vieną užduotį';
+  return !planTitleError.value && !planColorError.value && !planGoalsError.value && !planHabitsError.value && !planTasksListError.value && !planTasksError.value && !planRemindersError.value;
+};
 
 const removeGoal = (item) => {
   const index = dynamicValidateForm.goals.indexOf(item);
@@ -562,27 +596,33 @@ const form = useForm({
 });
 
 const saveToDB = () => {
-  visible.value = true;
-  form.post(
-    '/plans/custom',
-    {
-      preserveScroll: true,
-      onSuccess: () => { },
-      onError: () => { progressStatus.value = 'exception'; },
-    },
-  );
-  let i = 0;
-  defaultPercent.value = 0;
-  interval = setInterval(() => {
-    i += 1;
-    if (i < 99) { defaultPercent.value = i; }
-    if (i === 99 && form.processing) { defaultPercent.value = 99; }
-    if (i > 100 && !form.processing) {
-      defaultPercent.value = 100;
-      newPlanId.value = props.plan_id;
-      clearInterval(interval);
-    }
-  }, 50);
+  if (validateBeforeSubmit()) {
+    console.log('passed validation');
+    visible.value = true;
+    form.post(
+      '/plans/custom',
+      {
+        preserveScroll: true,
+        onSuccess: () => { },
+        onError: () => { progressStatus.value = 'exception'; },
+      },
+    );
+    let i = 0;
+    defaultPercent.value = 0;
+    interval = setInterval(() => {
+      i += 1;
+      if (i < 99) { defaultPercent.value = i; }
+      if (i === 99 && form.processing) { defaultPercent.value = 99; }
+      if (i > 100 && !form.processing) {
+        defaultPercent.value = 100;
+        newPlanId.value = props.plan_id;
+        clearInterval(interval);
+      }
+    }, 50);
+  } else {
+    message.error('Klaida! Peržiūrėkite klaidos pranešimus', 2);
+  }
 };
+
 </script>
 <style scoped></style>

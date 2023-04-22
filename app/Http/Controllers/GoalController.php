@@ -19,6 +19,9 @@ class GoalController extends Controller
     }
     public function addGoal(Request $request)
     {
+        $request -> validate([
+            'title' => 'required',
+        ]);
         $goal = new Goal();
         $goal->title = $request->title;
         $goal->status='not in progress';
@@ -27,6 +30,9 @@ class GoalController extends Controller
     }
     public function editGoal(Request $request)
     {
+        $request -> validate([
+            'title' => 'required',
+        ]);
         $goal = Goal::find($request->id);
         $goal->title = $request->title;
         $goal->save();

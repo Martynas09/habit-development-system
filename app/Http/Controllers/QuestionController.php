@@ -32,6 +32,11 @@ class QuestionController extends Controller
     }
     public function editReflectionQuestion(Request $request)
     {
+        $request -> validate([
+            'number' => 'required|integer',
+            'content' => 'required|string',
+            'required' => 'required',
+        ]);
         $question = Reflection_question::find($request->id);
         if($question->number!=$request->number){
             $tempQuestion=Reflection_question::where('number', $request->number)->first();
@@ -45,6 +50,9 @@ class QuestionController extends Controller
     }
     public function editReflectionAnswer(Request $request)
     {
+        $request -> validate([
+            'content' => 'required|string',
+        ]);
         $answer = Reflection_answer::find($request->id);
         $answer->content=$request->content;
         $answer->save();
@@ -56,6 +64,12 @@ class QuestionController extends Controller
     }
     public function addReflectionQuestion(Request $request)
     {
+        $request -> validate([
+            'number' => 'required|integer',
+            'content' => 'required|string',
+            'required' => 'required',
+            'answers' => 'required',
+        ]);
         if(Reflection_question::where('number', $request->number)->first()!=null)
         {
             $maxNumber = Reflection_question::max('number');

@@ -16,6 +16,11 @@ class AchievementController extends Controller
     }
     public function addAchievement(Request $request)
     {
+        $request -> validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required',
+            'rewardXP' => 'required',
+        ]);
         $achievement = new Achievement();
         $achievement->title = $request->title;
         $achievement->description = $request->description;
@@ -29,6 +34,11 @@ class AchievementController extends Controller
     }
     public function editAchievement(Request $request)
     {
+        $request -> validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required',
+            'rewardXP' => 'required',
+        ]);
         $achievement = Achievement::find($request->id);
         $achievement->title = $request->title;
         $achievement->description = $request->description;

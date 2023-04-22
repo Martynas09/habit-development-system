@@ -25,13 +25,13 @@
             <a-modal v-model:visible="visible" title="Naujas pasiekimas" @ok="handleOk" ok-text="Sukurti"
               cancel-text="Atšaukti">
               <a-form>
-                <a-form-item label="Pavadinimas" :label-col="{ span: 7 }" :wrapper-col="{ span: 12 }">
+                <a-form-item label="Pavadinimas" :label-col="{ span: 9 }" :wrapper-col="{ span: 12 }">
                   <a-input v-model:value="achievementTitle" />
                 </a-form-item>
-                <a-form-item label="Aprašymas" :label-col="{ span: 7 }" :wrapper-col="{ span: 12 }">
+                <a-form-item label="Aprašymas" :label-col="{ span: 9 }" :wrapper-col="{ span: 12 }">
                   <a-textarea v-model:value="achievementDescription" />
                 </a-form-item>
-                <a-form-item label="Skiriami patirties taškai" :label-col="{ span: 7 }" :wrapper-col="{ span: 12 }">
+                <a-form-item label="Skiriami patirties taškai" :label-col="{ span: 9 }" :wrapper-col="{ span: 12 }">
                   <a-input-number v-model:value="achievementRewardXP" />
                 </a-form-item>
               </a-form>
@@ -157,9 +157,9 @@ onMounted(() => {
   }
 });
 
-const triggerPagination = (page) => {
-  router.get('/achievements', { page });
-};
+// const triggerPagination = (page) => {
+//   router.get('/achievements', { page });
+// };
 const visible = ref(false);
 const achievementTitle = ref('');
 const achievementDescription = ref('');

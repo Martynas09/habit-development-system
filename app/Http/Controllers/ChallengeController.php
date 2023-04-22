@@ -57,6 +57,14 @@ class ChallengeController extends Controller
 
     public function challengeSend(Request $request)
     {
+        $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'xpGiven' => 'required',
+            'duration' => 'required',
+            'timesPerWeek' => 'required',
+            'receivers' => 'required',
+        ]);
         $challenge = new Challenge();
         $challenge->title = $request->title;
         $challenge->description = $request->description;
@@ -85,6 +93,11 @@ class ChallengeController extends Controller
     }
     public function challengeAccept($id, Request $request)
     {
+        $request->validate([
+            'title' => 'required',
+            'duration' => 'required',
+            'days' => 'required',
+        ]);
         $challenge = Challenge::where('id', $id)->first();
         if ($challenge->type == 'private') {
             $challenged_user = Challenged_user::where('fk_challenge', $id)->where('fk_user', auth()->user()->id)->first();

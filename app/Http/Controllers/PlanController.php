@@ -44,6 +44,15 @@ class PlanController extends Controller
     }
     public function createPlan(Request $request)
     {
+        $request -> validate([
+            'title' => 'required',
+            'color' => 'required',
+            'tasks' => 'required',
+            'reminder' => 'required',
+            'goals' => 'required',
+            'habits' => 'required',
+            'prizes' => 'required',
+        ]);
         //todo reikia validacijos ir paduot esamus goals kurie nepradėti
         $goals = [];
         $habits = [];
@@ -239,6 +248,14 @@ class PlanController extends Controller
     }
     public function editPlan(Request $request, $id)
     {
+        $request -> validate([
+            'title' => 'required',
+            'color' => 'required',
+            'tasks' => 'required',
+            'prizes' => 'required',
+            'goals' => 'required',
+            'habits' => 'required',
+        ]);
         $goals = [];
         $habits = [];
         $tasks = [];
@@ -505,6 +522,10 @@ class PlanController extends Controller
     }
     public function questionnaireFinished(Request $request)
     {
+        $request -> validate ([
+            'selectedAnswerValue' => 'required',
+        ]);
+        
         $plan = new Plan();
         $plan->fk_user = auth()->user()->id;
         $plan->title = 'Pavadinimas';

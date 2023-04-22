@@ -30,6 +30,12 @@ class CharacterController extends Controller
     }
     public function characterEdit(Request $request)
     {
+        $request -> validate([
+            'head' => 'required',
+            'top' => 'required',
+            'bottom' => 'required',
+            'shoes' => 'required',
+        ]);
         $character = Users_character::where('fk_user', auth()->user()->id)->first();
         $character->head = $request->head;
         $character->top = $request->top;
@@ -53,6 +59,13 @@ class CharacterController extends Controller
     }
     public function addCharacterItem(Request $request)
     {
+        $request -> validate([
+            'title' => 'required',
+            'image' => 'required',
+            'rarity' => 'required',
+            'category' => 'required',
+            'level' => 'required',
+        ]);
         $image = substr($request->image, 2, -2);
         $item = new Character_item;
         $item->title = $request->title;
@@ -85,6 +98,12 @@ class CharacterController extends Controller
     }
     public function editCharacterItem(Request $request)
     {
+        $request -> validate([
+            'title' => 'required',
+            'rarity' => 'required',
+            'category' => 'required',
+            'level' => 'required',
+        ]);
         if($request->image!='null')
         {
             $image = substr($request->image, 2, -2);

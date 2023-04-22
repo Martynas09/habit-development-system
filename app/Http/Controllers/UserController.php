@@ -23,6 +23,11 @@ class UserController extends Controller
     }
     public function editUser(Request $request)
     {
+        $request -> validate([
+            'username' => 'required',
+            'email' => 'required',
+            'xp' => 'required',
+        ]);
         $user = User::find($request->id);
         $user->username = $request->username;
         $user->email = $request->email;

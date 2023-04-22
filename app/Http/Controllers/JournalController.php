@@ -15,6 +15,10 @@ class JournalController extends Controller
     }
     public function addNote(Request $request)
     {
+        $request -> validate([
+            'value' => 'required',
+        ]);
+
         $note=new Note();
         $note->description=$request->value;
         $note->fk_user=auth()->user()->id;
@@ -23,6 +27,9 @@ class JournalController extends Controller
     }
     public function editNote(Request $request)
     {
+        $request -> validate([
+            'description' => 'required',
+        ]);
         $note=Note::find($request->id);
         $note->description=$request->description;
         $note->save();
