@@ -58,8 +58,8 @@ class DatabaseSeeder extends Seeder
             'avatar' => 'head1.png',
          ]);
         \App\Models\User::factory(15)->create();
-        \App\Models\Reflection_question::factory(10)->create();
-        \App\Models\Reflection_answer::factory(30)->create();
+        \App\Models\Reflection_question::factory(5)->create();
+        \App\Models\Reflection_answer::factory(10)->create();
         \App\Models\Achievement::factory(10)->create();
         \App\Models\User_achievement::factory(15)->create();
 
@@ -92,15 +92,10 @@ class DatabaseSeeder extends Seeder
             'fk_level' => 1,
         ]);
 
-        \App\Models\Character_item::factory(7)->create();
+        \App\Models\Character_item::factory(6)->create();
         \App\Models\Note::factory(40)->create();
         \App\Models\Challenge::factory(5)->create();
         \App\Models\Challenged_user::factory(10)->create();
-        // \App\Models\Plan::factory()->create([
-        //     'title' => 'Test Plan',
-        //     'active' => 1,
-        //     'fk_user' => 1,
-        // ]);
         \App\Models\Plan::factory(20)->create();
         \App\Models\Goal::factory(25)->create();
         \App\Models\Habit::factory(20)->create();

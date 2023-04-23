@@ -70,43 +70,48 @@ const selectedAnswerValue = ref([
 ]);
 const questions = [
   {
-    text: 'Kaip dažnai per savaitę mankštinatės?',
+    text: 'Kiek kartų per savaitę dalyvaujate fizinėje veikloje ar sporte?',
     answers: [
-      { text: 'Rečiau nei kartą per savaitę', value: -1 },
-      { text: '1-2 kartus per savaitę', value: 0 },
-      { text: '3-4 kartus per savaitę ir daugiau', value: 1 },
+      { text: 'Niekuomet', value: 0 },
+      { text: 'Retkarčiais (1-2 kartus per savaitę)', value: 1 },
+      { text: 'Kartais (3-4 kartus per savaitę)', value: 2 },
+      { text: 'Dažnai (5 ar daugiau kartų per savaitę)', value: 3 },
     ],
   },
   {
-    text: 'Kaip dažnai valgote vaisius ir daržoves?',
+    text: 'Kiek laiko per dieną skiriate mokantis ar bandydamas mokytis kažko naujo?',
     answers: [
-      { text: 'Retai arba niekada', value: -1 },
-      { text: '1-2 kartus per dieną', value: 0 },
-      { text: '3-4 kartus per dieną', value: 1 },
+      { text: 'Niekada', value: 0 },
+      { text: 'Mažiau nei 1 valandą per dieną', value: 1 },
+      { text: '1-2 valandas per dieną', value: 2 },
+      { text: 'Daugiau nei 2 valandas per dieną', value: 3 },
     ],
   },
   {
-    text: 'Kaip dažnai užsiimate veikla, kuri jums teikia džiaugsmo ar atpalaiduoja, pavyzdžiui, hobiu ar meditacija?',
+    text: 'Kiek dažnai bendraujate su draugais ar šeimos nariais?',
     answers: [
-      { text: 'Retai arba niekada', value: -1 },
-      { text: '1-2 kartus per savaitę', value: 0 },
-      { text: '3 ar daugiau kartų per savaitę', value: 1 },
+      { text: 'Niekuomet', value: 0 },
+      { text: 'Retkarčiais (kartą per savaitę ar rečiau)', value: 1 },
+      { text: 'Kartais (kelis kartus per savaitę)', value: 2 },
+      { text: 'Dažnai (beveik kiekvieną dieną)', value: 3 },
     ],
   },
   {
-    text: 'Kaip dažnai dalyvaujate socialinėje veikloje su draugais ar šeima?',
+    text: 'Kiek dažnai laisvalaikiu užsiimate savo pomėgiais ar susidomėjimais?',
     answers: [
-      { text: 'Retai arba niekada', value: -1 },
-      { text: '1-2 kartus per savaitę', value: 0 },
-      { text: '3 ar daugiau kartų per savaitę', value: 1 },
+      { text: 'Niekuomet', value: 0 },
+      { text: 'Retkarčiais (kartą per savaitę ar rečiau)', value: 1 },
+      { text: 'Kartais (kelis kartus per savaitę)', value: 2 },
+      { text: 'Dažnai (beveik kiekvieną dieną)', value: 3 },
     ],
   },
   {
-    text: 'Kaip dažnai dalyvaujate socialinėje veikloje su draugais ar šeima?',
+    text: 'Kaip dažnai valgote sveiką maistą?',
     answers: [
-      { text: 'Retai arba niekada', value: -1 },
-      { text: '1-2 kartus per savaitę', value: 0 },
-      { text: '3 ar daugiau kartų per savaitę', value: 1 },
+      { text: 'Niekuomet', value: 0 },
+      { text: 'Retkarčiais (kartą per savaitę ar rečiau)', value: 1 },
+      { text: 'Kartais (kelis kartus per savaitę)', value: 2 },
+      { text: 'Dažnai (beveik kiekvieną dieną)', value: 3 },
     ],
   },
 ];

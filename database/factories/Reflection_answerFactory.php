@@ -24,25 +24,24 @@ class Reflection_answerFactory extends Factory
     // }
     private static $answerCounter = 0;
     private static $currentQuestionId = 1;
-    private static $value=-1;
+    private static $value=1;
 
     public function definition()
     {
+        $content="Taip";
+        self::$value=1;
         if(self::$answerCounter==1) {
-            self::$value=0;
+            self::$value=-1;
+            $content="Ne";
         }
-        if(self::$answerCounter==2) {
-            self::$value=1;
-        }
-        if(self::$answerCounter>2) {
+        if(self::$answerCounter>1) {
             self::$answerCounter = 0;
             self::$currentQuestionId++;
-            self::$value=-1;
         }
 
         self::$answerCounter++;
         return [
-            'content' => $this->faker->sentence,
+            'content' => $content,
             'value' => self::$value,
             'fk_question' =>self::$currentQuestionId,
         ];

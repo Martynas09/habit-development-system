@@ -12,12 +12,11 @@ return [
     | has failed, such as for an invalid token or invalid new password.
     |
     */
-    
-    'throttled' => 'Prieš bandydami dar kartą, palaukite.',
-    'password' => 'Slaptažodis turi būti bent šešių simbolių ir sutapti su patvirtinimu.',
-    'reset'    => 'Nustatytas naujas slaptažodis!',
-    'sent'     => 'Naujo slaptažodžio nustatymo nuoroda išsiųsta',
-    'token'    => 'Šis slaptažodžio raktas yra neteisingas.',
-    'user'     => 'Vartotojas su tokiu el. pašu nerastas.',
+
+    'reset' => 'Your password has been reset!',
+    'sent' => 'We have emailed your password reset link!',
+    'throttled' => 'Please wait before retrying.',
+    'token' => 'This password reset token is invalid.',
+    'user' => "We can't find a user with that email address.",
 
 ];

@@ -33,7 +33,6 @@ const submit = () => {
 <template>
     <GuestLayout>
         <Head title="Registracija" />
-
         <form @submit.prevent="submit">
             <div>
                 <InputLabel for="username" value="Slapyvardis" />
@@ -43,11 +42,10 @@ const submit = () => {
                     type="text"
                     class="mt-1 block w-full"
                     v-model="form.username"
-                    required
                     autocomplete="user"
                 />
 
-                <InputError class="mt-2" :message="form.errors.username" />
+                <InputError class="mt-2"  :message="form.errors.username" />
             </div>
 
             <div class="mt-4">
@@ -58,8 +56,7 @@ const submit = () => {
                     type="email"
                     class="mt-1 block w-full"
                     v-model="form.email"
-                    required
-                    autocomplete="username"
+                    autocomplete="email"
                 />
 
                 <InputError class="mt-2" :message="form.errors.email" />
@@ -73,7 +70,6 @@ const submit = () => {
                     type="password"
                     class="mt-1 block w-full"
                     v-model="form.password"
-                    required
                     autocomplete="new-password"
                 />
 
@@ -88,7 +84,6 @@ const submit = () => {
                     type="password"
                     class="mt-1 block w-full"
                     v-model="form.password_confirmation"
-                    required
                     autocomplete="new-password"
                 />
 

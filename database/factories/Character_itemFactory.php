@@ -14,18 +14,25 @@ class Character_itemFactory extends Factory
      *
      * @return array<string, mixed>
      */
+    public $index=0;
     public function definition()
     {
-        $picture_url=$this->faker->randomElement(["head1.png","head2.png","head3.png","top1.png","top2.png","top3.png","bottom1.png","bottom2.png","bottom3.png","shoes1.png","shoes2.png","shoes3.png"]);
-        if($picture_url=="head1.png" || $picture_url=="head2.png" || $picture_url=="head3.png"){
+
+        $picturesArray = [
+            'head2.png',
+            'head3.png',
+            'head4.png',
+            'head5.png',
+            'head6.png',
+            'top2.png',
+        ];
+        $picture_url=$picturesArray[$this->index];
+        if($picture_url=="head2.png" || $picture_url=="head3.png" || $picture_url=="head4.png" || $picture_url=="head5.png" || $picture_url=="head6.png"){
             $category="head";
-        }elseif($picture_url=="top1.png" || $picture_url=="top2.png" || $picture_url=="top3.png"){
+        }elseif( $picture_url=="top2.png"){
             $category="top";
-        }elseif($picture_url=="bottom1.png" || $picture_url=="bottom2.png" || $picture_url=="bottom3.png"){
-            $category="bottom";
-        }elseif($picture_url=="shoes1.png" || $picture_url=="shoes2.png" || $picture_url=="shoes3.png"){
-            $category="shoes";
         }
+        $this->index++;
     
         return [
             'title' => $this->faker->word,

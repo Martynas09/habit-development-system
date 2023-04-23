@@ -51,7 +51,6 @@ class PlanController extends Controller
             'reminder' => 'required',
             'goals' => 'required',
             'habits' => 'required',
-            'prizes' => 'required',
         ]);
         //todo reikia validacijos ir paduot esamus goals kurie nepradėti
         $goals = [];
@@ -252,7 +251,6 @@ class PlanController extends Controller
             'title' => 'required',
             'color' => 'required',
             'tasks' => 'required',
-            'prizes' => 'required',
             'goals' => 'required',
             'habits' => 'required',
         ]);
@@ -529,13 +527,13 @@ class PlanController extends Controller
         $plan = new Plan();
         $plan->fk_user = auth()->user()->id;
         $plan->title = 'Pavadinimas';
-        $plan->color = '#fff1b8';
+        $plan->color = 'white';
         $plan->active = 1;
         $plan->save();
         //first answer
-        if ($request->selectedAnswerValue['_value'][0] == -1) {
+        if ($request->selectedAnswerValue['_value'][0] <= 1) {
             $newTask = new Task();
-            $newTask->title = 'Pirmas atsakymas';
+            $newTask->title = 'Treniruotė';
             $newTask->duration = 30;
             $newTask->save();
 
@@ -548,7 +546,7 @@ class PlanController extends Controller
             $newPlanTask->save();
 
             $newGoal = new Goal();
-            $newGoal->title = 'Pirmas atsakymas';
+            $newGoal->title = 'Pagerinti fizinę formą';
             $newGoal->status = 'in progress';
             $newGoal->fk_user = auth()->user()->id;
             $newGoal->save();
@@ -559,7 +557,7 @@ class PlanController extends Controller
             $newPlanGoal->save();
 
             $newHabit = new Habit();
-            $newHabit->title = 'Pirmas atsakymas';
+            $newHabit->title = 'Pastovus sportavimas';
             $newHabit->fk_user = auth()->user()->id;
             $newHabit->save();
 
@@ -569,16 +567,16 @@ class PlanController extends Controller
             $newPlanHabit->save();
 
             $newPrize = new Prize();
-            $newPrize->title = 'Pirmas atsakymas';
+            $newPrize->title = 'Proteino kokteilis';
             $newPrize->category = 'task';
             $newPrize->fk_task = $newTask->id;
             $newPrize->fk_plan = $plan->id;
             $newPrize->save();
         }
         //second answer
-        if ($request->selectedAnswerValue['_value'][1] == -1) {
+        if ($request->selectedAnswerValue['_value'][1] <= 1) {
             $newTask = new Task();
-            $newTask->title = 'Antras atsakymas';
+            $newTask->title = 'Išmokti naują dalyką';
             $newTask->duration = 30;
             $newTask->save();
 
@@ -591,7 +589,7 @@ class PlanController extends Controller
             $newPlanTask->save();
 
             $newGoal = new Goal();
-            $newGoal->title = 'Antras atsakymas';
+            $newGoal->title = 'Išmokti naujų dalykų';
             $newGoal->status = 'in progress';
             $newGoal->fk_user = auth()->user()->id;
             $newGoal->save();
@@ -602,7 +600,7 @@ class PlanController extends Controller
             $newPlanGoal->save();
 
             $newHabit = new Habit();
-            $newHabit->title = 'Antras atsakymas';
+            $newHabit->title = 'Pastovus mokymasis';
             $newHabit->fk_user = auth()->user()->id;
             $newHabit->save();
 
@@ -611,17 +609,17 @@ class PlanController extends Controller
             $newPlanHabit->fk_habit = $newHabit->id;
             $newPlanHabit->save();
 
-            $newPrize = new Prize();
-            $newPrize->title = 'Antras atsakymas';
-            $newPrize->category = 'task';
-            $newPrize->fk_task = $newTask->id;
-            $newPrize->fk_plan = $plan->id;
-            $newPrize->save();
+            // $newPrize = new Prize();
+            // $newPrize->title = 'Antras atsakymas';
+            // $newPrize->category = 'task';
+            // $newPrize->fk_task = $newTask->id;
+            // $newPrize->fk_plan = $plan->id;
+            // $newPrize->save();
         }
         //third answer
-        if ($request->selectedAnswerValue['_value'][2] == -1) {
+        if ($request->selectedAnswerValue['_value'][2] <= 1) {
             $newTask = new Task();
-            $newTask->title = 'Trečias atsakymas';
+            $newTask->title = 'Pabendrauti su žmonėmis';
             $newTask->duration = 30;
             $newTask->save();
 
@@ -634,7 +632,7 @@ class PlanController extends Controller
             $newPlanTask->save();
 
             $newGoal = new Goal();
-            $newGoal->title = 'Trečias atsakymas';
+            $newGoal->title = 'Pagerinti socialinius santykius';
             $newGoal->status = 'in progress';
             $newGoal->fk_user = auth()->user()->id;
             $newGoal->save();
@@ -645,7 +643,7 @@ class PlanController extends Controller
             $newPlanGoal->save();
 
             $newHabit = new Habit();
-            $newHabit->title = 'Trečias atsakymas';
+            $newHabit->title = 'Pastovus bendravimas';
             $newHabit->fk_user = auth()->user()->id;
             $newHabit->save();
 
@@ -653,18 +651,11 @@ class PlanController extends Controller
             $newPlanHabit->fk_plan = $plan->id;
             $newPlanHabit->fk_habit = $newHabit->id;
             $newPlanHabit->save();
-
-            $newPrize = new Prize();
-            $newPrize->title = 'Trečias atsakymas';
-            $newPrize->category = 'task';
-            $newPrize->fk_task = $newTask->id;
-            $newPrize->fk_plan = $plan->id;
-            $newPrize->save();
         }
         //fourth answer
-        if ($request->selectedAnswerValue['_value'][3] == -1) {
+        if ($request->selectedAnswerValue['_value'][3] <= 1) {
             $newTask = new Task();
-            $newTask->title = 'Ketvirtas atsakymas';
+            $newTask->title = 'Laikas sau';
             $newTask->duration = 30;
             $newTask->save();
 
@@ -677,7 +668,7 @@ class PlanController extends Controller
             $newPlanTask->save();
 
             $newGoal = new Goal();
-            $newGoal->title = 'Ketvirtas atsakymas';
+            $newGoal->title = 'Skirti laiko sau';
             $newGoal->status = 'in progress';
             $newGoal->fk_user = auth()->user()->id;
             $newGoal->save();
@@ -687,27 +678,27 @@ class PlanController extends Controller
             $newPlanGoal->fk_goal = $newGoal->id;
             $newPlanGoal->save();
 
-            $newHabit = new Habit();
-            $newHabit->title = 'Ketvirtas atsakymas';
-            $newHabit->fk_user = auth()->user()->id;
-            $newHabit->save();
+            // $newHabit = new Habit();
+            // $newHabit->title = 'Ketvirtas atsakymas';
+            // $newHabit->fk_user = auth()->user()->id;
+            // $newHabit->save();
 
-            $newPlanHabit = new Plan_habit();
-            $newPlanHabit->fk_plan = $plan->id;
-            $newPlanHabit->fk_habit = $newHabit->id;
-            $newPlanHabit->save();
+            // $newPlanHabit = new Plan_habit();
+            // $newPlanHabit->fk_plan = $plan->id;
+            // $newPlanHabit->fk_habit = $newHabit->id;
+            // $newPlanHabit->save();
 
-            $newPrize = new Prize();
-            $newPrize->title = 'Ketvirtas atsakymas';
-            $newPrize->category = 'task';
-            $newPrize->fk_task = $newTask->id;
-            $newPrize->fk_plan = $plan->id;
-            $newPrize->save();
+            // $newPrize = new Prize();
+            // $newPrize->title = 'Ketvirtas atsakymas';
+            // $newPrize->category = 'task';
+            // $newPrize->fk_task = $newTask->id;
+            // $newPrize->fk_plan = $plan->id;
+            // $newPrize->save();
         }
         //fifth answer
-        if ($request->selectedAnswerValue['_value'][4] == -1) {
+        if ($request->selectedAnswerValue['_value'][4] <= 1) {
             $newTask = new Task();
-            $newTask->title = 'Penktas atsakymas';
+            $newTask->title = 'Sveikas patiekalas';
             $newTask->duration = 30;
             $newTask->save();
 
@@ -720,7 +711,7 @@ class PlanController extends Controller
             $newPlanTask->save();
 
             $newGoal = new Goal();
-            $newGoal->title = 'Penktas atsakymas';
+            $newGoal->title = 'Sveikai maitintis';
             $newGoal->status = 'in progress';
             $newGoal->fk_user = auth()->user()->id;
             $newGoal->save();
@@ -731,7 +722,7 @@ class PlanController extends Controller
             $newPlanGoal->save();
 
             $newHabit = new Habit();
-            $newHabit->title = 'Penktas atsakymas';
+            $newHabit->title = 'Nuolatinė sveika mityba';
             $newHabit->fk_user = auth()->user()->id;
             $newHabit->save();
 
@@ -739,13 +730,6 @@ class PlanController extends Controller
             $newPlanHabit->fk_plan = $plan->id;
             $newPlanHabit->fk_habit = $newHabit->id;
             $newPlanHabit->save();
-
-            $newPrize = new Prize();
-            $newPrize->title = 'Penktas atsakymas';
-            $newPrize->category = 'task';
-            $newPrize->fk_task = $newTask->id;
-            $newPrize->fk_plan = $plan->id;
-            $newPrize->save();
         }
         return Redirect::to('/planedit/' . $plan->id);
     }

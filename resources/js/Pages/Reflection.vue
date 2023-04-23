@@ -39,7 +39,9 @@
       <div class="flex flex-col items-center justify-center p-2">
         <check-circle-filled style="font-size: 40px; color: #52c41a;" />
         <p class="mt-2">Refleksija baigta</p>
-        <p>{{ suggestion }}</p>
+        <p class="text-lg font-bold">{{ suggestion }}</p>
+        <p>Citata motyvacijai palaikyti:</p>
+        <p>{{ quote }}</p>
         <a-button @click="finish()" type="primary" class="mt-1">Grįžti į tvarkaraštį</a-button>
       </div>
     </a-modal>
@@ -51,7 +53,7 @@ import { Head, Link, router } from '@inertiajs/vue3';
 import {
   HomeOutlined, CheckCircleFilled,
 } from '@ant-design/icons-vue';
-import { ref, onBeforeMount } from 'vue';
+import { ref, onBeforeMount, onMounted } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 const props = defineProps({ questionData: Object, answerData: Object });
@@ -69,18 +71,26 @@ const currentQuestionIndex = ref(0);
 const visible = ref(false);
 const selectedAnswerValue = ref([
 ]);
-
+const quote = ref('');
+async function getapi(url) {
+  const response = await fetch(url);
+  const data = await response.json();
+  quote.value = data.quote;
+}
+onMounted(async () => {
+  await getapi('https://iq.orm.ovh/');
+});
 const nextQuestion = () => {
   if (currentQuestionIndex.value === questions.value.length - 1) {
     const total = selectedAnswerValue.value.reduce((a, b) => a + b, 0);
-    if (total > 2) {
+    if (total > 0) {
       suggestion.value = 'Planų progresas yra labai geras';
     }
-    if (total === 2) {
+    if (total === 0) {
       suggestion.value = 'Planų progresas yra vidutinis';
     }
-    if (total < 2) {
-      suggestion.value = 'Planų progresas yra prastas, reikia paredaguoti planus';
+    if (total < 0) {
+      suggestion.value = 'Planų progresas yra prastas, siūlome paredaguoti planus';
     }
     visible.value = true;
   } else {
