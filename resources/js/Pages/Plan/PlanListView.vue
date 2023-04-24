@@ -35,7 +35,7 @@
                   <span class="text-green-500" v-if="record.active === 1">
                     Aktyvus
                   </span>
-                  <span class="text-red-500" v-else-if="record.status === 0">
+                  <span class="text-red-500" v-else-if="record.active === 0">
                     Neaktyvus
                   </span>
                 </template>

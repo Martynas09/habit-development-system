@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Reminder extends Model
 {
     use HasFactory;
+    public function planTask()
+    {
+        return $this->belongsTo(Plan_task::class, 'id', 'fk_reminder');
+    }
 }

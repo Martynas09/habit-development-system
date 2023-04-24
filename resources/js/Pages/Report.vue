@@ -23,9 +23,9 @@
               </a-select-option>
             </a-select>
           </div>
-          <div class="p-8">
-          <canvas id="myChart"></canvas>
-        </div>
+          <div v-if="chartDrawn" class="p-8">
+            <canvas id="myChart"></canvas>
+          </div>
         </div>
       </div>
     </div>
@@ -43,6 +43,7 @@ const months = ['Sausis', 'Vasaris', 'Kovas', 'Balandis', 'Gegužė', 'Birželis
 const selectedMonths = ref([]);
 const filteredData = computed(() => props.completedTasks.filter((value, index) => selectedMonths.value.includes(months[index])));
 const largestValue = Math.max(...Object.values(props.completedTasks));
+const chartDrawn = ref(false);
 const handleChange = () => {
   const ctx = document.getElementById('myChart');
   const chartInstance = Chart.getChart(ctx);
@@ -74,5 +75,6 @@ const handleChange = () => {
       },
     },
   });
+  chartDrawn.value = true;
 };
 </script>

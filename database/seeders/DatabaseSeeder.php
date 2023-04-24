@@ -101,7 +101,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\Habit::factory(20)->create();
         \App\Models\Plan_habit::factory(10)->create();
         \App\Models\Plan_goal::factory(10)->create();
-        \App\Models\Reminder::factory(70)->create();
+        \App\Models\Reminder::factory(5)->create();
         \App\Models\Task::factory(50)->create();
         \App\Models\Prize::factory(25)->create();
         \App\Models\Plan_task::factory(70)->create();

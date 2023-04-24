@@ -215,7 +215,7 @@ const handleOk = () => {
       router.post(
         '/goalAdd/',
         {
-          title: goalTitle.value,
+          title: form.value.goalTitle,
         },
         {
           preserveScroll: true,
@@ -228,6 +228,7 @@ const handleOk = () => {
       goalTitle.value = '';
     })
     .catch(() => {
+      console.log('error');
     });
 };
 </script>

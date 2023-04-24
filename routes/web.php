@@ -148,5 +148,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/reflectionAnswerDelete', [QuestionController::class, 'deleteReflectionAnswer']);
 });
 
+//NOTIFICATIONS
+Route::get('/notification',[UserController::class, 'notification']);
+
 
 require __DIR__ . '/auth.php';

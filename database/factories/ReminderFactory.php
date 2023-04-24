@@ -18,6 +18,7 @@ class ReminderFactory extends Factory
     {
         return [
             'remind_time' => $this->faker->dateTimeBetween('now', '+1 week'),
+            'is_sent' => false,
         ];
     }
 }

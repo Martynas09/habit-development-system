@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Reminder;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Inertia\Inertia;
+use App\Notifications\TaskReminder;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -43,5 +46,19 @@ class UserController extends Controller
     {
         $user = User::where('id', auth()->user()->id)->first();
         return response()->json($user->xp);
+    }
+    public function notification(){
+        $reminders = Reminder::where('remind_time', '<=', Carbon::now('Europe/Vilnius')->addMinutes(15))
+        ->where('remind_time', '>', Carbon::now('Europe/Vilnius'))
+        ->where('is_sent', 0)
+        ->get();
+        foreach($reminders as $reminder){
+            $minutes = Carbon::now('Europe/Vilnius')->diffInMinutes($reminder->remind_time);
+            $title=$reminder->planTask->getTask->title;
+            $user = User::where('id', $reminder->planTask->getPlan->fk_user)->first();
+            $user->notify(new TaskReminder($title,$minutes));
+            $reminder->is_sent = 1;
+            $reminder->save();
+        }
     }
 }

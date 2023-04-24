@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('reminders', function (Blueprint $table) {
             $table->id();
             $table->dateTime('remind_time');
+            $table->boolean('is_sent')->default(false);
             $table->timestamps();
         });
     }
