@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Users_character;
+use App\Models\User_achievement;
 use App\Models\Level;
 use App\Models\User;
 
@@ -23,10 +24,15 @@ class ProfileController extends Controller
     public function edit(Request $request): Response
     {
         $userAvatar=Users_character::where('fk_user', auth()->user()->id)->first()->load('getHead');
+        $achievements= User_achievement::where('fk_user',auth()->user()->id)->get()->load('getAchievement')->take(2);
+        $count = User_achievement::where('fk_user',auth()->user()->id)->get();
+        $count = $count->count()-2;
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
             'userAvatar' => $userAvatar,
+            'achievements' => $achievements,
+            'count' => $count,
         ]);
     }
 

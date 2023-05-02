@@ -270,10 +270,10 @@ class PlanController extends Controller
         }
 
         //deleting only upcoming tasks
-        foreach ($plan->getTasks->where('execution_date', '>', now())->load('getTask') as $task) {
+        foreach ($plan->getTasks->where('execution_date', '>', Carbon::now())->load('getTask') as $task) {
             $task->getTask->delete();
         }
-        $plan->getTasks()->where('execution_date', '>', now())->delete();
+        $plan->getTasks()->where('execution_date', '>', Carbon::now())->delete();
 
 
 

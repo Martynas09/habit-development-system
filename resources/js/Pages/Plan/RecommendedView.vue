@@ -10,6 +10,18 @@
                     </Link>
                 </a-breadcrumb-item>
                 <a-breadcrumb-item class="text-xl">
+                    <Link :href="route('Plan.PlanListView')">
+                    <reconciliation-outlined style="font-size:20px" />
+                    Planų valdymas
+                    </Link>
+                </a-breadcrumb-item>
+                <a-breadcrumb-item class="text-xl">
+                    <Link :href="route('Plan.ChooseAlternativeView')">
+                    <gold-outlined style="font-size:20px" />
+                    Alternatyvos pasirinkimas
+                    </Link>
+                </a-breadcrumb-item>
+                <a-breadcrumb-item class="text-xl">
                     <dashboard-outlined style="font-size:20px" />
                     Rekomenduojami planai
                 </a-breadcrumb-item>
@@ -27,11 +39,15 @@
                                     class="bg-white rounded-lg shadow p-6 relative min-w-[380px] min-h-[180px]">
                                     <h2 style="color:#0F4C81" class="text-xl font-bold mb-2">{{ plan.title }}</h2>
                                     <p class="text-gray-500 text-base mb-4">
-                                        <span v-if="plan.title==='Sportas'">Planas skirtas norintiems išsiugdyti sportinės veiklos įprotį</span>
-                                        <span v-if="plan.title==='Mityba'">Planas skirtas norintiems subalansuoti mitybą</span>
-                                        <span v-if="plan.title==='Skaitymas'">Planas skirtas norintiems išsiugdyti skaitymo įprotį</span>
+                                        <span v-if="plan.title === 'Sportas'">Planas skirtas norintiems išsiugdyti sportinės
+                                            veiklos įprotį</span>
+                                        <span v-if="plan.title === 'Mityba'">Planas skirtas norintiems subalansuoti
+                                            mitybą</span>
+                                        <span v-if="plan.title === 'Skaitymas'">Planas skirtas norintiems išsiugdyti skaitymo
+                                            įprotį</span>
                                     </p>
-                                    <div class="absolute right-4 bottom-4"><a-button type="primary" @click="handleSelect(plan.id)">Pasirinkti</a-button></div>
+                                    <div class="absolute right-4 bottom-4"><a-button type="primary"
+                                            @click="handleSelect(plan.id)">Pasirinkti</a-button></div>
                                 </div>
                             </div>
                         </div>

@@ -37,10 +37,11 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return Inertia::render('Dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/dashboard', [UserController::class, 'showDashboard'])->middleware(['auth', 'verified'])->name('dashboard');
 Route::get('/getUserXp', [UserController::class, 'getUserXp']);
 //PROFILE ROUTES
 Route::middleware('auth')->group(function () {
@@ -147,9 +148,5 @@ Route::middleware('auth')->group(function () {
     Route::post('/reflectionAnswerEdit', [QuestionController::class, 'editReflectionAnswer']);
     Route::post('/reflectionAnswerDelete', [QuestionController::class, 'deleteReflectionAnswer']);
 });
-
-//NOTIFICATIONS
-Route::get('/notification',[UserController::class, 'notification']);
-
 
 require __DIR__ . '/auth.php';

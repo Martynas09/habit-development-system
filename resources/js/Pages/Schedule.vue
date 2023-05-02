@@ -19,7 +19,8 @@
       <div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
           <p class="pt-2 pl-3 text-lg">Dienos citata: <span class="text-xl">"{{ quote }}"</span></p>
-          <h3 class="m-3">Aktyvūs planai:</h3>
+          <h3 v-if="plan.length>0" class="m-3">Aktyvūs planai:</h3>
+          <h3 v-else class="m-3">Neturite aktyvių planų</h3>
           <div class="flex">
             <div v-for="planName in plan" :key="planName.title">
               <div class="pl-3 w-fit">
@@ -88,10 +89,13 @@ import dayjs from 'dayjs';
 import { message, Modal } from 'ant-design-vue';
 import ltLT from 'ant-design-vue/es/locale/lt_LT';
 import axios from 'axios';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import 'dayjs/locale/lt';
 import useExperience from '../Composables/useExperience';
 
+dayjs.extend(relativeTime);
+dayjs.locale('lt');
 const props = defineProps({ plan: Object, tasks: Object, oneWeekPassed: Boolean });
 const value = ref();
 const starttime = ref();

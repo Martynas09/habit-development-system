@@ -1,10 +1,3 @@
-<script setup>
-import { Head } from '@inertiajs/vue3';
-import { HomeOutlined } from '@ant-design/icons-vue';
-import { message } from 'ant-design-vue';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-</script>
-
 <template>
     <Head title="Pagrindinis" />
 
@@ -21,53 +14,91 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div>
-                        <h1 class="text-xl font-bold text-sky-500 p-5 text-center">Sužaidybinta įpročių ugdymo sistema</h1>
-                        <a-row class="flex items-center py-10">
-                            <a-col :span="12" class="p-5">
-                                <div>
-                                    <h1 class="text-xl font-bold">Pavadinimas</h1>
-                                    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quidem quas voluptate sit
-                                        qui mollitia vel modi odio, repudiandae tenetur. Sint, numquam! Pariatur qui ea
-                                        aperiam non nostrum minima corrupti eum quis vel quas explicabo saepe rerum, eaque
-                                        minus eos, optio deserunt ut, necessitatibus tenetur. Ipsum voluptate eum explicabo?
-                                        Placeat repellat atque blanditiis sequi illo! Ea, fuga laboriosam? Quasi, aut
-                                        dolorum.</p>
-                                </div>
-                            </a-col>
-                            <a-col :span="12" class="p-5"><div class="border border-gray-300 rounded-md p-2"><div class="w-[400px] h-[270px]">Paveikslėlis</div></div></a-col>
-                        </a-row>
-                        <a-row class="flex items-center py-10">
-                            <a-col :span="12" class="p-5"><div class="border border-gray-300 rounded-md p-2"><div class="w-[400px] h-[270px]">Paveikslėlis</div></div></a-col>
-                            <a-col :span="12" class="p-5">
-                                <div>
-                                    <h1 class="text-xl font-bold">Pavadinimas</h1>
-                                    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quidem quas voluptate sit
-                                        qui mollitia vel modi odio, repudiandae tenetur. Sint, numquam! Pariatur qui ea
-                                        aperiam non nostrum minima corrupti eum quis vel quas explicabo saepe rerum, eaque
-                                        minus eos, optio deserunt ut, necessitatibus tenetur. Ipsum voluptate eum explicabo?
-                                        Placeat repellat atque blanditiis sequi illo! Ea, fuga laboriosam? Quasi, aut
-                                        dolorum.</p>
-                                </div>
-                            </a-col>
-                        </a-row>
-                        <a-row class="flex items-center py-10">
-                            <a-col :span="12" class="p-5">
-                                <div>
-                                    <h1 class="text-xl font-bold">Pavadinimas</h1>
-                                    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quidem quas voluptate sit
-                                        qui mollitia vel modi odio, repudiandae tenetur. Sint, numquam! Pariatur qui ea
-                                        aperiam non nostrum minima corrupti eum quis vel quas explicabo saepe rerum, eaque
-                                        minus eos, optio deserunt ut, necessitatibus tenetur. Ipsum voluptate eum explicabo?
-                                        Placeat repellat atque blanditiis sequi illo! Ea, fuga laboriosam? Quasi, aut
-                                        dolorum.</p>
-                                </div>
-                            </a-col>
-                            <a-col :span="12" class="p-5"><div class="border border-gray-300 rounded-md p-2"><div class="w-[400px] h-[270px]">Paveikslėlis</div></div></a-col>
-                        </a-row>
+                    <div v-if="!$page.props.auth.user.is_admin">
+                        <p class="text-3xl font-bold text-black text-center p-3">Sveiki, {{ $page.props.auth.user.username
+                        }}
+                        </p>
+                        <div style="padding: 20px">
+                            <a-row :gutter="16">
+                                <a-col :span="16">
+                                    <a-card :bordered="false">
+                                        <template #title><bell-outlined /><span class="font-bold"> Pranešimai</span></template>
+                                        <p class="pt-2">Neturite naujų pranešimų</p>
+                                    </a-card>
+                                </a-col>
+                                <a-col :span="8">
+                                    <a-card :bordered="false">
+                                        <template #title><calendar-outlined /><span class="font-bold"> Artimiausios
+                                                užduotys</span></template>
+                                        <div v-for="task in tasks" :key="task" class="pt-1">
+                                            <span class="font-semibold">{{ dayjs(task.execution_date).format('dddd/MMMM')
+                                            }}</span>
+                                            <div class="pb-1">
+                                                <div class="rounded-sm max-h-[22px] pl-1 bg-sky-100 max-w-[220px]">
+                                                    <a-badge
+                                                        :text="dayjs(task.execution_date).format('HH:mm') + ' ' + task.get_task.title" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a-card>
+                                </a-col>
+                                <a-col :span="8">
+                                    <a-card :bordered="false">
+                                        <template #title><form-outlined /><span class="font-bold"> Naujausi užrašai</span></template>
+                                            <p v-if="notes.length === 0">neturite užrašų</p>
+                                            <a-list v-if="notes.length" :data-source="notes" item-layout="horizontal">
+                                                <template #renderItem="{ item }">
+                                                    <a-list-item style="padding:0px">
+                                                        <a-comment>
+                                                            <template #content>
+                                                                <div>{{ item.description }}</div>
+                                                            </template>
+                                                            <template #datetime>
+                                                                <a-tooltip :title="dayjs().format('YYYY-MM-DD HH:mm:ss')">
+                                                                    <span>{{ dayjs(item.updated_at).fromNow() }}</span>
+                                                                </a-tooltip>
+                                                            </template>
+                                                        </a-comment>
+                                                    </a-list-item>
+                                                </template>
+                                            </a-list>
+                                    </a-card>
+                                </a-col>
+                            </a-row>
+                        </div>
                     </div>
-                    <p class="text-end mr-2 text-gray-200">Martynas Gaulia IFAi-9</p>
+                    <div v-else class="p-5">
+                        <div class="text-3xl font-bold text-black text-center p-3">Sėkmingai prisijungėte prie administratoriaus paskyros</div>
+                        <div class="text-md text-gray-400 text-center">Galite pradėti sistemos administravimą</div>
+                    </div>
                 </div>
             </div>
-    </div>
-</AuthenticatedLayout></template>
+        </div>
+    </AuthenticatedLayout>
+</template>
+<script setup>
+import { Head } from '@inertiajs/vue3';
+import {
+  HomeOutlined, CalendarOutlined, FormOutlined, BellOutlined,
+} from '@ant-design/icons-vue';
+import { defineProps } from 'vue';
+import dayjs from 'dayjs';
+import 'dayjs/locale/lt';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+
+dayjs.extend(relativeTime);
+dayjs.locale('lt');
+
+const props = defineProps({
+  tasks: Object,
+  notes: Object,
+});
+console.log(props.tasks);
+console.log(props.notes);
+</script>
+<style>
+.ant-card-body {
+    padding-top: 0px;
+}
+</style>

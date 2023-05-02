@@ -127,6 +127,7 @@ const props = defineProps({
 function formatDate(date) {
   return dayjs(date).format('YYYY-MM-DD');
 }
+console.log(props.achievements);
 const editingList = ref([
 ]);
 // const currentPage = ref(props.achievements.current_page);

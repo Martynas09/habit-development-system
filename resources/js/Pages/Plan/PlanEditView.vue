@@ -439,10 +439,10 @@
                 <check-circle-filled v-if="defaultPercent === 100" style="font-size: 40px; color: #52c41a;" />
                 <a-spin size="large" v-else />
                 <a-progress :percent="defaultPercent" :status="progressStatus" />
-                <p class="mt-2" v-if="defaultPercent < 100">Planas redaguojamas...</p>
-                <p class="mt-2" v-else>Planas paredaguotas</p>
+                <p class="mt-2" v-if="defaultPercent < 100">Planas išsaugomas...</p>
+                <p class="mt-2" v-else>Plano pakeitimai išsaugoti</p>
                 <Link :href="route('Schedule')">
-                <a-button v-if="defaultPercent === 100" type="primary" class="mt-4">Peržiūrėti
+                <a-button v-if="defaultPercent === 100" type="primary">Peržiūrėti
                   tvarkaraštį</a-button>
                 </Link>
               </div>

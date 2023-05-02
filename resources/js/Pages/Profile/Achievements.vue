@@ -34,14 +34,20 @@
                                             <div class="flex flex-col items-center justify-center">
                                                 <div class="max-w-[45px]">
                                                     <img src="/storage/achievement.png">
-                                                </div>{{ achievement.get_achievement.title }}
+                                                </div>
+                                                <a-tooltip>
+                                                    <template #title>{{ achievement.get_achievement.title }}</template>
+                                                    <div class="whitespace-nowrap text-ellipsis overflow-hidden max-w-[150px]">
+                                                        {{ achievement.get_achievement.title }}
+                                                    </div>
+                                                </a-tooltip>
                                             </div>
                                         </template>
                                         <div>
                                             <p class="max-h-[45px] overflow-scroll">{{
                                                 achievement.get_achievement.description }}</p>
-                                            <p>{{ achievement.get_achievement.rewardXP }} patirties taškai</p>
-                                            <p class="text-gray-400">{{ formatDate(achievement.get_achievement.created_at)
+                                            <p>{{ achievement.get_achievement.rewardXP }} patirties taškų</p>
+                                            <p class="text-gray-400">{{ formatDate(achievement.created_at)
                                             }}</p>
                                         </div>
                                     </a-card>
@@ -57,7 +63,7 @@
 </template>
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
-import { PropertySafetyTwoTone, PropertySafetyOutlined, HomeOutlined } from '@ant-design/icons-vue';
+import { PropertySafetyOutlined, HomeOutlined } from '@ant-design/icons-vue';
 import dayjs from 'dayjs';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 

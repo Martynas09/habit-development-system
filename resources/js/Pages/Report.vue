@@ -76,5 +76,8 @@ const handleChange = () => {
     },
   });
   chartDrawn.value = true;
+  if (selectedMonths.value.length === 0) {
+    chartDrawn.value = false;
+  }
 };
 </script>

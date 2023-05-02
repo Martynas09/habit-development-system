@@ -46,7 +46,7 @@ class PasswordReset extends Notification
         ->line('Šį el. laišką gaunate, nes gavome jūsų paskyros slaptažodžio atkūrimo užklausą.')
         ->action('Atkurti slaptažodį', url('password/reset', $this->token))
         ->line('Jei neprašėte iš naujo nustatyti slaptažodžio, jokių tolesnių veiksmų imtis nereikia.')
-        ->salutation('Pagarbiai,'. config('app.name'));
+        ->salutation('Įpročių ugdymo sistema');
         // ->subcopy('Jei turite problemų paspaudę mygtuką "Atkurti slaptažodį", nukopijuokite ir įklijuokite URL adresą žemiau į savo interneto naršyklę: [ '. url('password/reset', $this->token). ' ]('. url('password/reset', $this->token). ' )');
 
     }

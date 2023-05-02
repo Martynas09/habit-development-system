@@ -97,7 +97,12 @@ const showingNavigationDropdown = ref(false);
                                         <span>
                                             <button type="button"
                                                 class="inline-flex items-center pr-2 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                                                {{ $page.props.auth.user.username }}
+                                                <span v-if="!$page.props.auth.user.is_admin" class="max-w-[70px]">
+                                                    {{ $page.props.auth.user.username }}
+                                                </span>
+                                                <span v-else>
+                                                    {{ $page.props.auth.user.username }}
+                                                </span>
                                                 <div v-if="!$page.props.auth.user.is_admin" class="flex items-center justify-center ml-2 w-10">
                                                     <img :src="'/storage/' + $page.props.auth.user.avatar"
                                                         class="rounded-sm border px-1 border-solid border-gray-300 shadow-sm"

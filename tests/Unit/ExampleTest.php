@@ -3,6 +3,8 @@
 namespace Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use App\Models\Level;
+use App\Models\Character_item;
 
 class ExampleTest extends TestCase
 {
@@ -15,4 +17,5 @@ class ExampleTest extends TestCase
     {
         $this->assertTrue(true);
     }
+    
 }

@@ -2,7 +2,10 @@
   <div>
     <div class="flex relative" style="font-size: 12px; align-items: center;">
       <div style="margin-right: 6px;">
-        <div class="absolute top-2" style="font-size: 13px;"><span class="font-bold">{{ xp }}</span> patirties taškai
+        <div class="absolute top-2" style="font-size: 13px;">
+          <span class="font-bold">{{ xp }}</span>
+          <span v-if="xp===0"> patirties taškų</span>
+          <span v-else> patirties taškai</span>
         </div>
         <div class="pt-5">
           <a-progress :percent="displayPercent" size="small" :status="xp <= 400?'active':'success'" :showInfo="false"

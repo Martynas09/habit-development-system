@@ -40,7 +40,7 @@ const updatePassword = () => {
             <h2 class="text-lg font-medium text-gray-900">Atnaujinti slaptažodį</h2>
 
             <p class="mt-1 text-sm text-gray-600">
-                Užtikrinkite, kad jūsų paskyra naudoja ilgą, atsitiktinį slaptažodį, kad būtų saugus.
+                Užtikrinkite, kad jūsų paskyra naudoja ilgą, atsitiktinį slaptažodį, kuris būtų saugus.
             </p>
         </header>
 

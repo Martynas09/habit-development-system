@@ -88,6 +88,7 @@
                   </a-list-item>
                 </template>
               </a-list>
+              <div v-else class="text-center">Jūs neturite užrašų</div>
             </div>
             <div class="flex justify-end"><a-pagination v-model:current="currentPage" @change="triggerPagination"
                 :total="notes.total" :defaultPageSize="notes.per_page" :hideOnSinglePage="true" :size="'small'" /></div>

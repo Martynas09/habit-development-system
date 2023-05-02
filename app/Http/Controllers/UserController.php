@@ -6,7 +6,9 @@ use App\Models\Reminder;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Inertia\Inertia;
+use App\Models\Plan;
 use App\Notifications\TaskReminder;
+use App\Models\Note;
 use Carbon\Carbon;
 
 class UserController extends Controller
@@ -16,17 +18,17 @@ class UserController extends Controller
         $top10 = User::where('is_admin', 0)->orderBy('xp', 'desc')->take(10)->get();
         $currentUserXP = auth()->user()->xp;
         $rank = User::where('is_admin', 0)->where('xp', '>', $currentUserXP)->count() + 1;
-        $user=User::where('id', auth()->user()->id)->first();
+        $user = User::where('id', auth()->user()->id)->first();
         return Inertia::render('Leaderboard', ['top10' => $top10, 'rank' => $rank, 'user' => $user]);
     }
     public function showUsersList()
     {
-        $users = User::where('is_admin', 0)->orderBy('created_at','desc')->get();
+        $users = User::where('is_admin', 0)->orderBy('created_at', 'desc')->get();
         return Inertia::render('Users', ['users' => $users]);
     }
     public function editUser(Request $request)
     {
-        $request -> validate([
+        $request->validate([
             'username' => 'required',
             'email' => 'required',
             'xp' => 'required',
@@ -34,7 +36,7 @@ class UserController extends Controller
         $user = User::find($request->id);
         $user->username = $request->username;
         $user->email = $request->email;
-        $user->xp=$request->xp;
+        $user->xp = $request->xp;
         $user->save();
     }
     public function deleteUser(Request $request)
@@ -47,18 +49,20 @@ class UserController extends Controller
         $user = User::where('id', auth()->user()->id)->first();
         return response()->json($user->xp);
     }
-    public function notification(){
-        $reminders = Reminder::where('remind_time', '<=', Carbon::now('Europe/Vilnius')->addMinutes(15))
-        ->where('remind_time', '>', Carbon::now('Europe/Vilnius'))
-        ->where('is_sent', 0)
-        ->get();
-        foreach($reminders as $reminder){
-            $minutes = Carbon::now('Europe/Vilnius')->diffInMinutes($reminder->remind_time);
-            $title=$reminder->planTask->getTask->title;
-            $user = User::where('id', $reminder->planTask->getPlan->fk_user)->first();
-            $user->notify(new TaskReminder($title,$minutes));
-            $reminder->is_sent = 1;
-            $reminder->save();
+    public function showDashboard()
+    {
+        $tasks = collect();
+        $plan = Plan::where('fk_user', auth()->user()->id)->where('active', '=', 1)->get()->load('getTasks.getTask');
+        foreach ($plan as $planItem) {
+            $tasks = $tasks->merge($planItem->getTasks->load('getTask'));
         }
+        $tasks= $tasks->where('is_done', 0);
+        $tasks= $tasks->where('execution_date', '>', Carbon::now());
+        $tasks = $tasks->sortBy('execution_date');
+        $allTasksArray = array_values($tasks->toArray());
+        $taskArray = array_slice($allTasksArray, 0, 3);
+
+        $notes=Note::where('fk_user', auth()->user()->id)->orderBy('created_at', 'desc')->take(3)->get();
+        return Inertia::render('Dashboard', ['tasks' => $taskArray, 'notes' => $notes]);
     }
 }

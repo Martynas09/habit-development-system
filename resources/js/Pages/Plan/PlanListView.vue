@@ -29,6 +29,7 @@
 
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
           <div class="p-4">
+            <a-config-provider :locale="ltLT">
             <a-table :columns="columns" :data-source="plans" :pagination="false">
               <template #bodyCell="{ column, record }">
                 <template v-if="column.key === 'active'">
@@ -82,6 +83,7 @@
                 </template>
               </template>
             </a-table>
+          </a-config-provider>
           </div>
         </div>
       </div>
@@ -97,6 +99,7 @@ import {
 } from '@ant-design/icons-vue';
 import { defineProps } from 'vue';
 import { message } from 'ant-design-vue';
+import ltLT from 'ant-design-vue/es/locale/lt_LT';
 import dayjs from 'dayjs';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
