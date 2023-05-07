@@ -54,4 +54,4 @@ RUN php artisan key:generate
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Crontab
-RUN echo -e "$(crontab -l ; echo '* * * * * cd /var/www/html && php artisan schedule:run >> /dev/null 2>&1')" | crontab -
+RUN crontab -l | { cat; echo "* * * * * cd /var/www/html && php artisan schedule:run >> /dev/null 2>&1"; } | crontab -
