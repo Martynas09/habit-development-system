@@ -18,59 +18,73 @@ use App\Models\User;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
-    public function edit(Request $request): Response
-    {
-        $userAvatar=Users_character::where('fk_user', auth()->user()->id)->first()->load('getHead');
-        $achievements= User_achievement::where('fk_user',auth()->user()->id)->get()->load('getAchievement')->take(2);
-        $count = User_achievement::where('fk_user',auth()->user()->id)->get();
-        $count = $count->count()-2;
-        return Inertia::render('Profile/Edit', [
-            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
-            'status' => session('status'),
-            'userAvatar' => $userAvatar,
-            'achievements' => $achievements,
-            'count' => $count,
-        ]);
+  /**
+   * Display the user's profile form.
+   */
+  public function edit(Request $request): Response
+  {
+    // $userAvatar=Users_character::where('fk_user', auth()->user()->id)->first()->load('getHead');
+    // $achievements= User_achievement::where('fk_user',auth()->user()->id)->get()->load('getAchievement')->take(2);
+    // $count = User_achievement::where('fk_user',auth()->user()->id)->get();
+    // $count = $count->count()-2;
+    // return Inertia::render('Profile/Edit', [
+    //     'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
+    //     'status' => session('status'),
+    //     'userAvatar' => $userAvatar,
+    //     'achievements' => $achievements,
+    //     'count' => $count,
+    // ]);
+    $userAvatar = Users_character::where('fk_user', auth()->user()->id)->first();
+    if ($userAvatar) {
+      $userAvatar->load('getHead');
     }
 
-    /**
-     * Update the user's profile information.
-     */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
-    {
-        $request->user()->fill($request->validated());
+    $achievements = User_achievement::where('fk_user', auth()->user()->id)->get()->load('getAchievement')->take(2);
+    $count = User_achievement::where('fk_user', auth()->user()->id)->count() - 2;
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
+    return Inertia::render('Profile/Edit', [
+      'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
+      'status' => session('status'),
+      'userAvatar' => $userAvatar,
+      'achievements' => $achievements,
+      'count' => $count,
+    ]);
+  }
 
-        $request->user()->save();
+  /**
+   * Update the user's profile information.
+   */
+  public function update(ProfileUpdateRequest $request): RedirectResponse
+  {
+    $request->user()->fill($request->validated());
 
-        return Redirect::route('profile.edit');
+    if ($request->user()->isDirty('email')) {
+      $request->user()->email_verified_at = null;
     }
 
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'password' => ['required', 'current-password'],
-        ]);
+    $request->user()->save();
 
-        $user = $request->user();
+    return Redirect::route('profile.edit');
+  }
 
-        Auth::logout();
+  /**
+   * Delete the user's account.
+   */
+  public function destroy(Request $request): RedirectResponse
+  {
+    $request->validate([
+      'password' => ['required', 'current-password'],
+    ]);
 
-        $user->delete();
+    $user = $request->user();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+    Auth::logout();
 
-        return Redirect::to('/');
-    }
-    
+    $user->delete();
+
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    return Redirect::to('/');
+  }
 }

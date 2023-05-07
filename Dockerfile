@@ -6,7 +6,8 @@ RUN apt-get update && \
   libzip-dev \
   zip \
   openssl \
-  libssl-dev
+  libssl-dev \
+  cron
 
 RUN apt-get install gcc g++ make
 
@@ -51,3 +52,6 @@ RUN php artisan key:generate
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+
+# Crontab
+RUN echo -e "$(crontab -l ; echo '* * * * * cd /var/www/html && php artisan schedule:run >> /dev/null 2>&1')" | crontab -
