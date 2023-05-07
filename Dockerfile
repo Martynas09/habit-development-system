@@ -59,4 +59,4 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 
 #Reminders
 RUN chmod 777 /var/www/html/reminders.sh
-ENTRYPOINT ["bash", "/var/www/html/reminders.sh"]
+CMD ["/var/www/html/reminders.sh"]
