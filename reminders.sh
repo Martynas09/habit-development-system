@@ -1,3 +1,6 @@
 #!/bin/bash
-cd /var/www/html
-php artisan schedule:run --verbose --no-interaction
+while [ true ]
+do
+  php artisan schedule:run --verbose --no-interaction
+  sleep 60
+done
