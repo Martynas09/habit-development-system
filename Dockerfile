@@ -54,6 +54,9 @@ RUN php artisan key:generate
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Crontab
-RUN crontab -l | { cat; echo "*/5 * * * * cd /var/www/html && php artisan schedule:run >> /dev/null 2>&1"; } | crontab -
+#RUN crontab -l | { cat; echo "*/5 * * * * cd /var/www/html && php artisan schedule:run >> /dev/null 2>&1"; } | crontab -
+#RUN /etc/init.d/cron start
 
-RUN /etc/init.d/cron start
+#Reminders
+RUN chmod 777 /var/www/html/reminders.sh
+ENTRYPOINT ["bash", "/var/www/html/reminders.sh"]
