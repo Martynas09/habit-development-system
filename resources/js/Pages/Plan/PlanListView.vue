@@ -39,6 +39,7 @@
                   <span class="text-red-500" v-else-if="record.active === 0">
                     Neaktyvus
                   </span>
+                  <a-switch :checked="record.active === 1" @change="updateActive(record)"/>
                 </template>
                 <template v-if="column.key === 'color'">
                   <div class="flex justify-start">
@@ -147,5 +148,23 @@ const confirm = (id) => {
 const cancel = () => {
   message.error('Click on No');
 };
+function updateActive(record) {
+  router.post(
+    '/planUpdateActive/',
+    {
+      id: record.id,
+      active: record.active,
+    },
+    {
+      preserveScroll: true,
+      onSuccess: () => message.success('Planas atnaujintas'),
+      onError: () => message.error('Klaida atnaujinant planą'),
+    },
+  );
+}
 </script>
-<style></style>
+<style>
+.ant-switch-checked {
+    background-color: #22c55e;
+}
+</style>

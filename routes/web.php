@@ -64,6 +64,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/planedit/{id}', [PlanController::class, 'showPlanEdit'])->name('Plan.PlanEditView');
     Route::post('/planedit/{id}', [PlanController::class, 'editPlan'])->name('Plan.PlanEditView');
     Route::post('/planDelete', [PlanController::class, 'deletePlan']);
+    Route::post('/planUpdateActive', [PlanController::class, 'planUpdateActive']);
     Route::get('/plans/recommended', [PlanController::class, 'showRecommended'])->name('Plan.RecommendedView');
     Route::post('/plans/recommended', [PlanController::class, 'selectRecommended']);
 

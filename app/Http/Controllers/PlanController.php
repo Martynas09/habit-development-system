@@ -429,6 +429,12 @@ class PlanController extends Controller
         $plan->getPrizes()->delete();
         $plan->delete();
     }
+    public function planUpdateActive(Request $request)
+    {
+        $plan = Plan::find($request->id);
+        $plan->active = !$request->active;
+        $plan->save();
+    }
     public function showRecommended()
     {
         $plans = Plan::where('fk_user', 2)->get();
@@ -523,7 +529,7 @@ class PlanController extends Controller
         $request -> validate ([
             'selectedAnswerValue' => 'required',
         ]);
-        
+
         $plan = new Plan();
         $plan->fk_user = auth()->user()->id;
         $plan->title = 'Pavadinimas';

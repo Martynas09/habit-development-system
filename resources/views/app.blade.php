@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-		    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+		    <!-- <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> -->
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
@@ -14,8 +14,8 @@
         @routes
         @inertiaHead
         @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
-        
-		
+
+
     </head>
     <body class="font-sans antialiased">
         @inertia
