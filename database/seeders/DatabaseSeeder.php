@@ -39,18 +39,18 @@ class DatabaseSeeder extends Seeder
         ]);
 
         \App\Models\User::factory()->create([
-            'username' => 'Test User',
-            'email' => 'test@test',
+            'username' => 'Martynas',
+            'email' => 'martynas@test.com',
             'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => 'ZbwWAZpB5n',
-            'xp' => 344,
-            'level' => 4,
-            'avatar' => 'head1.png',
+            'xp' => 290,
+            'level' => 3,
+            'avatar' => 'head2.png',
          ]);
          \App\Models\User::factory()->create([
-            'username' => 'ADMINISTRATOR',
-            'email' => 'admin@admin',
+            'username' => 'Administratorius',
+            'email' => 'admin@test.com',
             'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => 'ZbwWAZpB5n',
@@ -58,11 +58,11 @@ class DatabaseSeeder extends Seeder
             'is_admin' => 1,
             'avatar' => 'head1.png',
          ]);
-        \App\Models\User::factory(15)->create();
-        \App\Models\Reflection_question::factory(5)->create();
-        \App\Models\Reflection_answer::factory(10)->create();
-        \App\Models\Achievement::factory(10)->create();
-        \App\Models\User_achievement::factory(15)->create();
+        \App\Models\User::factory(10)->create();
+        //\App\Models\Reflection_question::factory(5)->create();
+        //\App\Models\Reflection_answer::factory(10)->create();
+        //\App\Models\Achievement::factory(10)->create();
+        //\App\Models\User_achievement::factory(15)->create();
 
         \App\Models\Character_item::factory()->create([
             'title' => 'Default Head',
@@ -94,18 +94,18 @@ class DatabaseSeeder extends Seeder
         ]);
 
         \App\Models\Character_item::factory(6)->create();
-        \App\Models\Note::factory(40)->create();
-        \App\Models\Challenge::factory(5)->create();
-        \App\Models\Challenged_user::factory(10)->create();
-        \App\Models\Plan::factory(20)->create();
-        \App\Models\Goal::factory(25)->create();
-        \App\Models\Habit::factory(20)->create();
-        \App\Models\Plan_habit::factory(10)->create();
-        \App\Models\Plan_goal::factory(10)->create();
-        \App\Models\Reminder::factory(5)->create();
-        \App\Models\Task::factory(50)->create();
-        \App\Models\Prize::factory(25)->create();
-        \App\Models\Plan_task::factory(70)->create();
+        //\App\Models\Note::factory(40)->create();
+        //\App\Models\Challenge::factory(5)->create();
+        //\App\Models\Challenged_user::factory(10)->create();
+        //\App\Models\Plan::factory(20)->create();
+        //\App\Models\Goal::factory(25)->create();
+        //\App\Models\Habit::factory(20)->create();
+        //\App\Models\Plan_habit::factory(10)->create();
+        //\App\Models\Plan_goal::factory(10)->create();
+        //\App\Models\Reminder::factory(5)->create();
+       // \App\Models\Task::factory(50)->create();
+       // \App\Models\Prize::factory(25)->create();
+        //\App\Models\Plan_task::factory(70)->create();
 
         \App\Models\Users_character::factory()->create([
             'head' => 1,

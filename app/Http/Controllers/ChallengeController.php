@@ -113,7 +113,7 @@ class ChallengeController extends Controller
 
         $plan = new Plan();
         $plan->fk_user = auth()->user()->id;
-        $plan->title = "Iššūkis";
+        $plan->title = "Iššūkis" . $id;
         $plan->color = "#CA33FF";
         $plan->active = 1;
         $plan->save();
@@ -126,7 +126,7 @@ class ChallengeController extends Controller
         foreach ($request->days as $day) {
             $taskTime = $request->time;
             $dateTime = DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s.u\Z', $taskTime)
-                ->add(new DateInterval('PT2H'));
+                ->add(new DateInterval('PT3H'));
             $hoursAndMinutes = $dateTime->format('H:i');
             for ($i = 0; $i < 1; $i++) {
                 $upcomingDay = new DateTimeImmutable('next ' . ucfirst($day) . ' +' . $i . ' week');

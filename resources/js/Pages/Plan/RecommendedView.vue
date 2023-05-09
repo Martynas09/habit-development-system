@@ -41,8 +41,7 @@
                                     <p class="text-gray-500 text-base mb-4">
                                         <span v-if="plan.title === 'Sportas'">Planas skirtas norintiems išsiugdyti sportinės
                                             veiklos įprotį</span>
-                                        <span v-if="plan.title === 'Mityba'">Planas skirtas norintiems subalansuoti
-                                            mitybą</span>
+                                        <span v-if="plan.title === 'Meditacija'">Planas skirtas norintiems sumažinti kasdieninį stresą</span>
                                         <span v-if="plan.title === 'Skaitymas'">Planas skirtas norintiems išsiugdyti skaitymo
                                             įprotį</span>
                                     </p>
@@ -61,7 +60,9 @@
 
 <script setup>
 import { Head, Link, router } from '@inertiajs/vue3';
-import { DashboardOutlined, HomeOutlined } from '@ant-design/icons-vue';
+import {
+  DashboardOutlined, HomeOutlined, ReconciliationOutlined, GoldOutlined,
+} from '@ant-design/icons-vue';
 import { defineProps } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 

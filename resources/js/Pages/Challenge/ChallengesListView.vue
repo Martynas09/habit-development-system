@@ -44,7 +44,7 @@
                       <h2 style="color:#0F4C81" class="text-xl font-bold mb-2">{{ challenge.challenge.title }}</h2>
                       <div class="flex items-center absolute top-4 right-4">
                         <div class="mr-1 w-9">
-                          <img :src="'/storage/' + $page.props.auth.user.avatar"
+                          <img :src="'/storage/' + challenge.challenge.challenge_author.avatar"
                             class="rounded-sm border px-1 border-solid border-gray-300 shadow-sm"
                             style="padding-top:1px;padding-bottom:1px">
                         </div>
@@ -84,6 +84,7 @@
                         <span v-if="user.status === 'pending'" class="text-yellow-500 font-bold ml-1">Laukiama</span>
                         <span v-if="user.status === 'rejected'" class="text-red-500 font-bold ml-1">Atmetė</span>
                         <span v-if="user.status === 'accepted'" class="text-green-500 font-bold ml-1">Priėmė</span>
+                        <span v-if="user.status === 'completed'" class="text-green-600 font-bold ml-1">Atliktas</span>
                       </div>
                       <div class="flex justify-between">
                         <div class="absolute right-4 bottom-4">

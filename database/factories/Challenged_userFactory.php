@@ -19,7 +19,7 @@ class Challenged_userFactory extends Factory
         return [
             'fk_user' => $this->faker->randomElement(\App\Models\User::pluck('id')),
             'fk_challenge' => $this->faker->randomElement(\App\Models\Challenge::pluck('id')),
-            'status' => $this->faker->randomElement(['pending','accepted','rejected']),
+            'status' => $this->faker->randomElement(['pending','accepted','rejected','completed']),
         ];
     }
 }

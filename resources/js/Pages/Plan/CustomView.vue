@@ -68,7 +68,6 @@
                             </a-select-option>
                           </template>
                           </a-select>
-                          <a @click="goalSelectVisible = false">Close</a>
                         </template>
                       </a-popover>
                       <a-popconfirm title="Pasirinkite" ok-text="Naujas" cancel-text="Esamas" @confirm="addGoal"

@@ -61,10 +61,24 @@
                       </a-form-item>
                     </div>
                     <a-form-item>
-                      <a-button type="primary" @click="addGoal">
-                        <PlusOutlined />
-                        Pridėti tikslą
-                      </a-button>
+                      <a-popover v-model:visible="goalSelectVisible" title="Pasirinkite norimą tikslą" trigger="click" placement="rightBottom">
+                        <template #content>
+                          <a-select ref="select" v-model:value="selectedGoal" style="width: 200px" @change="handleChange">
+                            <template v-for="goal in existingGoalsArray" :key="goal">
+                            <a-select-option v-if="goal.visible" :value="goal.title">
+                              <span>{{ goal.title }}</span>
+                            </a-select-option>
+                          </template>
+                          </a-select>
+                        </template>
+                      </a-popover>
+                      <a-popconfirm title="Pasirinkite" ok-text="Naujas" cancel-text="Esamas" @confirm="addGoal"
+                        @cancel="goalSelectVisible = true">
+                        <a-button type="primary">
+                          <PlusOutlined />
+                          Pridėti tikslą
+                        </a-button>
+                      </a-popconfirm>
                     </a-form-item>
                   </a-form>
                   <span v-if="planGoalsError != ''" class="text-red-500">{{ planGoalsError }}</span>
@@ -485,7 +499,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 dayjs.extend(relativeTime);
 dayjs.locale('lt');
 const props = defineProps({
-  plan: Object, goals: Array, habits: Array, tasks: Array, tasksByWeekday: Object, prizes: Array, reminders: Boolean,
+  plan: Object, goals: Array, habits: Array, tasks: Array, tasksByWeekday: Object, prizes: Array, reminders: Boolean, existingGoals: Object,
 });
 
 const listTasks = ref([
@@ -544,7 +558,8 @@ const dynamicValidateForm = reactive({
   habits: [],
   prizes: [],
 });
-
+const existingGoalsArray = ref([
+]);
 onMounted(() => {
   planTitle.value = props.plan.title;
   planColor.value = props.plan.color;
@@ -623,11 +638,28 @@ onMounted(() => {
   if (props.reminders === false) {
     reminderType.value = 'self';
   }
+  existingGoalsArray.value = props.existingGoals.map((goal) => ({ ...goal, visible: true }));
 });
 
 onUnmounted(() => {
   clearInterval(interval);
 });
+// Existing goals stuff
+
+const selectedGoal = ref('Pasirinkite');
+
+const goalSelectVisible = ref(false);
+const handleChange = (value) => {
+  const found = existingGoalsArray.value.find((element) => element.title === value);
+  const index = existingGoalsArray.value.indexOf(found);
+  dynamicValidateForm.goals.push({
+    value,
+    key: index,
+  });
+  goalSelectVisible.value = false;
+  selectedGoal.value = 'Pasirinkite';
+  existingGoalsArray.value[index].visible = false;
+};
 // VALIDATION
 const planTitleError = ref('');
 const planColorError = ref('');
@@ -671,6 +703,9 @@ const validateBeforeSubmit = () => {
 };
 
 const removeGoal = (item) => {
+  if (existingGoalsArray.value[item.key] !== undefined) {
+    existingGoalsArray.value[item.key].visible = true;
+  }
   const index = dynamicValidateForm.goals.indexOf(item);
   if (index !== -1) {
     dynamicValidateForm.goals.splice(index, 1);

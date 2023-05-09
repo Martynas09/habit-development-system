@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Models\Plan;
 use App\Models\Plan_task;
 use App\Models\User;
+use App\Models\Challenged_user;
 use Carbon\Carbon;
 
 class ScheduleController extends Controller
@@ -53,6 +54,7 @@ class ScheduleController extends Controller
             'oneWeekPassed' => $oneWeekPassed,
         ]);
     }
+    //TODO: fix finishing iššūkis
     public function taskDone(Request $request)
     {
         $user = User::where('id', auth()->user()->id)->first();
@@ -61,6 +63,22 @@ class ScheduleController extends Controller
         $task = Plan_task::where('id', $request->id)->first();
         $task->is_done = 1;
         $task->save();
+        if(strpos($task->getPlan->title, "Iššūkis") !== false){
+          $status=1;
+          foreach($task->getPlan->getTasks as $challengeTask){
+            if($challengeTask->is_done==0){
+              $status=0;
+              break;
+            }
+          }
+          if($status==1){
+            $challengeId = preg_replace('/[^0-9]/', '', $challengeTask->getPlan->title);
+            $challengeTask->getPlan->active=0;
+            $challengeTask->getPlan->save();
+            $challengeToComplete = Challenged_user::where('fk_user', auth()->user()->id)->where('fk_challenge', $challengeId)->first();
+            $challengeToComplete->status = 'completed';
+          }
+        }
     }
     public function isPrize(Request $request){
         $task = Plan_task::where('id', $request->id)->first()->load('getTask');
