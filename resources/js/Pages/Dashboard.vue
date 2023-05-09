@@ -94,8 +94,8 @@ const props = defineProps({
   tasks: Object,
   notes: Object,
 });
-console.log(props.tasks);
-console.log(props.notes);
+// console.log(props.tasks);
+// console.log(props.notes);
 </script>
 <style>
 .ant-card-body {
