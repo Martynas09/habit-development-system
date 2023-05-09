@@ -28,6 +28,7 @@
         "ant-design-vue": "^3.2.15",
         "chart.js": "^4.2.1",
         "happy-dom": "^9.9.2",
+        "ics": "^3.1.0",
         "unplugin-vue-components": "^0.23.0",
         "uuid": "^9.0.0",
         "vue-chartjs": "^5.2.0",

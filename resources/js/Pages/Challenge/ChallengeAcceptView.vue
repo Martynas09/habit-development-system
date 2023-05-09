@@ -24,13 +24,14 @@
           <div class="m-6">
             <div>Iššūkis per savaitę pasikartoja {{ challenge.timesPerWeek }} kartus</div>
             <a-form-item style="margin-top:0px;margin-bottom:0px" name="receivers"
-                                :label="'Pasirinkite vykdymo laiką ir ' + challenge.timesPerWeek +' savaitės dienas'" :rules="[{ required: true }]"></a-form-item>
+              :label="'Pasirinkite vykdymo laiką ir ' + challenge.timesPerWeek + ' savaitės dienas'"
+              :rules="[{ required: true }]"></a-form-item>
             <a-form>
               <div class="flex item-center">
                 <a-form-item style="margin-top:0px;margin-bottom:10px" class="flex"><a-time-picker
                     style="width: 25%; margin-bottom:7px;margin-top:7px;margin-right:5px" format="HH:mm"
-                    placeholder="Laikas" v-model:value="time"/><a-select v-model:value="days" mode="multiple" style="width: 250px"
-                    placeholder="Savaitės dienos">
+                    placeholder="Laikas" v-model:value="time" />
+                  <a-select v-model:value="days" mode="multiple" style="width: 250px" placeholder="Savaitės dienos">
                     <a-select-option value="monday">Pirmadienis</a-select-option>
                     <a-select-option value="tuesday">Antradienis</a-select-option>
                     <a-select-option value="wednesday">Trečiadienis</a-select-option>
@@ -38,8 +39,10 @@
                     <a-select-option value="friday">Penktadienis</a-select-option>
                     <a-select-option value="saturday">Šeštadienis</a-select-option>
                     <a-select-option value="sunday">Sekmadienis</a-select-option>
-                  </a-select></a-form-item>
+                  </a-select>
+                </a-form-item>
               </div>
+              <a-alert v-if="!daysValidation && days.length!==0" :message="`Pasirinkite ${challenge.timesPerWeek} dienas`" type="error" show-icon/>
               <div><a-form-item style="margin-top:0px;margin-bottom:0px" name="category" label="Priminimai"
                   :rules="[{ required: true }]"></a-form-item></div>
               <a-select v-model:value="reminder" style="width: 250px" placeholder="Pasirinkite">
@@ -48,7 +51,8 @@
                     class="text-sm text-green-500">rekomenduojama</span>)</a-select-option>
               </a-select>
               <div class="flex justify-end my-6 mr-4">
-                <a-button type="primary" @click="acceptChallenge">Priimti iššūkį<send-outlined /></a-button>
+                <a-button type="primary" @click="acceptChallenge" :disabled="!daysValidation">Priimti
+                  iššūkį<send-outlined /></a-button>
               </div>
             </a-form>
           </div>
@@ -61,7 +65,9 @@
 <script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { DashboardOutlined, HomeOutlined, SendOutlined } from '@ant-design/icons-vue';
-import { defineProps, ref, onMounted } from 'vue';
+import {
+  defineProps, ref, onMounted, computed,
+} from 'vue';
 import { message } from 'ant-design-vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
@@ -71,6 +77,12 @@ const duration = ref();
 const days = ref([]);
 const time = ref();
 const reminder = ref();
+const daysValidation = computed(() => {
+  if (days.value.length === props.challenge.timesPerWeek) {
+    return true;
+  }
+  return false;
+});
 
 onMounted(() => {
   title.value = props.challenge.title;

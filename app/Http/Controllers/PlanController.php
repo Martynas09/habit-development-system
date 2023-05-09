@@ -40,7 +40,10 @@ class PlanController extends Controller
     }
     public function showCustom()
     {
-        return inertia::render('Plan/CustomView');
+      $goals=Goal::where('fk_user', auth()->user()->id)->get();
+        return inertia::render('Plan/CustomView', [
+            'goals' => $goals
+        ]);
     }
     public function createPlan(Request $request)
     {

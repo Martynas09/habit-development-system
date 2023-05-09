@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        
+
         \App\Models\Level::factory()->create([
             'title' => 'Level 1',
             'requiredXP' => 0,
@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
             'title' => 'Level 5',
             'requiredXP' => 400,
         ]);
-        
+
         \App\Models\User::factory()->create([
             'username' => 'Test User',
             'email' => 'test@test',
@@ -45,6 +45,7 @@ class DatabaseSeeder extends Seeder
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => 'ZbwWAZpB5n',
             'xp' => 344,
+            'level' => 4,
             'avatar' => 'head1.png',
          ]);
          \App\Models\User::factory()->create([

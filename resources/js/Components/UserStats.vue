@@ -24,11 +24,15 @@
   </div>
 </template>
 <script setup>
-import { onMounted, computed } from 'vue';
+import { router } from '@inertiajs/vue3';
+import { onMounted, computed, watch } from 'vue';
+import { Modal, message } from 'ant-design-vue';
 import useExperience from '../Composables/useExperience';
 
 const { xp } = useExperience();
+const { level } = useExperience();
 const { pullXP } = useExperience();
+
 const displayLevel = computed(() => {
   if (xp.value < 100) {
     return 1;
@@ -47,6 +51,24 @@ const displayLevel = computed(() => {
   }
   return 1;
 });
+function displayLevelUp() {
+  if (level.value !== displayLevel.value) {
+    router.post(
+      '/levelUp/',
+      {
+        level: displayLevel.value,
+      },
+      {
+        preserveScroll: true,
+        onSuccess: () => Modal.success({
+          title: 'Sveikiname!',
+          content: 'Jūs pasiekėte naują lygį!',
+        }),
+        onError: () => message.error('Klaida atnaujinant lygį'),
+      },
+    );
+  }
+}
 const displayLeftSide = computed(() => {
   if (xp.value < 100) {
     return 0;
@@ -98,5 +120,7 @@ const displayPercent = computed(() => {
 onMounted(() => {
   pullXP();
 });
-
+watch([displayLevel, level], () => {
+  displayLevelUp();
+});
 </script>

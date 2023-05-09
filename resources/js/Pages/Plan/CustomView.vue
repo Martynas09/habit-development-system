@@ -59,10 +59,25 @@
                       </a-form-item>
                     </div>
                     <a-form-item>
-                      <a-button type="primary" @click="addGoal">
-                        <PlusOutlined />
-                        Pridėti tikslą
-                      </a-button>
+                      <a-popover v-model:visible="goalSelectVisible" title="Pasirinkite norimą tikslą" trigger="click" placement="rightBottom">
+                        <template #content>
+                          <a-select ref="select" v-model:value="selectedGoal" style="width: 200px" @change="handleChange">
+                            <template v-for="goal in existingGoals" :key="goal">
+                            <a-select-option v-if="goal.visible" :value="goal.title">
+                              <span>{{ goal.title }}</span>
+                            </a-select-option>
+                          </template>
+                          </a-select>
+                          <a @click="goalSelectVisible = false">Close</a>
+                        </template>
+                      </a-popover>
+                      <a-popconfirm title="Pasirinkite" ok-text="Naujas" cancel-text="Esamas" @confirm="addGoal"
+                        @cancel="goalSelectVisible = true">
+                        <a-button type="primary">
+                          <PlusOutlined />
+                          Pridėti tikslą
+                        </a-button>
+                      </a-popconfirm>
                     </a-form-item>
                   </a-form>
                   <span v-if="planGoalsError != ''" class="text-red-500">{{ planGoalsError }}</span>
@@ -87,7 +102,8 @@
                               <minus-circle-two-tone v-if="element.canDelete" two-tone-color="#ef4444" class="pl-2"
                                 @click="removeTask(index)" />
                             </div>
-                            <span v-if="element.value.length < 1" class="text-red-500 pl-9">Prašome įvesti pavadinimą</span>
+                            <span v-if="element.value.length < 1" class="text-red-500 pl-9">Prašome įvesti
+                              pavadinimą</span>
                           </div>
                         </template>
                       </draggable>
@@ -188,55 +204,58 @@
                 <div class="border border-zinc-300 min-h-[150px]">
                   <h3 style="margin-top:0px;margin-bottom:0px"
                     class="text-center border-b border-zinc-300 font-bold bg-zinc-50">Pirmadienis</h3>
-                    <draggable class="list-group" :list="listMonday" group="people" @change="log" itemKey="id">
+                  <draggable class="list-group" :list="listMonday" group="people" @change="log" itemKey="id">
                     <template #item="{ element, index }">
                       <div>
-                      <div class="list-group-item hover:bg-zinc-50 flex items-center">
-                        <button class="pl-1" @click="removeFromDay(index, element.fatherId, 'listMonday')"><minus-circle-two-tone
-                            two-tone-color="#ef4444" /></button>
-                        <a-time-picker :minute-step="5" class="min-w-[82px]"
-                          style="width: 82px; margin-bottom:7px;margin-top:7px;margin-left:5px;margin-right:5px"
-                          v-model:value="element.time" format="HH:mm" placeholder="Laikas" />
+                        <div class="list-group-item hover:bg-zinc-50 flex items-center">
+                          <button class="pl-1"
+                            @click="removeFromDay(index, element.fatherId, 'listMonday')"><minus-circle-two-tone
+                              two-tone-color="#ef4444" /></button>
+                          <a-time-picker :minute-step="5" class="min-w-[82px]"
+                            style="width: 82px; margin-bottom:7px;margin-top:7px;margin-left:5px;margin-right:5px"
+                            v-model:value="element.time" format="HH:mm" placeholder="Laikas" />
                           <a-tooltip>
                             <template #title>{{ element.value }}</template>
                             <div class="whitespace-nowrap text-ellipsis overflow-hidden">{{ element.value }}</div>
                           </a-tooltip>
+                        </div>
+                        <a-divider style="margin-top:0px;margin-bottom:0px" />
                       </div>
-                      <a-divider style="margin-top:0px;margin-bottom:0px" />
-                    </div>
                     </template>
                   </draggable>
                 </div>
                 <div class="border-r border-y border-zinc-300 min-h-[150px]">
                   <h3 style="margin-top:0px;margin-bottom:0px"
                     class="text-center border-b border-zinc-300 font-bold bg-zinc-50">Antradienis</h3>
-                    <draggable class="list-group" :list="listTuesday" group="people" @change="log" itemKey="name">
+                  <draggable class="list-group" :list="listTuesday" group="people" @change="log" itemKey="name">
                     <template #item="{ element, index }">
                       <div>
-                      <div class="list-group-item hover:bg-zinc-50 flex items-center">
-                        <button class="pl-1" @click="removeFromDay(index, element.fatherId, 'listTuesday')"><minus-circle-two-tone
-                            two-tone-color="#ef4444" /></button>
-                        <a-time-picker class="min-w-[82px]" :minute-step="5"
-                          style="width: 82px; margin-bottom:7px;margin-top:7px;margin-left:5px;margin-right:5px"
-                          v-model:value="element.time" format="HH:mm" placeholder="Laikas" />
+                        <div class="list-group-item hover:bg-zinc-50 flex items-center">
+                          <button class="pl-1"
+                            @click="removeFromDay(index, element.fatherId, 'listTuesday')"><minus-circle-two-tone
+                              two-tone-color="#ef4444" /></button>
+                          <a-time-picker class="min-w-[82px]" :minute-step="5"
+                            style="width: 82px; margin-bottom:7px;margin-top:7px;margin-left:5px;margin-right:5px"
+                            v-model:value="element.time" format="HH:mm" placeholder="Laikas" />
                           <a-tooltip>
                             <template #title>{{ element.value }}</template>
                             <div class="whitespace-nowrap text-ellipsis overflow-hidden">{{ element.value }}</div>
                           </a-tooltip>
+                        </div>
+                        <a-divider style="margin-top:0px;margin-bottom:0px" />
                       </div>
-                      <a-divider style="margin-top:0px;margin-bottom:0px" />
-                    </div>
                     </template>
                   </draggable>
                 </div>
                 <div class="border-r border-y border-zinc-300 min-h-[150px]">
                   <h3 style="margin-top:0px;margin-bottom:0px"
                     class="text-center border-b border-zinc-300 font-bold bg-zinc-50">Trečiadienis</h3>
-                    <draggable class="list-group" :list="listWednesday" group="people" @change="log" itemKey="name">
+                  <draggable class="list-group" :list="listWednesday" group="people" @change="log" itemKey="name">
                     <template #item="{ element, index }">
                       <div>
                         <div class="list-group-item hover:bg-zinc-50 flex items-center">
-                          <button class="pl-1" @click="removeFromDay(index, element.fatherId, 'listWednesday')"><minus-circle-two-tone
+                          <button class="pl-1"
+                            @click="removeFromDay(index, element.fatherId, 'listWednesday')"><minus-circle-two-tone
                               two-tone-color="#ef4444" /></button>
                           <a-time-picker class="min-w-[82px]" :minute-step="5"
                             style="width: 82px; margin-bottom:7px;margin-top:7px;margin-left:5px;margin-right:5px"
@@ -254,7 +273,7 @@
                 <div class="border-r border-y border-zinc-300 min-h-[150px]">
                   <h3 style="margin-top:0px;margin-bottom:0px"
                     class="text-center border-b border-zinc-300 font-bold bg-zinc-50">Ketvirtadienis</h3>
-                    <draggable class="list-group" :list="listThursday" group="people" @change="log" itemKey="name">
+                  <draggable class="list-group" :list="listThursday" group="people" @change="log" itemKey="name">
                     <template #item="{ element, index }">
                       <div>
                         <div class="list-group-item hover:bg-zinc-50 flex items-center">
@@ -277,7 +296,7 @@
                 <div class="border-r border-y border-zinc-300 min-h-[150px]">
                   <h3 style="margin-top:0px;margin-bottom:0px"
                     class="text-center border-b border-zinc-300 font-bold bg-zinc-50">Penktadienis</h3>
-                    <draggable class="list-group" :list="listFriday" group="people" @change="log" itemKey="name">
+                  <draggable class="list-group" :list="listFriday" group="people" @change="log" itemKey="name">
                     <template #item="{ element, index }">
                       <div>
                         <div class="list-group-item hover:bg-zinc-50 flex items-center">
@@ -300,7 +319,7 @@
                 <div class="border-r border-y border-zinc-300 min-h-[150px]">
                   <h3 style="margin-top:0px;margin-bottom:0px"
                     class="text-center border-b border-zinc-300 font-bold bg-zinc-50">Šeštadienis</h3>
-                    <draggable class="list-group" :list="listSaturday" group="people" @change="log" itemKey="name">
+                  <draggable class="list-group" :list="listSaturday" group="people" @change="log" itemKey="name">
                     <template #item="{ element, index }">
                       <div>
                         <div class="list-group-item hover:bg-zinc-50 flex items-center">
@@ -323,7 +342,7 @@
                 <div class="border-r border-y border-zinc-300 min-h-[150px]">
                   <h3 style="margin-top:0px;margin-bottom:0px"
                     class="text-center border-b border-zinc-300 font-bold bg-zinc-50">Sekmadienis</h3>
-                    <draggable class="list-group" :list="listSunday" group="people" @change="log" itemKey="name">
+                  <draggable class="list-group" :list="listSunday" group="people" @change="log" itemKey="name">
                     <template #item="{ element, index }">
                       <div>
                         <div class="list-group-item hover:bg-zinc-50 flex items-center">
@@ -475,7 +494,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 dayjs.extend(relativeTime);
 dayjs.locale('lt');
-const props = defineProps({ plan_id: Number });
+const props = defineProps({ plan_id: Number, goals: Object });
 
 const listTasks = ref([
 ]);
@@ -493,6 +512,7 @@ const listSaturday = ref([
 ]);
 const listSunday = ref([
 ]);
+
 const log = (evt) => {
   window.console.log(evt);
 };
@@ -532,6 +552,30 @@ const dynamicValidateForm = reactive({
   habits: [],
   prizes: [],
 });
+onUnmounted(() => {
+  clearInterval(interval);
+});
+// Existing goals stuff
+const existingGoals = ref([
+]);
+const selectedGoal = ref('Pasirinkite');
+onMounted(() => {
+  existingGoals.value = props.goals.map((goal) => ({ ...goal, visible: true }));
+});
+
+const goalSelectVisible = ref(false);
+const handleChange = (value) => {
+  const found = existingGoals.value.find((element) => element.title === value);
+  const index = existingGoals.value.indexOf(found);
+  dynamicValidateForm.goals.push({
+    value,
+    key: index,
+  });
+  goalSelectVisible.value = false;
+  selectedGoal.value = 'Pasirinkite';
+  existingGoals.value[index].visible = false;
+};
+
 // VALIDATION
 const planTitleError = ref('');
 const planColorError = ref('');
@@ -540,12 +584,6 @@ const planHabitsError = ref('');
 const planTasksListError = ref('');
 const planTasksError = ref('');
 const planRemindersError = ref('');
-
-onMounted(() => {
-});
-onUnmounted(() => {
-  clearInterval(interval);
-});
 
 // VALIDATION
 const validateBeforeSubmit = () => {
@@ -581,6 +619,9 @@ const validateBeforeSubmit = () => {
 };
 
 const removeGoal = (item) => {
+  if (existingGoals.value[item.key] !== undefined) {
+    existingGoals.value[item.key].visible = true;
+  }
   const index = dynamicValidateForm.goals.indexOf(item);
   if (index !== -1) {
     dynamicValidateForm.goals.splice(index, 1);

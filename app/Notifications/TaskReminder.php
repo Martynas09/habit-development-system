@@ -44,7 +44,7 @@ class TaskReminder extends Notification
     {
         return (new MailMessage)
             ->subject('Užduoties priminimas')
-            ->greeting('Sveiki!' . $notifiable->name)
+            ->greeting('Sveiki!')
             ->line('Jūsų užduotis: ' . $this->title)
             ->line('Prasidės už: ' . $this->minutes . ' min.')
             ->salutation('Įpročių ugdymo sistema');

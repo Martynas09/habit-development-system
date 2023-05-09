@@ -73,6 +73,9 @@
               Praėjo savaitė laiko nuo paskutinės refleksijos. Ar norite atlikti refleksiją?
             </a-modal>
           </div>
+          <div class="flex flex-row-reverse mr-4 mb-2">
+          <a-button type="primary" @click="exportCalendar">Ekportuoti tvarkaraštį</a-button>
+        </div>
         </div>
       </div>
     </div>
@@ -90,6 +93,7 @@ import { message, Modal } from 'ant-design-vue';
 import ltLT from 'ant-design-vue/es/locale/lt_LT';
 import axios from 'axios';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { createEvent, createEvents } from 'ics';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import 'dayjs/locale/lt';
 import useExperience from '../Composables/useExperience';
@@ -245,6 +249,29 @@ const taskDone = () => {
 function handleTaskDone() {
   visible.value = false;
   status.value = 'atlikta';
+}
+function exportCalendar() {
+  const temp = [];
+  props.tasks.forEach((task) => {
+    temp.push({
+      title: task.get_task.title,
+      start: [parseInt(dayjs(task.execution_date).format('YYYY'), 10), parseInt(dayjs(task.execution_date).format('MM'), 10), parseInt(dayjs(task.execution_date).format('DD'), 10), parseInt(dayjs(task.execution_date).format('HH'), 10), parseInt(dayjs(task.execution_date).format('mm'), 10)],
+      duration: { minutes: task.get_task.duration },
+    });
+  });
+
+  const calendarData = createEvents(temp);
+
+  const blob = new Blob([calendarData.value], { type: 'text/calendar' });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'Kalendorius.ics';
+  link.click();
+
+  // Clean up the URL object
+  URL.revokeObjectURL(url);
 }
 </script>
 <style scoped>

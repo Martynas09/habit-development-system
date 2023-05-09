@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('xp')->default('0');
             $table->string('avatar')->default('head1.png');
             $table->boolean('is_admin')->default('0');
+            $table->integer('level')->default('1');
             $table->rememberToken();
             $table->timestamps();
         });
