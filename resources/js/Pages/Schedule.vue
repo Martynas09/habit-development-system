@@ -67,7 +67,7 @@
                 </template>
               </a-calendar>
             </a-config-provider>
-            <a-modal v-model:visible=" visibleReflection " title='Refleksija' okText="Atlikti"
+            <a-modal v-model:visible="visibleReflection" title='Refleksija' okText="Atlikti"
               cancelText="Priminti vėliau" @ok=" handleOk " @cancel=" handleCancel " :closable=" false "
               :maskClosable=" false ">
               Praėjo savaitė laiko nuo paskutinės refleksijos. Ar norite atlikti refleksiją?
@@ -93,7 +93,7 @@ import { message, Modal } from 'ant-design-vue';
 import ltLT from 'ant-design-vue/es/locale/lt_LT';
 import axios from 'axios';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { createEvent, createEvents } from 'ics';
+import { createEvents } from 'ics';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import 'dayjs/locale/lt';
 import useExperience from '../Composables/useExperience';
@@ -234,6 +234,7 @@ function achievementCheck() {
   axios.get('/api/isAchievement', {
   })
     .then((response) => {
+      console.log(response);
       if (response.data !== undefined) {
         Modal.success({
           title: 'Naujas pasiekimas',
