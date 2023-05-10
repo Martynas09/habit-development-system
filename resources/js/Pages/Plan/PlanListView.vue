@@ -134,7 +134,7 @@ function formatDate(date) {
 }
 const confirm = (id) => {
   router.post(
-    '/planDelete/',
+    '/planDelete',
     {
       id,
     },
