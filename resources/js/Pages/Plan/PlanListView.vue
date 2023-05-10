@@ -150,7 +150,7 @@ const cancel = () => {
 };
 function updateActive(record) {
   router.post(
-    '/planUpdateActive/',
+    '/planUpdateActive',
     {
       id: record.id,
       active: record.active,

@@ -313,7 +313,7 @@ const handleOk = () => {
 };
 const confirm = (id) => {
   router.post(
-    '/characterItemDelete/',
+    '/characterItemDelete',
     {
       id,
     },
@@ -337,7 +337,7 @@ const handleEdit = (title, picture, rarity, category, fk_level, id, index) => {
     fileArray = null;
   }
   router.post(
-    '/characterItemEdit/',
+    '/characterItemEdit',
     {
       id,
       title,

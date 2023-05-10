@@ -162,7 +162,7 @@ const handleSubmit = () => {
 };
 const confirm = (id) => {
   router.post(
-    '/noteDelete/',
+    '/noteDelete',
     {
       id,
     },
@@ -182,7 +182,7 @@ const cancel = (e) => {
 };
 const handleEdit = (description, id, index) => {
   router.post(
-    '/noteEdit/',
+    '/noteEdit',
     {
       description,
       id,

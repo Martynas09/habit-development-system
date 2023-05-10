@@ -145,7 +145,7 @@ onMounted(() => {
 // };
 const confirm = (id) => {
   router.post(
-    '/userDelete/',
+    '/userDelete',
     {
       id,
     },
@@ -161,7 +161,7 @@ const cancel = () => {
 };
 const handleEdit = (username, email, xp, id, index) => {
   router.post(
-    '/userEdit/',
+    '/userEdit',
     {
       username,
       email,

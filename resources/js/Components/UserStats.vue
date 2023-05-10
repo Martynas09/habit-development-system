@@ -54,7 +54,7 @@ const displayLevel = computed(() => {
 function displayLevelUp() {
   if (level.value !== displayLevel.value) {
     router.post(
-      '/levelUp/',
+      '/levelUp',
       {
         level: displayLevel.value,
       },

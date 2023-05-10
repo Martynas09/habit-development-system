@@ -174,7 +174,7 @@ function formatDate(date) {
 }
 const confirm = (id) => {
   router.post(
-    '/goalDelete/',
+    '/goalDelete',
     {
       id,
     },
@@ -190,7 +190,7 @@ const cancel = () => {
 };
 const handleEdit = (title, id, index) => {
   router.post(
-    '/goalEdit/',
+    '/goalEdit',
     {
       title,
       id,
@@ -213,7 +213,7 @@ const handleOk = () => {
   formRef.value.validateFields()
     .then(() => {
       router.post(
-        '/goalAdd/',
+        '/goalAdd',
         {
           title: form.value.goalTitle,
         },

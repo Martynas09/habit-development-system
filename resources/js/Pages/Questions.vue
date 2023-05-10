@@ -281,7 +281,7 @@ const handleOk = () => {
 };
 const confirm = (id) => {
   router.post(
-    '/reflectionQuestionDelete/',
+    '/reflectionQuestionDelete',
     {
       id,
     },
@@ -297,7 +297,7 @@ const cancel = () => {
 };
 const handleEdit = (number, content, required, id, index) => {
   router.post(
-    '/reflectionQuestionEdit/',
+    '/reflectionQuestionEdit',
     {
       number,
       content,
@@ -321,7 +321,7 @@ const showAnswers = (recordAnswers) => {
 };
 const handleEditAnswer = (id, content, index) => {
   router.post(
-    '/reflectionAnswerEdit/',
+    '/reflectionAnswerEdit',
     {
       content,
       id,
@@ -336,7 +336,7 @@ const handleEditAnswer = (id, content, index) => {
 };
 const confirmAnswer = (id) => {
   router.post(
-    '/reflectionAnswerDelete/',
+    '/reflectionAnswerDelete',
     {
       id,
     },

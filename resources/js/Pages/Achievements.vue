@@ -190,7 +190,7 @@ const handleOk = () => {
 };
 const confirm = (id) => {
   router.post(
-    '/achievementDelete/',
+    '/achievementDelete',
     {
       id,
     },
@@ -206,7 +206,7 @@ const cancel = () => {
 };
 const handleEdit = (rewardXP, description, title, id, index) => {
   router.post(
-    '/achievementEdit/',
+    '/achievementEdit',
     {
       rewardXP,
       title,
