@@ -40,7 +40,9 @@ class ChallengeController extends Controller
     }
     public function showChallengeSend()
     {
-        $usersTemp = User::where('id', '!=', auth()->user()->id)->get();
+        $usersTemp = User::where('id', '!=', auth()->user()->id)
+                  ->where('is_admin', '!=', 1)
+                  ->get();
         //make users object with only id and name
         $users = [];
         foreach ($usersTemp as $user) {
