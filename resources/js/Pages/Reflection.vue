@@ -39,7 +39,7 @@
       <div class="flex flex-col items-center justify-center p-2">
         <check-circle-filled style="font-size: 40px; color: #52c41a;" />
         <p class="mt-2">Refleksija baigta</p>
-        <p class="text-lg font-bold">{{ suggestion }}</p>
+        <p class="text-lg font-bold text-center">{{ suggestion }}</p>
         <p>Citata motyvacijai palaikyti:</p>
         <p>{{ quote }}</p>
         <a-button @click="finish()" type="primary" class="mt-1">Grįžti į tvarkaraštį</a-button>

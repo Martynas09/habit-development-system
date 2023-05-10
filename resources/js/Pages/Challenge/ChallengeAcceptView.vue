@@ -22,7 +22,7 @@
       <div class="max-w-xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
           <div class="m-6">
-            <div>Iššūkis per savaitę pasikartoja {{ challenge.timesPerWeek }} kartus</div>
+            <div>Iššūkis per savaitę pasikartoja <span class="font-bold">{{ challenge.timesPerWeek }}</span> kartus</div>
             <a-form-item style="margin-top:0px;margin-bottom:0px" name="receivers"
               :label="'Pasirinkite vykdymo laiką ir ' + challenge.timesPerWeek + ' savaitės dienas'"
               :rules="[{ required: true }]"></a-form-item>

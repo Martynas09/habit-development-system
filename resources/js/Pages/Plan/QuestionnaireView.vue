@@ -41,7 +41,7 @@
             </a-radio-group>
           </div>
           <div class="m-4">
-            <a-button @click="nextQuestion()" type="primary" :disabled="!selectedAnswerValue[currentQuestionIndex]">Toliau</a-button>
+            <a-button @click="nextQuestion()" type="primary" :disabled="selectedAnswerValue[currentQuestionIndex] === undefined || selectedAnswerValue[currentQuestionIndex] === null">Toliau</a-button>
           </div>
         </div>
       </div>

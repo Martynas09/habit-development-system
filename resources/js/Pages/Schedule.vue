@@ -212,7 +212,7 @@ function getMonthData(current) {
   });
   return [total, done, undone];
 }
-function axijos() {
+function prizeCheck() {
   axios.get('/api/isPrize', {
     params: {
       id: taskID.value,
@@ -230,6 +230,21 @@ function axijos() {
       console.log(error);
     });
 }
+function achievementCheck() {
+  axios.get('/api/isAchievement', {
+  })
+    .then((response) => {
+      if (response.data !== undefined) {
+        Modal.success({
+          title: 'Naujas pasiekimas',
+          content: h('div', {}, [h('p', response.data)]),
+        });
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
 const taskDone = () => {
   router.post(
     'schedule',
@@ -239,7 +254,7 @@ const taskDone = () => {
     {
       preserveScroll: true,
       onSuccess: () => {
-        pullXP(); message.success('Užduotis pažymėta kaip atlikta', 1).then(() => message.info('Gavote 5 patirties taškus!', 2.5)); axijos();
+        message.success('Užduotis pažymėta kaip atlikta', 1).then(() => message.info('Gavote 5 patirties taškus!', 2.5)); prizeCheck(); achievementCheck(); pullXP();
       },
       onError: () => message.error('Klaida pažymėjant užduotį kaip atliktą'),
     },

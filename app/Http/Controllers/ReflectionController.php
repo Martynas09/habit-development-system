@@ -33,7 +33,7 @@ class ReflectionController extends Controller
         $reflection = new Plan_task();
         $reflection->fk_plan = $plan->id;
         $reflection->fk_task = $task->id;
-        $reflection->execution_date = Carbon::now();
+        $reflection->execution_date = Carbon::now('Europe/Vilnius');
         $reflection->is_done = 1;
         $reflection->save();
         return Redirect::route('Schedule');

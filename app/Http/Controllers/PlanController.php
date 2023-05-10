@@ -338,7 +338,10 @@ class PlanController extends Controller
     //adding only new goals, and creating new plan_goals
     foreach ($request->goals as $goal) {
       // Check if a goal with the same title already exists in the database
-      $existingGoal = Goal::where('title', $goal['value'])->where('fk_user', auth()->user()->id)->first();
+      $existingGoal = Goal::where('title', $goal['value'])
+        ->where('fk_user', auth()->user()->id)
+        ->orderBy('created_at', 'desc')
+        ->first();
 
       // If the goal doesn't exist, create a new one
       if (!$existingGoal) {

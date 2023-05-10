@@ -85,6 +85,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/schedule', [ScheduleController::class, 'showSchedule'])->name('Schedule');
     Route::post('/schedule', [ScheduleController::class, 'taskDone']);
     Route::get('/api/isPrize', [ScheduleController::class, 'isPrize']);
+    Route::get('/api/isAchievement', [ScheduleController::class, 'isAchievement']);
 });
 
 //LEADERBOARD ROUTES
