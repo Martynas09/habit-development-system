@@ -119,7 +119,7 @@ const showingNavigationDropdown = ref(false);
                                     </template>
 
                                     <template #content>
-                                        <DropdownLink :href="route('profile.edit')"> Profilis </DropdownLink>
+                                        <DropdownLink v-if="!$page.props.auth.user.is_admin" :href="route('profile.edit')"> Profilis </DropdownLink>
                                         <DropdownLink :href="route('logout')" method="post" as="button">
                                             Atsijungti
                                         </DropdownLink>

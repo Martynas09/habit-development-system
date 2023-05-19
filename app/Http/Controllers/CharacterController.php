@@ -102,7 +102,7 @@ class CharacterController extends Controller
             'title' => 'required',
             'rarity' => 'required',
             'category' => 'required',
-            'level' => 'required',
+            'fk_level' => 'required',
         ]);
         if($request->image!='null')
         {

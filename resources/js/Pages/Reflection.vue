@@ -56,21 +56,29 @@ import {
 import { ref, onBeforeMount, onMounted } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
-const props = defineProps({ questionData: Object, answerData: Object });
+const props = defineProps({ questionData: Object, answerData: Object, planData: Object });
 const questions = ref([]);
 const suggestion = ref();
 onBeforeMount(() => {
-  questions.value = props.questionData.map((q) => {
-    const answers = props.answerData
-      .filter((a) => a.fk_question === q.id)
-      .map((a) => ({ text: a.content, value: a.value }));
-    return { text: q.content, answers };
-  });
+  questions.value = [
+    ...props.questionData.map((q) => {
+      const answers = props.answerData
+        .filter((a) => a.fk_question === q.id)
+        .map((a) => ({ text: a.content, value: a.value }));
+      return { text: q.content, answers };
+    }),
+    ...props.planData.map((q) => {
+      const answers = [
+        { text: 'Taip', value: 0 },
+        { text: 'Ne', value: 0 },
+      ];
+      return { text: `Ar planas '${q.title}' jau užbaigtas?`, answers };
+    }),
+  ];
 });
 const currentQuestionIndex = ref(0);
 const visible = ref(false);
-const selectedAnswerValue = ref([
-]);
+const selectedAnswerValue = ref([]);
 const quote = ref('');
 async function getapi(url) {
   const response = await fetch(url);
@@ -79,9 +87,13 @@ async function getapi(url) {
 }
 onMounted(async () => {
   await getapi('https://iq.orm.ovh/');
+  console.log(props.planData.length);
 });
 const nextQuestion = () => {
   if (currentQuestionIndex.value === questions.value.length - 1) {
+    const modifiedArray = [...selectedAnswerValue.value.slice(0, -2)];
+    console.log(selectedAnswerValue.value);
+    console.log(modifiedArray.value);
     const total = selectedAnswerValue.value.reduce((a, b) => a + b, 0);
     if (total > 0) {
       suggestion.value = 'Planų progresas yra labai geras';
@@ -90,7 +102,7 @@ const nextQuestion = () => {
       suggestion.value = 'Planų progresas yra vidutinis';
     }
     if (total < 0) {
-      suggestion.value = 'Planų progresas yra prastas, siūlome paredaguoti planus';
+      suggestion.value = 'Planų progresas yra prastas, siūlome paredaguoti savo planus';
     }
     visible.value = true;
   } else {
@@ -101,6 +113,7 @@ const finish = () => {
   router.post(
     '/reflection',
     {
+      planAnswers: selectedAnswerValue.value.slice(-props.answerData.length),
     },
     {
       preserveScroll: true,

@@ -225,7 +225,7 @@ const handleOk = () => {
       );
       editingList.value.push(false);
       visible.value = false;
-      goalTitle.value = '';
+      form.value.goalTitle = '';
     })
     .catch(() => {
       console.log('error');

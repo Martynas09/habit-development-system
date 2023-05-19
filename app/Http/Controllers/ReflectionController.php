@@ -18,18 +18,23 @@ class ReflectionController extends Controller
     {
         $questions = Reflection_question::orderBy('number')->get();
         $answers = Reflection_answer::all();
+        $plans = Plan::where('fk_user', auth()->user()->id)->where('active', '=', 1)->whereNotIn('title', ['Iššūkis'])->get();
         return inertia::render('Reflection', [
             'questionData' => $questions,
             'answerData' => $answers,
+            'planData' => $plans
         ]);
     }
-    public function reflectionFinished()
+    public function reflectionFinished(Request $request)
     {
+      dd($request->all());
+      //idea: make refleksija plan for each user and hide it everywhere and use it only to store reflection tasks
         $plan = Plan::where('fk_user', auth()->user()->id)->where('active', '=', 1)->whereNotIn('title', ['Iššūkis'])->first();
         $task = new Task();
         $task->duration = 15;
         $task->title = "Refleksija";
         $task->save();
+        //adding reflection as a task
         $reflection = new Plan_task();
         $reflection->fk_plan = $plan->id;
         $reflection->fk_task = $task->id;

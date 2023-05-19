@@ -41,7 +41,7 @@ class PlanController extends Controller
   }
   public function showCustom()
   {
-    $goals = Goal::where('fk_user', auth()->user()->id)->get();
+    $goals = Goal::where('status', '!=', 'completed')->where('fk_user', auth()->user()->id)->get();
     return inertia::render('Plan/CustomView', [
       'goals' => $goals
     ]);
@@ -56,7 +56,6 @@ class PlanController extends Controller
       'goals' => 'required',
       'habits' => 'required',
     ]);
-    //todo reikia validacijos ir paduot esamus goals kurie nepradėti
     $goals = [];
     $habits = [];
     $tasks = [];
@@ -85,7 +84,7 @@ class PlanController extends Controller
         }
         if ($taskTime) {
           $dateTime = DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s.u\Z', $taskTime)
-            ->add(new DateInterval('PT2H'));
+            ->add(new DateInterval('PT3H'));
           $hoursAndMinutes = $dateTime->format('H:i');
           for ($i = 0; $i < 4; $i++) {
             $upcomingDay = new DateTimeImmutable('next ' . ucfirst($day) . ' +' . $i . ' week');
@@ -111,11 +110,18 @@ class PlanController extends Controller
       }
     }
     foreach ($request->goals as $goal) {
-      $newGoal = new Goal();
-      $newGoal->title = $goal['value'];
-      $newGoal->status = 'in progress';
-      $newGoal->fk_user = auth()->user()->id;
-      $newGoal->save();
+      $tempGoal = Goal::where('title', $goal['value'])->where('fk_user', auth()->user()->id)->first();
+      if ($tempGoal) {
+        $newGoal = $tempGoal;
+        $newGoal->status = 'in progress';
+        $newGoal->save();
+      } else {
+        $newGoal = new Goal();
+        $newGoal->title = $goal['value'];
+        $newGoal->status = 'in progress';
+        $newGoal->fk_user = auth()->user()->id;
+        $newGoal->save();
+      }
       $newPlanGoal = new Plan_goal();
       $newPlanGoal->fk_plan = $plan->id;
       $newPlanGoal->fk_goal = $newGoal->id;
@@ -169,9 +175,12 @@ class PlanController extends Controller
   }
   public function showPlanEdit($id)
   {
-    $existingGoals = Goal::where('fk_user', auth()->user()->id)
-      ->whereHas('plan_goal', function ($query) use ($id) {
-        $query->where('fk_plan', '!=', $id);
+    $existingGoals = Goal::where('status', '!=', 'completed')
+      ->where('fk_user', auth()->user()->id)
+      ->where(function ($query) use ($id) {
+        $query->whereHas('plan_goal', function ($subQuery) use ($id) {
+          $subQuery->where('fk_plan', '!=', $id);
+        })->orWhereDoesntHave('plan_goal');
       })
       ->get();
     $goals = array();
@@ -352,6 +361,8 @@ class PlanController extends Controller
         $newGoal->save();
       } else {
         $newGoal = $existingGoal;
+        $newGoal->status = 'in progress';
+        $newGoal->save();
       }
       $newPlanGoal = new Plan_goal();
       $newPlanGoal->fk_plan = $plan->id;
@@ -436,6 +447,18 @@ class PlanController extends Controller
     foreach ($plan->getTasks->load('getTask') as $task) {
       $task->getTask->delete();
     }
+    //deleting all habits
+    foreach ($plan->getPlanHabits->load('habits') as $habit) {
+      $habit->habits->delete();
+    }
+    //deleting all goals if they dont have other plans
+    foreach ($plan->getPlanGoals->load('goals') as $goal) {
+      if ($goal->goals->status != 'completed') {
+        if ($goal->goals->plan_goal->count() == 1) {
+          $goal->goals->delete();
+        }
+      }
+    }
     $plan->getTasks()->delete();
     $plan->getPlanGoals()->delete();
     $plan->getPlanHabits()->delete();
@@ -482,6 +505,7 @@ class PlanController extends Controller
       'plans' => $plans
     ]);
   }
+  //TODO: fix overall kekw
   public function selectRecommended(Request $request)
   {
     $goalsArray = [];
@@ -490,9 +514,9 @@ class PlanController extends Controller
     $tempTaskArray = [];
     $originalPlan = Plan::find($request->id);
     $newPlan = new Plan;
-    $newPlan->title = $originalPlan->title;
+    $newPlan->title = 'Pavadinimas';
     $newPlan->active = 1;
-    $newPlan->color = $originalPlan->color;
+    $newPlan->color = 'white';
     $newPlan->fk_user = auth()->user()->id;
     $newPlan->save();
 
@@ -500,39 +524,57 @@ class PlanController extends Controller
       $tempTaskArray[] = $task->getTask;
     }
     $tasks = array_unique($tempTaskArray);
-    //tasks plan_tasks reminders
+    //tasks plan_tasks
     foreach ($tasks as $task) {
       $newTask = new Task;
       $newTask->title = $task->title;
       $newTask->duration = $task->duration;
       $newTask->save();
       $tasksArray[$task->id] = $newTask->id;
-      foreach ($task->getPlanTasks as $planTask) {
-        $newReminder = new Reminder();
-        $newReminder->remind_time = $planTask->execution_date;
-        $newReminder->save();
-        $newPlanTask = new Plan_task;
-        $newPlanTask->execution_date = $planTask->execution_date;
-        $newPlanTask->is_done = 0;
-        $newPlanTask->fk_task = $newTask->id;
-        $newPlanTask->fk_plan = $newPlan->id;
-        $newPlanTask->fk_reminder = $newReminder->id;
-        $newPlanTask->save();
-      }
+      $newPlanTask = new Plan_task;
+      $newPlanTask->execution_date = Carbon::now()->addDays(1);
+      $newPlanTask->is_done = 0;
+      $newPlanTask->fk_task = $newTask->id;
+      $newPlanTask->fk_plan = $newPlan->id;
+      $newPlanTask->fk_reminder = null;
+      $newPlanTask->save();
+      // foreach ($task->getPlanTasks as $planTask) {
+      //   $newReminder = new Reminder();
+      //   $newReminder->remind_time = $planTask->execution_date;
+      //   $newReminder->save();
+      //   $newPlanTask = new Plan_task;
+      //   $newPlanTask->execution_date = Carbon::now()->addDays(1);
+      //   $newPlanTask->is_done = 0;
+      //   $newPlanTask->fk_task = $newTask->id;
+      //   $newPlanTask->fk_plan = $newPlan->id;
+      //   $newPlanTask->fk_reminder = null;
+      //   $newPlanTask->save();
+      // }
     }
     //goals and plan_goals
     foreach ($originalPlan->getPlanGoals as $plangoals) {
-      $newGoal = new Goal();
-      $newGoal->title = $plangoals->goals->title;
-      $newGoal->status = 'in progress';
-      $newGoal->fk_user = auth()->user()->id;
-      $newGoal->save();
+      $existingGoal = Goal::where('title', $plangoals->goals->title)
+        ->where('fk_user', auth()->user()->id)
+        ->where('status', '!=', 'completed')
+        ->first();
+      if (!$existingGoal) {
+        $newGoal = new Goal();
+        $newGoal->title = $plangoals->goals->title;
+        $newGoal->status = 'in progress';
+        $newGoal->fk_user = auth()->user()->id;
+        $newGoal->save();
+      } else {
+        $newGoal = $existingGoal;
+        $newGoal->status = 'in progress';
+        $newGoal->save();
+      }
       $newPlanGoal = new Plan_goal();
       $newPlanGoal->fk_plan = $newPlan->id;
       $newPlanGoal->fk_goal = $newGoal->id;
       $newPlanGoal->save();
       $goalsArray[$plangoals->goals->id] = $newGoal->id;
     }
+
     //habits and plan_habits
     foreach ($originalPlan->getPlanHabits as $planhabits) {
       $newHabit = new Habit();
@@ -564,6 +606,7 @@ class PlanController extends Controller
     }
     return Redirect::to('/planedit/' . $newPlan->id);
   }
+  //TODO: add more questions maybe
   public function questionnaireFinished(Request $request)
   {
     $request->validate([
@@ -591,11 +634,22 @@ class PlanController extends Controller
       $newPlanTask->fk_plan = $plan->id;
       $newPlanTask->save();
 
-      $newGoal = new Goal();
-      $newGoal->title = 'Pagerinti fizinę formą';
-      $newGoal->status = 'in progress';
-      $newGoal->fk_user = auth()->user()->id;
-      $newGoal->save();
+      $existingGoal = Goal::where('title', 'Pagerinti fizinę formą')
+        ->where('fk_user', auth()->user()->id)
+        ->where('status', '!=', 'completed')
+        ->first();
+      // If the goal doesn't exist, create a new one
+      if (!$existingGoal) {
+        $newGoal = new Goal();
+        $newGoal->title = 'Pagerinti fizinę formą';
+        $newGoal->status = 'in progress';
+        $newGoal->fk_user = auth()->user()->id;
+        $newGoal->save();
+      } else {
+        $newGoal = $existingGoal;
+        $newGoal->status = 'in progress';
+        $newGoal->save();
+      }
 
       $newPlanGoal = new Plan_goal();
       $newPlanGoal->fk_plan = $plan->id;
@@ -634,12 +688,24 @@ class PlanController extends Controller
       $newPlanTask->fk_plan = $plan->id;
       $newPlanTask->save();
 
-      $newGoal = new Goal();
-      $newGoal->title = 'Išmokti naujų dalykų';
-      $newGoal->status = 'in progress';
-      $newGoal->fk_user = auth()->user()->id;
-      $newGoal->save();
 
+
+      $existingGoal = Goal::where('title', 'Išmokti naujų dalykų')
+        ->where('fk_user', auth()->user()->id)
+        ->where('status', '!=', 'completed')
+        ->first();
+      // If the goal doesn't exist, create a new one
+      if (!$existingGoal) {
+        $newGoal = new Goal();
+        $newGoal->title = 'Išmokti naujų dalykų';
+        $newGoal->status = 'in progress';
+        $newGoal->fk_user = auth()->user()->id;
+        $newGoal->save();
+      } else {
+        $newGoal = $existingGoal;
+        $newGoal->status = 'in progress';
+        $newGoal->save();
+      }
       $newPlanGoal = new Plan_goal();
       $newPlanGoal->fk_plan = $plan->id;
       $newPlanGoal->fk_goal = $newGoal->id;
@@ -677,11 +743,22 @@ class PlanController extends Controller
       $newPlanTask->fk_plan = $plan->id;
       $newPlanTask->save();
 
-      $newGoal = new Goal();
-      $newGoal->title = 'Pagerinti socialinius santykius';
-      $newGoal->status = 'in progress';
-      $newGoal->fk_user = auth()->user()->id;
-      $newGoal->save();
+      $existingGoal = Goal::where('title', 'Pagerinti socialinius santykius')
+        ->where('fk_user', auth()->user()->id)
+        ->where('status', '!=', 'completed')
+        ->first();
+      // If the goal doesn't exist, create a new one
+      if (!$existingGoal) {
+        $newGoal = new Goal();
+        $newGoal->title = 'Pagerinti socialinius santykius';
+        $newGoal->status = 'in progress';
+        $newGoal->fk_user = auth()->user()->id;
+        $newGoal->save();
+      } else {
+        $newGoal = $existingGoal;
+        $newGoal->status = 'in progress';
+        $newGoal->save();
+      }
 
       $newPlanGoal = new Plan_goal();
       $newPlanGoal->fk_plan = $plan->id;
@@ -713,11 +790,23 @@ class PlanController extends Controller
       $newPlanTask->fk_plan = $plan->id;
       $newPlanTask->save();
 
-      $newGoal = new Goal();
-      $newGoal->title = 'Skirti laiko sau';
-      $newGoal->status = 'in progress';
-      $newGoal->fk_user = auth()->user()->id;
-      $newGoal->save();
+
+      $existingGoal = Goal::where('title', 'Skirti laiko sau')
+        ->where('fk_user', auth()->user()->id)
+        ->where('status', '!=', 'completed')
+        ->first();
+      // If the goal doesn't exist, create a new one
+      if (!$existingGoal) {
+        $newGoal = new Goal();
+        $newGoal->title = 'Skirti laiko sau';
+        $newGoal->status = 'in progress';
+        $newGoal->fk_user = auth()->user()->id;
+        $newGoal->save();
+      } else {
+        $newGoal = $existingGoal;
+        $newGoal->status = 'in progress';
+        $newGoal->save();
+      }
 
       $newPlanGoal = new Plan_goal();
       $newPlanGoal->fk_plan = $plan->id;
@@ -756,11 +845,22 @@ class PlanController extends Controller
       $newPlanTask->fk_plan = $plan->id;
       $newPlanTask->save();
 
-      $newGoal = new Goal();
-      $newGoal->title = 'Sveikai maitintis';
-      $newGoal->status = 'in progress';
-      $newGoal->fk_user = auth()->user()->id;
-      $newGoal->save();
+      $existingGoal = Goal::where('title', 'Sveikai maitintis')
+        ->where('fk_user', auth()->user()->id)
+        ->where('status', '!=', 'completed')
+        ->first();
+      // If the goal doesn't exist, create a new one
+      if (!$existingGoal) {
+        $newGoal = new Goal();
+        $newGoal->title = 'Sveikai maitintis';
+        $newGoal->status = 'in progress';
+        $newGoal->fk_user = auth()->user()->id;
+        $newGoal->save();
+      } else {
+        $newGoal = $existingGoal;
+        $newGoal->status = 'in progress';
+        $newGoal->save();
+      }
 
       $newPlanGoal = new Plan_goal();
       $newPlanGoal->fk_plan = $plan->id;

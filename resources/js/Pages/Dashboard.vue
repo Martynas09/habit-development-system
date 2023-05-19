@@ -45,7 +45,7 @@
                                 <a-col :span="8">
                                     <a-card :bordered="false">
                                         <template #title><form-outlined /><span class="font-bold"> Naujausi užrašai</span></template>
-                                            <p v-if="notes.length === 0">neturite užrašų</p>
+                                            <p v-if="notes.length === 0">Neturite užrašų</p>
                                             <a-list v-if="notes.length" :data-source="notes" item-layout="horizontal">
                                                 <template #renderItem="{ item }">
                                                     <a-list-item style="padding:0px">

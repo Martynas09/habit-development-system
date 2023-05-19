@@ -19,7 +19,7 @@
       <div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
           <p class="pt-2 pl-3 text-lg">Dienos citata: <span class="text-xl">"{{ quote }}"</span></p>
-          <h3 v-if="plan.length>0" class="m-3">Aktyvūs planai:</h3>
+          <h3 v-if="plan.length > 0" class="m-3">Aktyvūs planai:</h3>
           <h3 v-else class="m-3">Neturite aktyvių planų</h3>
           <div class="flex">
             <div v-for="planName in plan" :key="planName.title">
@@ -27,6 +27,11 @@
                 <p class="px-2 rounded-sm" :style="{ backgroundColor: planName.color }">{{ planName.title }}</p>
               </div>
             </div>
+            <div class="ml-auto mr-4">
+            <Link :href="route('Reflection')">
+              <a-button type="primary">Atlikti refleksiją</a-button>
+            </Link>
+          </div>
           </div>
           <div style="border: 1px solid #d9d9d9; border-radius: 4px; margin: 16px ">
             <a-config-provider :locale="ltLT">
@@ -46,17 +51,17 @@
                             class="w-full" @click="handleTaskDone(); taskDone()">Pažymėti atlikta</a-button>
                         </template>
                         <div class="pb-1">
-                          <div class="rounded-sm max-h-[22px] pl-1" :style=" { backgroundColor: item.color } ">
-                            <a-badge @click= handleClick(item)  :status=" item.type "
-                              :text=" dayjs(item.time).format('HH:mm') + ' ' + item.content " />
+                          <div class="rounded-sm max-h-[22px] pl-1" :style="{ backgroundColor: item.color }">
+                            <a-badge @click=handleClick(item) :status="item.type"
+                              :text="dayjs(item.time).format('HH:mm') + ' ' + item.content" />
                           </div>
                         </div>
                       </a-popover>
                     </li>
                   </ul>
                 </template>
-                <template #monthCellRender=" { current } ">
-                  <div v-if=" getMonthData(current)[0] " class="notes-month">
+                <template #monthCellRender="{ current }">
+                  <div v-if="getMonthData(current)[0]" class="notes-month">
                     <p class="text-sm p-0 m-0">Išviso užduočių: {{ getMonthData(current)[0] }}</p>
                     <p class="text-sm p-0 m-0 text-green-600">Atlikta: {{ getMonthData(current)[1] }}</p>
                     <p class="text-sm p-0 m-0 text-red-600">Neatlikta: {{ getMonthData(current)[2] }}</p>
@@ -67,15 +72,14 @@
                 </template>
               </a-calendar>
             </a-config-provider>
-            <a-modal v-model:visible="visibleReflection" title='Refleksija' okText="Atlikti"
-              cancelText="Priminti vėliau" @ok=" handleOk " @cancel=" handleCancel " :closable=" false "
-              :maskClosable=" false ">
+            <a-modal v-model:visible="visibleReflection" title='Refleksija' okText="Atlikti" cancelText="Priminti vėliau"
+              @ok="handleOk" @cancel="handleCancel" :closable="false" :maskClosable="false">
               Praėjo savaitė laiko nuo paskutinės refleksijos. Ar norite atlikti refleksiją?
             </a-modal>
           </div>
           <div class="flex flex-row-reverse mr-4 mb-2">
-          <a-button type="primary" @click="exportCalendar">Ekportuoti tvarkaraštį</a-button>
-        </div>
+            <a-button type="primary" @click="exportCalendar">Ekportuoti tvarkaraštį</a-button>
+          </div>
         </div>
       </div>
     </div>
@@ -312,4 +316,5 @@ function exportCalendar() {
 
 .notes-month section {
   font-size: 28px;
-}</style>
+}
+</style>

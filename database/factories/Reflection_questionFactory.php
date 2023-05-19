@@ -26,7 +26,7 @@ class Reflection_questionFactory extends Factory
     {
         return [
             'number' => ++$this->sequence,
-            'content' => $this->questions[$this->sequence - 1] . '?',
+            'content' => $this->questions[$this->sequence - 1],
             'required' => $this->faker->boolean(),
         ];
     }
