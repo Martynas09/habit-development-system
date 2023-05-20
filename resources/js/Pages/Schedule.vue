@@ -29,7 +29,7 @@
             </div>
             <div class="ml-auto mr-4">
             <Link :href="route('Reflection')">
-              <a-button type="primary">Atlikti refleksiją</a-button>
+              <a-button type="primary" :disabled="plan.length === 0">Atlikti refleksiją</a-button>
             </Link>
           </div>
           </div>
@@ -78,7 +78,7 @@
             </a-modal>
           </div>
           <div class="flex flex-row-reverse mr-4 mb-2">
-            <a-button type="primary" @click="exportCalendar">Ekportuoti tvarkaraštį</a-button>
+            <a-button type="primary" @click="exportCalendar" :disabled="plan.length === 0">Ekportuoti tvarkaraštį</a-button>
           </div>
         </div>
       </div>

@@ -65,7 +65,7 @@
                     <span class="text-yellow-500" v-else-if="record.status === 'in progress'">
                       Vykdomas
                     </span>
-                    <span class="text-green-500" v-else-if="record.status === 'completed'">
+                    <span class="text-green-600" v-else-if="record.status === 'completed'">
                       Užbaigtas
                     </span>
                   </template>

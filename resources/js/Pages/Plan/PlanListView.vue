@@ -39,7 +39,10 @@
                   <span class="text-red-500" v-else-if="record.active === 0">
                     Neaktyvus
                   </span>
-                  <a-switch :checked="record.active === 1" @change="updateActive(record)"/>
+                  <span class="text-green-600" v-else-if="record.active === 2">
+                    Užbaigtas
+                  </span>
+                  <a-switch v-if="record.active !== 2" :checked="record.active === 1" @change="updateActive(record)"/>
                 </template>
                 <template v-if="column.key === 'color'">
                   <div class="flex justify-start">
@@ -65,7 +68,7 @@
                   <div class="flex">
                     <div class="pr-2">
                       <Link :href="route('Plan.PlanEditView', record.id)">
-                      <a-button type="primary" shape="circle">
+                      <a-button v-if="record.active !== 2" type="primary" shape="circle">
                         <template #icon>
                           <edit-outlined />
                         </template>

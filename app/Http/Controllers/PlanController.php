@@ -131,6 +131,7 @@ class PlanController extends Controller
     foreach ($request->habits as $habit) {
       $newHabit = new Habit();
       $newHabit->title = $habit['value'];
+      $newHabit->status = 'in progress';
       $newHabit->fk_user = auth()->user()->id;
       $newHabit->save();
       $newPlanHabit = new Plan_habit();
@@ -377,11 +378,12 @@ class PlanController extends Controller
     //adding only new habits, and creating new plan_habits
     foreach ($request->habits as $habit) {
       // Check if a habit with the same title already exists in the database
-      $existingHabit = Habit::where('title', $habit['value'])->first();
+      $existingHabit = Habit::where('title', $habit['value'])->where('fk_user', auth()->user()->id)->orderBy('created_at', 'desc')->first();
 
       // If the habit doesn't exist, create a new one
       if (!$existingHabit) {
         $newHabit = new Habit();
+        $newHabit->status = 'in progress';
         $newHabit->title = $habit['value'];
         $newHabit->fk_user = auth()->user()->id;
         $newHabit->save();
@@ -579,6 +581,7 @@ class PlanController extends Controller
     foreach ($originalPlan->getPlanHabits as $planhabits) {
       $newHabit = new Habit();
       $newHabit->title = $planhabits->habits->title;
+      $newHabit->status = 'in progress';
       $newHabit->fk_user = auth()->user()->id;
       $newHabit->save();
       $newPlanHabit = new Plan_habit();
@@ -658,6 +661,7 @@ class PlanController extends Controller
 
       $newHabit = new Habit();
       $newHabit->title = 'Pastovus sportavimas';
+      $newHabit->status = 'in progress';
       $newHabit->fk_user = auth()->user()->id;
       $newHabit->save();
 
@@ -713,6 +717,7 @@ class PlanController extends Controller
 
       $newHabit = new Habit();
       $newHabit->title = 'Pastovus mokymasis';
+      $newHabit->status = 'in progress';
       $newHabit->fk_user = auth()->user()->id;
       $newHabit->save();
 
@@ -767,6 +772,7 @@ class PlanController extends Controller
 
       $newHabit = new Habit();
       $newHabit->title = 'Pastovus bendravimas';
+      $newHabit->status = 'in progress';
       $newHabit->fk_user = auth()->user()->id;
       $newHabit->save();
 
@@ -813,15 +819,15 @@ class PlanController extends Controller
       $newPlanGoal->fk_goal = $newGoal->id;
       $newPlanGoal->save();
 
-      // $newHabit = new Habit();
-      // $newHabit->title = 'Ketvirtas atsakymas';
-      // $newHabit->fk_user = auth()->user()->id;
-      // $newHabit->save();
+      $newHabit = new Habit();
+      $newHabit->title = 'Pastovus laiko sau skyrimas';
+      $newHabit->fk_user = auth()->user()->id;
+      $newHabit->save();
 
-      // $newPlanHabit = new Plan_habit();
-      // $newPlanHabit->fk_plan = $plan->id;
-      // $newPlanHabit->fk_habit = $newHabit->id;
-      // $newPlanHabit->save();
+      $newPlanHabit = new Plan_habit();
+      $newPlanHabit->fk_plan = $plan->id;
+      $newPlanHabit->fk_habit = $newHabit->id;
+      $newPlanHabit->save();
 
       // $newPrize = new Prize();
       // $newPrize->title = 'Ketvirtas atsakymas';
@@ -869,6 +875,7 @@ class PlanController extends Controller
 
       $newHabit = new Habit();
       $newHabit->title = 'Nuolatinė sveika mityba';
+      $newHabit->status = 'in progress';
       $newHabit->fk_user = auth()->user()->id;
       $newHabit->save();
 
