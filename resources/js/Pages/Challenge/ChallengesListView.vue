@@ -55,7 +55,9 @@
                         <div class="absolute right-4 bottom-4">
                           <a-button v-if="challenge.status === 'pending'" type="primary"
                             @click="showModal(challenge.challenge)">Plačiau</a-button>
-                          <span v-else>Iššūkis priimtas</span>
+                          <span v-else-if="challenge.status === 'accepted'" class="text-green-500 font-bold">Priimtas</span>
+                          <span v-else-if="challenge.status === 'completed'" class="text-green-600 font-bold">Atliktas</span>
+                          <span v-else-if="challenge.status === 'rejected'" class="text-red-500 font-bold">Atmestas</span>
                         </div>
                       </div>
                     </div>
@@ -86,11 +88,11 @@
                         <span v-if="user.status === 'accepted'" class="text-green-500 font-bold ml-1">Priėmė</span>
                         <span v-if="user.status === 'completed'" class="text-green-600 font-bold ml-1">Atliktas</span>
                       </div>
-                      <div class="flex justify-between">
+                      <!-- <div class="flex justify-between">
                         <div class="absolute right-4 bottom-4">
-                          <a-button type="primary" @click="showModal(challenge)">Plačiau</a-button>
+                          <a-button type="primary" @click="showModal(challenge,0)">Plačiau</a-button>
                         </div>
-                      </div>
+                      </div> -->
                     </div>
                   </div>
                 </div>
@@ -114,13 +116,13 @@
                         v-if="challenge.xpGiven === 10">patirties taškų</span><span
                         v-if="challenge.xpGiven !== 1 && challenge.xpGiven !== 10">patirties taškai</span></span>
                     <div v-if="challenge.challenged_users.length === 0" class="absolute right-4 bottom-4">
-                      <a-button type="primary" @click="showModal(challenge)">Plačiau</a-button>
+                      <a-button type="primary" @click="showModal(challenge,1)">Plačiau</a-button>
                     </div>
                     <div v-else class="absolute right-6 bottom-4">
                       <span v-if="challenge.challenged_users[0].status === 'accepted'"
-                        class="text-yellow-500">Vykdomas</span>
+                        class="text-green-500 font-bold">Priimtas</span>
                       <span v-if="challenge.challenged_users[0].status === 'completed'"
-                        class="text-green-500">Įvykdytas</span>
+                        class="text-green-600 font-bold">Atliktas</span>
                     </div>
                   </div>
                 </div>
@@ -136,6 +138,7 @@
           <Link :href="route('Challenge.ChallengeAcceptView', id)">
           <a-button type="primary">Priimti</a-button>
           </Link>
+          <a-button v-if="isPublic!==1" class="ml-2" type="danger" @click="decline(id)">Atmesti</a-button>
         </div>
       </a-modal>
     </div>
@@ -143,10 +146,11 @@
 </template>
 
 <script setup>
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import { DashboardOutlined, HomeOutlined, SendOutlined } from '@ant-design/icons-vue';
 import dayjs from 'dayjs';
 import { defineProps, ref } from 'vue';
+import { message } from 'ant-design-vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 const props = defineProps({ publicChallenges: Object, authorPrivateChallenges: Object, receivedChallenges: Object });
@@ -155,13 +159,28 @@ const title = ref('');
 const description = ref('');
 const activeKey = ref('1');
 const created_at = ref();
+const isPublic = ref();
 const id = ref();
-const showModal = (challenge) => {
+const showModal = (challenge, number) => {
   title.value = challenge.title;
   description.value = challenge.description;
   id.value = challenge.id;
+  isPublic.value = number;
   visible.value = true;
 };
-
+const decline = (challengeId) => {
+  router.post(
+    '/challengeDecline',
+    {
+      id: challengeId,
+    },
+    {
+      preserveScroll: true,
+      onSuccess: () => message.success('Iššūkis atmestas'),
+      onError: () => message.error('Klaida atmetant iššūkį'),
+    },
+  );
+  visible.value = false;
+};
 </script>
 <style></style>

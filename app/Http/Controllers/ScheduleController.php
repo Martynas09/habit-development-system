@@ -56,7 +56,6 @@ class ScheduleController extends Controller
       'oneWeekPassed' => $oneWeekPassed,
     ]);
   }
-  //TODO: fix finishing iššūkis
   public function taskDone(Request $request)
   {
     $user = User::where('id', auth()->user()->id)->first();
@@ -65,6 +64,8 @@ class ScheduleController extends Controller
     $task = Plan_task::where('id', $request->id)->first();
     $task->is_done = 1;
     $task->save();
+
+    //check if challenge is completed
     if (strpos($task->getPlan->title, "Iššūkis") !== false) {
       $status = 1;
       foreach ($task->getPlan->getTasks as $challengeTask) {
@@ -75,10 +76,12 @@ class ScheduleController extends Controller
       }
       if ($status == 1) {
         $challengeId = preg_replace('/[^0-9]/', '', $challengeTask->getPlan->title);
-        $challengeTask->getPlan->active = 0;
+        error_log($challengeId);
+        $challengeTask->getPlan->active = 2;
         $challengeTask->getPlan->save();
         $challengeToComplete = Challenged_user::where('fk_user', auth()->user()->id)->where('fk_challenge', $challengeId)->first();
         $challengeToComplete->status = 'completed';
+        $challengeToComplete->save();
       }
     }
   }
