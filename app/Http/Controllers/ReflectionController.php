@@ -33,7 +33,7 @@ class ReflectionController extends Controller
   }
   public function reflectionFinished(Request $request)
   {
-    //idea: make refleksija plan for each user and hide it everywhere and use it only to store reflection tasks
+    //TODO: make refleksija plan for each user and hide it everywhere and use it only to store reflection tasks
     $plan = Plan::where('fk_user', auth()->user()->id)->where('active', '=', 1)->whereNotIn('title', ['Iššūkis'])->first();
     $task = new Task();
     $task->duration = 15;

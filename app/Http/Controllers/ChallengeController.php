@@ -153,7 +153,6 @@ class ChallengeController extends Controller
     }
     return Redirect::route('Challenge.ChallengesListView');
   }
-  //TODO
   public function ChallengeDecline(Request $request)
   {
     $challenged_user = Challenged_user::where('fk_challenge', $request->id)->where('fk_user', auth()->user()->id)->first();
