@@ -34,7 +34,7 @@ defineProps({
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-5">
                     <div>
-                        <h1 class="text-3xl font-bold text-black text-center">Sužaidybinta įpročių ugdymo sistema</h1>
+                        <h1 class="text-3xl font-bold text-black text-center">Sužaidybinto įpročių ugdymo sistema</h1>
                         <p class="text-md  text-gray-400 text-center">Efektyvesnis ir patogesnis būdas ugdyti įpročius</p>
                         <div class="text-center">
                             <Link v-if="canRegister" :href="route('register')">
