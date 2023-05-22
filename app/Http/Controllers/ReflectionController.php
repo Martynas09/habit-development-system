@@ -71,6 +71,7 @@ class ReflectionController extends Controller
         }
       }
       if ($planCompleted) {
+        error_log("yes");
         $plan->active = 2;
         $plan->save();
         $goals = Plan_goal::where('fk_plan', $plan->id)->get();
@@ -97,6 +98,7 @@ class ReflectionController extends Controller
           }
         }
       } else {
+        error_log("no");
         //getting tasks for each day
         $tasksByWeekday = array(
           'Monday' => array(),
