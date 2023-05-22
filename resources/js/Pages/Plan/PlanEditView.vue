@@ -1,5 +1,5 @@
 <template>
-  <Head title="Kūrimas nuo nulio" />
+  <Head title="Plano redagavimas" />
 
   <AuthenticatedLayout>
     <template #header>
@@ -15,13 +15,7 @@
           Planų valdymas
           </Link>
         </a-breadcrumb-item>
-        <a-breadcrumb-item class="text-xl">
-          <Link :href="route('Plan.ChooseAlternativeView')">
-          <gold-outlined style="font-size:20px" />
-          Alternatyvos pasirinkimas
-          </Link>
-        </a-breadcrumb-item>
-        <a-breadcrumb-item class="text-xl">Kūrimas nuo nulio</a-breadcrumb-item>
+        <a-breadcrumb-item class="text-xl">Plano redagavimas</a-breadcrumb-item>
       </a-breadcrumb>
     </template>
 

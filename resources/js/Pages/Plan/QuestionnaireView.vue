@@ -41,7 +41,8 @@
             </a-radio-group>
           </div>
           <div class="m-4">
-            <a-button @click="nextQuestion()" type="primary" :disabled="selectedAnswerValue[currentQuestionIndex] === undefined || selectedAnswerValue[currentQuestionIndex] === null">Toliau</a-button>
+            <a-button @click="nextQuestion()" type="primary"
+              :disabled="selectedAnswerValue[currentQuestionIndex] === undefined || selectedAnswerValue[currentQuestionIndex] === null">Toliau</a-button>
           </div>
         </div>
       </div>
@@ -51,6 +52,22 @@
         <check-circle-filled style="font-size: 40px; color: #52c41a;" />
         <p class="mt-2">Apklausa baigta</p>
         <a-button @click="handleSubmit" type="primary" class="mt-4">Sugeneruoti planą</a-button>
+      </div>
+    </a-modal>
+    <a-modal v-model:visible="visible2" title="" footer="" :closable="false" :maskClosable="false">
+      <div class="flex flex-col items-center justify-center p-2">
+        <check-circle-filled style="font-size: 40px; color: #52c41a;" />
+        <p class="mt-2">Apklausa baigta</p>
+        <p class="mt-2 text-center">Jūsų apklausos rezultatai rodo, kad jūsų turimi įpročiai padengia visus svarbiausius gyvenimo rato
+          aspektus</p>
+        <p class="mt-2">Jums galime pasiūlyti susikurti planą nuo nulio</p>
+        <Link :href="route('Plan.CustomView')">
+        <a-button type="primary">Kurti planą nuo nulio</a-button>
+        </Link>
+        <p class="mt-3">Arba pasirinkti kitą alternatyvą</p>
+        <Link :href="route('Plan.ChooseAlternativeView')">
+        <a-button type="primary">Rinktis kitą alternatyvą</a-button>
+        </Link>
       </div>
     </a-modal>
 
@@ -66,6 +83,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 const currentQuestionIndex = ref(0);
 const visible = ref(false);
+const visible2 = ref(false);
 const selectedAnswerValue = ref([
 ]);
 const questions = [
@@ -115,9 +133,21 @@ const questions = [
     ],
   },
 ];
+const allValuesGreaterThanOne = ref(false);
 const nextQuestion = () => {
   if (currentQuestionIndex.value === questions.length - 1) {
-    visible.value = true;
+    allValuesGreaterThanOne.value = true;
+    for (let i = 0; i < selectedAnswerValue.value.length; i += 1) {
+      if (selectedAnswerValue.value[i] <= 1) {
+        allValuesGreaterThanOne.value = false;
+        break;
+      }
+    }
+    if (allValuesGreaterThanOne.value) {
+      visible2.value = true;
+    } else {
+      visible.value = true;
+    }
   } else {
     currentQuestionIndex.value += 1;
   }

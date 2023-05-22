@@ -149,7 +149,7 @@ const confirm = (id) => {
   );
 };
 const cancel = () => {
-  message.error('Click on No');
+  message.error('Atšaukta');
 };
 function updateActive(record) {
   router.post(

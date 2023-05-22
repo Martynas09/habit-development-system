@@ -142,7 +142,7 @@
                     <div v-else>
                       <a-textarea v-model:value="item.content" style="margin-left: 0px;margin-top:0px" :row="2" />
                     </div>
-                    <div class="pr-2">
+                    <div class="pr-2 pl-2">
                       <a-button v-if="editingListAnswers[index] === false" @click="editingListAnswers[index] = true"
                         type="primary" shape="circle">
                         <template #icon>

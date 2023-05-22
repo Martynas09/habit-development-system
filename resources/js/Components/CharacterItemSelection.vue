@@ -14,7 +14,7 @@
                     @click="emit('changeBodyPart', { category: item.category, partID: item.id, picture: item.picture });activeTop = item.id" :class="{active: activeTop === item.id }">
             </div>
         </div>
-        <h1 class="font-bold">Apatiniai drabužiai:</h1>
+        <h1 class="font-bold">Kelnės:</h1>
         <div class="grid grid-cols-5">
             <div v-for="item in props.itemsBottom" v-bind:key="item" class="w-24">
                 <img :src="'/storage/' + item.picture"

@@ -13,6 +13,9 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
+use DateTimeImmutable;
+use DateInterval;
+use App\Models\Reminder;
 
 class ReflectionController extends Controller
 {
@@ -94,16 +97,129 @@ class ReflectionController extends Controller
           }
         }
       } else {
-        error_log("Plan not completed");
-      }
-    }
+        //getting tasks for each day
+        $tasksByWeekday = array(
+          'Monday' => array(),
+          'Tuesday' => array(),
+          'Wednesday' => array(),
+          'Thursday' => array(),
+          'Friday' => array(),
+          'Saturday' => array(),
+          'Sunday' => array(),
+        );
 
-    if ($planCompleted) {
-      // The plan is completed
-      // Perform the necessary actions
-    } else {
-      // The plan is not completed
-      // Perform other actions
+        foreach ($plan->getTasks->where('execution_date', '>', Carbon::now()) as $task) {
+          $weekday = date('l', strtotime($task['execution_date']));
+          $time = date('H:i', strtotime($task['execution_date']));
+          $existingTask = null;
+
+          // Look for existing task with same title, time and weekday
+          foreach ($tasksByWeekday[$weekday] as $existing) {
+            if (
+              $existing['title'] === $task['title'] &&
+              date('H:i', strtotime($existing['execution_date'])) === $time
+            ) {
+              $existingTask = $existing;
+              break;
+            }
+          }
+          if (!$existingTask) {
+            // Add task to weekday array
+            if ($task->getTask->title !== "Refleksija")
+              $tasksByWeekday[$weekday][] = $task;
+          }
+        }
+        $convertedArray = [];
+        foreach ($tasksByWeekday as $day => $tasks) {
+          $convertedTasks = [];
+          foreach ($tasks as $task) {
+            $convertedTasks[] = $task->toArray();
+          }
+          $convertedArray[$day] = $convertedTasks;
+        }
+        $tasksByWeekday = $convertedArray;
+
+        //check if reminder is needed
+        $reminderNeeded = false;
+        foreach ($tasksByWeekday as $day => $tasks) {
+          foreach ($tasks as $task) {
+            if ($task['fk_reminder'] === null) {
+              $reminderNeeded = false;
+              break 2;
+            }
+            $reminderNeeded = true;
+            break 2;
+          }
+        }
+        //find all plan tasks unique
+        $uniqueTasks = array();
+        foreach ($plan->getTasks->where('execution_date', '>', Carbon::now()) as $task) {
+          $title = $task->getTask;
+          if ($title->title !== "Refleksija" && !in_array($title, $uniqueTasks)) {
+            $uniqueTasks[] = $task->getTask;
+          }
+        }
+
+        $convertedTaskArray = [];
+        foreach ($uniqueTasks as $index => $task) {
+            $convertedTaskArray[$index] = $task->toArray();
+        }
+        $uniqueTasks = $convertedTaskArray;
+
+        //deleting only upcoming tasks except reflection
+        foreach($plan->getTasks->where('execution_date', '>', Carbon::now()) as $task) {
+          if($task->getTask->title !== "Refleksija") {
+            $task->delete();
+          }
+        }
+        //TODO: delete reminders
+        // //deleting all reminders if existing
+        // foreach ($plan->getTasks as $task) {
+        //   if ($task->fk_reminder != null) {
+        //     $task->getReminder->delete();
+        //   }
+        // }
+
+        //adding tasks and reminders(if existing)
+        foreach ($uniqueTasks as $task) {
+          $daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+          foreach ($daysOfWeek as $day) {
+            $taskTime = null;
+
+            //check if task is in $day array
+            foreach ($tasksByWeekday[$day] as $checkDay) {
+              if (in_array($task['title'], $checkDay['get_task'])) {
+                $taskTime = $checkDay['execution_date'];
+                break;
+              }
+            }
+            if ($taskTime) {
+              $dateTime = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $taskTime);
+              $hoursAndMinutes = $dateTime->format('H:i');
+              for ($i = 0; $i < 4; $i++) {
+                $upcomingDay = new DateTimeImmutable('next ' . ucfirst($day) . ' +' . $i . ' week');
+                $tempDate = $upcomingDay->format('Y-m-d') . ' ' . $hoursAndMinutes;
+                if ($reminderNeeded != false) {
+                  $newReminder = new Reminder();
+                  $newReminder->remind_time = DateTimeImmutable::createFromFormat('Y-m-d H:i', $tempDate);
+                  $newReminder->save();
+                }
+                $newPlanTask = new Plan_task();
+                $newPlanTask->execution_date = DateTimeImmutable::createFromFormat('Y-m-d H:i', $tempDate);
+                $newPlanTask->is_done = 0;
+                if ($reminderNeeded != false) {
+                  $newPlanTask->fk_reminder = $newReminder->id;
+                } else {
+                  $newPlanTask->fk_reminder = null;
+                }
+                $newPlanTask->fk_task = $task['id'];
+                $newPlanTask->fk_plan = $plan->id;
+                $newPlanTask->save();
+              }
+            }
+          }
+        }
+      }
     }
     return Redirect::route('Schedule');
   }

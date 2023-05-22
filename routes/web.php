@@ -151,5 +151,8 @@ Route::middleware('auth')->group(function () {
   Route::post('/reflectionAnswerEdit', [QuestionController::class, 'editReflectionAnswer']);
   Route::post('/reflectionAnswerDelete', [QuestionController::class, 'deleteReflectionAnswer']);
 });
+Route::fallback(function () {
+  return redirect('/');
+});
 
 require __DIR__ . '/auth.php';

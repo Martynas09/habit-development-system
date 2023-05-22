@@ -204,7 +204,7 @@ class PlanController extends Controller
     }
 
     //getting tasks list
-    foreach ($plan->getTasks as $task) {
+    foreach ($plan->getTasks->where('execution_date', '>', Carbon::now()) as $task) { //HERE
       if ($task->fk_reminder != null) {
         $reminders = true;
       }
@@ -225,7 +225,7 @@ class PlanController extends Controller
       'Sunday' => array(),
     );
 
-    foreach ($plan->getTasks as $task) {
+    foreach ($plan->getTasks->where('execution_date', '>', Carbon::now()) as $task) { //HERE
       $weekday = date('l', strtotime($task['execution_date']));
       $time = date('H:i', strtotime($task['execution_date']));
       $existingTask = null;
@@ -281,21 +281,21 @@ class PlanController extends Controller
     $plan->title = $request->title;
     $plan->color = $request->color;
     $plan->save();
-
+    //TODO CLEAR REMINDERS AND TASKS
     //deleting all reminders
-    foreach ($plan->getTasks as $task) {
-      if ($task->fk_reminder != null) {
-        $task->getReminder->delete();
-      }
-    }
+    // foreach ($plan->getTasks->where('execution_date', '>', Carbon::now()) as $task) {
+    //   if ($task->fk_reminder != null) {
+    //     $task->getReminder->delete();
+    //   }
+    // }
 
     //deleting only upcoming tasks
-    foreach ($plan->getTasks->where('execution_date', '>', Carbon::now())->load('getTask') as $task) {
-      $task->getTask->delete();
+    // foreach ($plan->getTasks->where('execution_date', '>', Carbon::now())->load('getTask') as $task) {
+    //   $task->getTask->delete();
+    // }
+    foreach ($plan->getTasks->where('execution_date', '>', Carbon::now()) as $task) {
+      $task->delete();
     }
-    $plan->getTasks()->where('execution_date', '>', Carbon::now())->delete();
-
-
 
     //adding tasks and reminders(if selected system)
     foreach ($request->tasks as $task) {
@@ -449,6 +449,7 @@ class PlanController extends Controller
     foreach ($plan->getTasks->load('getTask') as $task) {
       $task->getTask->delete();
     }
+
     //deleting all habits
     foreach ($plan->getPlanHabits->load('habits') as $habit) {
       $habit->habits->delete();
@@ -622,6 +623,7 @@ class PlanController extends Controller
     $plan->color = 'white';
     $plan->active = 1;
     $plan->save();
+
     //first answer
     if ($request->selectedAnswerValue['_value'][0] <= 1) {
       $newTask = new Task();
