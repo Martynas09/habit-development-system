@@ -23,7 +23,7 @@ class ReflectionController extends Controller
   {
     $questions = Reflection_question::orderBy('number')->get();
     $answers = Reflection_answer::all();
-    $plans = Plan::where('fk_user', auth()->user()->id)->where('active', '=', 1)->whereNotIn('title', ['Iššūkis'])->with('getPlanHabits.habits')->get();
+    $plans = Plan::where('fk_user', auth()->user()->id)->where('active', '=', 1)->where('title', '!=', 'Refleksija')->whereNotIn('title', ['Iššūkis'])->with('getPlanHabits.habits')->get();
     $habits = $plans->pluck('getPlanHabits')->flatten()->pluck('habits')->flatten()->toArray();
     $filteredHabits = collect($habits)->reject(function ($habit) {
       return $habit['status'] === 'completed';
@@ -36,7 +36,7 @@ class ReflectionController extends Controller
   }
   public function reflectionFinished(Request $request)
   {
-    $plans = Plan::where('fk_user', auth()->user()->id)->where('active', '=', 1)->whereNotIn('title', ['Iššūkis'])->with('getPlanHabits.habits')->get();
+    $plans = Plan::where('fk_user', auth()->user()->id)->where('active', '=', 1)->where('title', '!=', 'Refleksija')->whereNotIn('title', ['Iššūkis'])->with('getPlanHabits.habits')->get();
     $habits = $plans->pluck('getPlanHabits')->flatten()->pluck('habits')->flatten()->toArray();
     foreach ($request->planAnswers as $key => $answer) {
       if ($answer == 1) {
@@ -48,7 +48,7 @@ class ReflectionController extends Controller
       }
     }
     // Check if all plan habits are completed
-    $plans = Plan::where('fk_user', auth()->user()->id)->where('active', '=', 1)->whereNotIn('title', ['Iššūkis'])->with('getPlanHabits.habits')->get();
+    $plans = Plan::where('fk_user', auth()->user()->id)->where('active', '=', 1)->where('title', '!=', 'Refleksija')->whereNotIn('title', ['Iššūkis'])->with('getPlanHabits.habits')->get();
     $planCompleted = true;
     foreach ($plans as $plan) {
       foreach ($plan->getPlanHabits as $planHabit) {
@@ -151,13 +151,13 @@ class ReflectionController extends Controller
 
         $convertedTaskArray = [];
         foreach ($uniqueTasks as $index => $task) {
-            $convertedTaskArray[$index] = $task->toArray();
+          $convertedTaskArray[$index] = $task->toArray();
         }
         $uniqueTasks = $convertedTaskArray;
 
         //deleting only upcoming tasks except reflection
-        foreach($plan->getTasks->where('execution_date', '>', Carbon::now()) as $task) {
-          if($task->getTask->title !== "Refleksija") {
+        foreach ($plan->getTasks->where('execution_date', '>', Carbon::now()) as $task) {
+          if ($task->getTask->title !== "Refleksija") {
             $task->delete();
           }
         }
@@ -210,19 +210,37 @@ class ReflectionController extends Controller
         }
       }
     }
-     //TODO: make refleksija plan for each user and hide it everywhere and use it only to store reflection tasks
-     $plan = Plan::where('fk_user', auth()->user()->id)->where('active', '=', 1)->whereNotIn('title', ['Iššūkis'])->first();
-     $task = new Task();
-     $task->duration = 15;
-     $task->title = "Refleksija";
-     $task->save();
-     //adding reflection as a task
-     $reflection = new Plan_task();
-     $reflection->fk_plan = $plan->id;
-     $reflection->fk_task = $task->id;
-     $reflection->execution_date = Carbon::now('Europe/Vilnius');
-     $reflection->is_done = 1;
-     $reflection->save();
+
+    $existingPlan = Plan::where('title', 'Refleksija')->where('fk_user', auth()->user()->id)->first();
+    if (!$existingPlan) {
+      $plan = new Plan();
+      $plan->title = "Refleksija";
+      $plan->active = 1;
+      $plan->color = "#bae7ff";
+      $plan->fk_user = auth()->user()->id;
+      $plan->save();
+    }
+    else{
+      $plan = $existingPlan;
+    }
+
+    $existingTask=Task::where('title', 'Refleksija')->first();
+    if(!$existingTask){
+      $task = new Task();
+      $task->duration = 15;
+      $task->title = "Refleksija";
+      $task->save();
+    }
+    else{
+      $task=$existingTask;
+    }
+    //adding reflection as a task
+    $reflection = new Plan_task();
+    $reflection->fk_plan = $plan->id;
+    $reflection->fk_task = $task->id;
+    $reflection->execution_date = Carbon::now('Europe/Vilnius');
+    $reflection->is_done = 1;
+    $reflection->save();
     return Redirect::route('Schedule');
   }
 }

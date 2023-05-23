@@ -100,7 +100,7 @@ class ScheduleController extends Controller
   {
     $tasks = collect();
 
-    $plan = Plan::where('fk_user', auth()->user()->id)->get()->load('getTasks.getTask');
+    $plan = Plan::where('fk_user', auth()->user()->id)->where('title', '!=', 'Refleksija')->get()->load('getTasks.getTask');
     foreach ($plan as $planItem) {
       $tasks = $tasks->merge($planItem->getTasks->load('getTask'));
     }

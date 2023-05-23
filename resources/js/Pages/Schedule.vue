@@ -23,7 +23,7 @@
           <h3 v-else class="m-3">Neturite aktyvių planų</h3>
           <div class="flex">
             <div v-for="planName in plan" :key="planName.title">
-              <div class="pl-3 w-fit">
+              <div v-if="planName.title!=='Refleksija'" class="pl-3 w-fit">
                 <p class="px-2 rounded-sm" :style="{ backgroundColor: planName.color }">{{ planName.title }}</p>
               </div>
             </div>

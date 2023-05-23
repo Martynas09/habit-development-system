@@ -116,7 +116,7 @@ class ChallengeController extends Controller
     $plan = new Plan();
     $plan->fk_user = auth()->user()->id;
     $plan->title = "Iššūkis" . $id;
-    $plan->color = "#CA33FF";
+    $plan->color = "#bae7ff";
     $plan->active = 1;
     $plan->save();
 

@@ -24,6 +24,7 @@ class PlanController extends Controller
   {
     $plans = Plan::where('fk_user', auth()->user()->id)
       ->where('title', 'not like', '%iššūkis%')
+      ->where('title', '!=', 'Refleksija')
       ->orderBy('created_at', 'desc')
       ->get();
     return inertia::render('Plan/PlanListView', [
