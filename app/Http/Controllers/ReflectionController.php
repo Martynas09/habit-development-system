@@ -36,19 +36,6 @@ class ReflectionController extends Controller
   }
   public function reflectionFinished(Request $request)
   {
-    //TODO: make refleksija plan for each user and hide it everywhere and use it only to store reflection tasks
-    $plan = Plan::where('fk_user', auth()->user()->id)->where('active', '=', 1)->whereNotIn('title', ['Iššūkis'])->first();
-    $task = new Task();
-    $task->duration = 15;
-    $task->title = "Refleksija";
-    $task->save();
-    //adding reflection as a task
-    $reflection = new Plan_task();
-    $reflection->fk_plan = $plan->id;
-    $reflection->fk_task = $task->id;
-    $reflection->execution_date = Carbon::now('Europe/Vilnius');
-    $reflection->is_done = 1;
-    $reflection->save();
     $plans = Plan::where('fk_user', auth()->user()->id)->where('active', '=', 1)->whereNotIn('title', ['Iššūkis'])->with('getPlanHabits.habits')->get();
     $habits = $plans->pluck('getPlanHabits')->flatten()->pluck('habits')->flatten()->toArray();
     foreach ($request->planAnswers as $key => $answer) {
@@ -223,6 +210,19 @@ class ReflectionController extends Controller
         }
       }
     }
+     //TODO: make refleksija plan for each user and hide it everywhere and use it only to store reflection tasks
+     $plan = Plan::where('fk_user', auth()->user()->id)->where('active', '=', 1)->whereNotIn('title', ['Iššūkis'])->first();
+     $task = new Task();
+     $task->duration = 15;
+     $task->title = "Refleksija";
+     $task->save();
+     //adding reflection as a task
+     $reflection = new Plan_task();
+     $reflection->fk_plan = $plan->id;
+     $reflection->fk_task = $task->id;
+     $reflection->execution_date = Carbon::now('Europe/Vilnius');
+     $reflection->is_done = 1;
+     $reflection->save();
     return Redirect::route('Schedule');
   }
 }
