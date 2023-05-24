@@ -22,8 +22,16 @@
               <a-row :gutter="16">
                 <a-col :span="16">
                   <a-card :bordered="false">
-                    <template #title><bell-outlined /><span class="font-bold"> Pranešimai</span></template>
-                    <p class="pt-2">Neturite naujų pranešimų</p>
+                    <template #title>
+                      <bell-outlined />
+                        <span class="font-bold pr-1"> Pranešimai</span>
+                        <a-badge :count="props.notification.length"></a-badge>
+                    </template>
+                    <p v-if="props.notification.length === 0" class="pt-2 pl-3">Neturite naujų pranešimų</p>
+                    <div v-for="challenge in props.notification" :key="challenge">
+                      <p v-if="challenge.status === 'pending'" class="pt-2 pl-3 font-semibold">Jūs gavote naują iššūkį nuo
+                        {{ challenge.challenge.challenge_author.username }}</p>
+                    </div>
                   </a-card>
                 </a-col>
                 <a-col :span="8">
@@ -94,7 +102,9 @@ dayjs.locale('lt');
 const props = defineProps({
   tasks: Object,
   notes: Object,
+  notification: Object,
 });
+console.log(props.notification);
 // console.log(props.tasks);
 // console.log(props.notes);
 </script>

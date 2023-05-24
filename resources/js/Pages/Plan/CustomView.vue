@@ -59,14 +59,15 @@
                       </a-form-item>
                     </div>
                     <a-form-item>
-                      <a-popover v-model:visible="goalSelectVisible" title="Pasirinkite norimą tikslą" trigger="click" placement="rightBottom">
+                      <a-popover v-model:visible="goalSelectVisible" title="Pasirinkite norimą tikslą" trigger="click"
+                        placement="rightBottom">
                         <template #content>
                           <a-select ref="select" v-model:value="selectedGoal" style="width: 200px" @change="handleChange">
                             <template v-for="goal in existingGoals" :key="goal">
-                            <a-select-option v-if="goal.visible" :value="goal.title">
-                              <span>{{ goal.title }}</span>
-                            </a-select-option>
-                          </template>
+                              <a-select-option v-if="goal.visible" :value="goal.title">
+                                <span>{{ goal.title }}</span>
+                              </a-select-option>
+                            </template>
                           </a-select>
                         </template>
                       </a-popover>
@@ -350,7 +351,7 @@
                               two-tone-color="#ef4444" /></button>
                           <a-time-picker class="min-w-[82px]" :minute-step="5"
                             style="width: 82px; margin-bottom:7px;margin-top:7px;margin-left:5px;margin-right:5px"
-                            v-model:value="element.time" format="HH:mm" valueFormat="HH:mm" placeholder="Laikas" />
+                            v-model:value="element.time" format="HH:mm" placeholder="Laikas" />
                           <a-tooltip>
                             <template #title>{{ element.value }}</template>
                             <div class="whitespace-nowrap text-ellipsis overflow-hidden">{{ element.value }}</div>
@@ -586,6 +587,7 @@ const planRemindersError = ref('');
 
 // VALIDATION
 const validateBeforeSubmit = () => {
+  // title
   if (planTitle.value.length < 1) {
     planTitleError.value = 'Pavadinimas yra privalomas';
   } else if (planTitle.value === 'Pavadinimas') {
@@ -595,10 +597,40 @@ const validateBeforeSubmit = () => {
   } else {
     planTitleError.value = '';
   }
+
+  // color
   planColorError.value = planColor.value === 'white' ? 'Pasirinkite plano spalvą' : '';
-  planGoalsError.value = dynamicValidateForm.goals.length < 1 ? 'Planas turi turėti bent vieną tikslą' : '';
-  planHabitsError.value = dynamicValidateForm.habits.length < 1 ? 'Planas turi turėti bent vieną įprotį' : '';
-  planTasksListError.value = listTasks.value.length < 1 ? 'Planas turi turėti bent vieną užduotį' : '';
+
+  // goals
+  if (dynamicValidateForm.goals.length < 1) {
+    planGoalsError.value = 'Planas turi turėti bent vieną tikslą';
+  } else if (dynamicValidateForm.goals.some((goal) => goal.value === '' || goal.value === null)) {
+    planGoalsError.value = 'Tikslai turi turėti pavadinimą';
+  } else {
+    planGoalsError.value = '';
+  }
+
+  // habits
+  if (dynamicValidateForm.habits.length < 1) {
+    planHabitsError.value = 'Planas turi turėti bent vieną įprotį';
+  } else if (dynamicValidateForm.habits.some((habit) => habit.value === '' || habit.value === null)) {
+    planHabitsError.value = 'Įpročiai turi turėti pavadinimą';
+  } else {
+    planHabitsError.value = '';
+  }
+
+  // tasks
+  if (listTasks.value.length < 1) {
+    planTasksListError.value = 'Planas turi turėti bent vieną užduotį';
+  } else if (listTasks.value.some((task) => task.value === '' || task.value === null)) {
+    planTasksListError.value = 'Užduotys turi turėti pavadinimą';
+  } else if (listTasks.value.some((task) => task.duration === '' || task.duration === null)) {
+    planTasksListError.value = 'Užduotys turi turėti trukmę';
+  } else {
+    planTasksListError.value = '';
+  }
+
+  // reminders
   planRemindersError.value = reminderType.value === undefined ? 'Pasirinkite priminimų tipą' : '';
 
   const hasItem = (list) => list.value.length > 0;
@@ -612,8 +644,26 @@ const validateBeforeSubmit = () => {
     || hasItem(listSaturday)
     || hasItem(listSunday)
   ));
+  if (!hasPlanItem) {
+    planTasksError.value = 'Tvarkaraštis turi turėti bent vieną užduotį';
+  } else if (listMonday.value.some((task) => task.time === undefined || task.time === null)) {
+    planTasksError.value = 'Užduotys turi turėti laiką';
+  } else if (listTuesday.value.some((task) => task.time === undefined || task.time === null)) {
+    planTasksError.value = 'Užduotys turi turėti laiką';
+  } else if (listWednesday.value.some((task) => task.time === undefined || task.time === null)) {
+    planTasksError.value = 'Užduotys turi turėti laiką';
+  } else if (listThursday.value.some((task) => task.time === undefined || task.time === null)) {
+    planTasksError.value = 'Užduotys turi turėti laiką';
+  } else if (listFriday.value.some((task) => task.time === undefined || task.time === null)) {
+    planTasksError.value = 'Užduotys turi turėti laiką';
+  } else if (listSaturday.value.some((task) => task.time === undefined || task.time === null)) {
+    planTasksError.value = 'Užduotys turi turėti laiką';
+  } else if (listSunday.value.some((task) => task.time === undefined || task.time === null)) {
+    planTasksError.value = 'Užduotys turi turėti laiką';
+  } else {
+    planTasksError.value = '';
+  }
 
-  planTasksError.value = hasPlanItem ? '' : 'Tvarkaraštis turi turėti bent vieną užduotį';
   return !planTitleError.value && !planColorError.value && !planGoalsError.value && !planHabitsError.value && !planTasksListError.value && !planTasksError.value && !planRemindersError.value;
 };
 

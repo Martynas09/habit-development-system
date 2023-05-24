@@ -8,6 +8,7 @@ use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Plan;
 use App\Notifications\TaskReminder;
+use App\Models\Challenged_user;
 use App\Models\Note;
 use Carbon\Carbon;
 
@@ -53,7 +54,8 @@ class UserController extends Controller
     ];
     return response()->json($response);
   }
-  public function levelUp(Request $request){
+  public function levelUp(Request $request)
+  {
     $user = User::where('id', auth()->user()->id)->first();
     $user->level = $request->level;
     $user->save();
@@ -72,6 +74,14 @@ class UserController extends Controller
     $taskArray = array_slice($allTasksArray, 0, 3);
 
     $notes = Note::where('fk_user', auth()->user()->id)->orderBy('created_at', 'desc')->take(3)->get();
-    return Inertia::render('Dashboard', ['tasks' => $taskArray, 'notes' => $notes]);
+
+    $notification = Challenged_user::where('fk_user', auth()->user()->id)
+      ->where('status', 'pending')
+      ->whereHas('challenge', function ($query) {
+        $query->where('type', '<>', 'public');
+      })
+      ->with(['challenge', 'challenge.challenge_author'])
+      ->get();
+    return Inertia::render('Dashboard', ['tasks' => $taskArray, 'notes' => $notes, 'notification' => $notification]);
   }
 }

@@ -48,9 +48,9 @@ class ReflectionController extends Controller
       }
     }
     // Check if all plan habits are completed
-    $plans = Plan::where('fk_user', auth()->user()->id)->where('active', '=', 1)->where('title', '!=', 'Refleksija')->whereNotIn('title', ['Iššūkis'])->with('getPlanHabits.habits')->get();
-    $planCompleted = true;
-    foreach ($plans as $plan) {
+    $plansTemp = Plan::where('fk_user', auth()->user()->id)->where('active', '=', 1)->where('title', '!=', 'Refleksija')->whereNotIn('title', ['Iššūkis'])->with('getPlanHabits.habits')->get();
+    foreach ($plansTemp as $plan) {
+      $planCompleted = true;
       foreach ($plan->getPlanHabits as $planHabit) {
         if ($planHabit->habits->status !== 'completed') {
           $planCompleted = false;

@@ -19,17 +19,19 @@
       <div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
           <p class="pt-2 pl-3 text-lg">Dienos citata: <span class="text-xl">"{{ quote }}"</span></p>
-          <h3 v-if="plan.length > 0" class="m-3">Aktyvūs planai:</h3>
+          <h3 v-if="plan.length > 0 && plan[0].title!=='Refleksija'" class="m-3">Aktyvūs planai:</h3>
           <h3 v-else class="m-3">Neturite aktyvių planų</h3>
           <div class="flex">
             <div v-for="planName in plan" :key="planName.title">
               <div v-if="planName.title!=='Refleksija'" class="pl-3 w-fit">
-                <p class="px-2 rounded-sm" :style="{ backgroundColor: planName.color }">{{ planName.title }}</p>
+                <p class="px-2 rounded-sm" :style="{ backgroundColor: planName.color }">
+                  <span v-if="!planName.title.includes('Iššūkis')">{{ planName.title }}</span>
+                  <span v-else>Iššūkis</span></p>
               </div>
             </div>
             <div class="ml-auto mr-4">
             <Link :href="route('Reflection')">
-              <a-button type="primary" :disabled="plan.length === 0">Atlikti refleksiją</a-button>
+              <a-button type="primary" :disabled="plan.length === 0 || plan[0].title==='Refleksija'">Atlikti refleksiją</a-button>
             </Link>
           </div>
           </div>
@@ -78,7 +80,7 @@
             </a-modal>
           </div>
           <div class="flex flex-row-reverse mr-4 mb-2">
-            <a-button type="primary" @click="exportCalendar" :disabled="plan.length === 0">Ekportuoti tvarkaraštį</a-button>
+            <a-button type="primary" @click="exportCalendar" :disabled="plan.length === 0 || plan[0].title==='Refleksija'" style="background:#84cc16;border-color:#84cc16">Ekportuoti tvarkaraštį</a-button>
           </div>
         </div>
       </div>

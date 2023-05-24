@@ -41,7 +41,7 @@
                     <span v-if="props.receivedChallenges.length === 0">Neturite gautų iššūkių</span>
                     <div v-for="challenge in props.receivedChallenges" :key="challenge"
                       class="bg-white rounded-lg shadow p-6 relative min-w-[380px] min-h-[220px]">
-                      <h2 style="color:#0F4C81" class="text-xl font-bold mb-2">{{ challenge.challenge.title }}</h2>
+                      <h2 style="color:#1c90ff" class="text-xl font-bold mb-2">{{ challenge.challenge.title }}</h2>
                       <div class="flex items-center absolute top-4 right-4">
                         <div class="mr-1 w-9">
                           <img :src="'/storage/' + challenge.challenge.challenge_author.avatar"
@@ -53,7 +53,7 @@
                       <p class="text-gray-700 mb-8">{{ challenge.challenge.description }}</p>
                       <div class="flex justify-between">
                         <div class="absolute right-4 bottom-4">
-                          <a-button v-if="challenge.status === 'pending'" type="primary"
+                          <a-button v-if="challenge.status === 'pending'" type="primary" style="background:#84cc16;border-color:#84cc16"
                             @click="showModal(challenge.challenge)">Plačiau</a-button>
                           <span v-else-if="challenge.status === 'accepted'" class="text-green-500 font-bold">Priimtas</span>
                           <span v-else-if="challenge.status === 'completed'" class="text-green-600 font-bold">Atliktas</span>
@@ -74,7 +74,7 @@
                     <span v-if="props.authorPrivateChallenges.length === 0">Neturite mestų iššūkių</span>
                     <div v-for="challenge in props.authorPrivateChallenges" :key="challenge"
                       class="bg-white rounded-lg shadow p-6 relative min-w-[380px] min-h-[220px]">
-                      <h2 style="color:#0F4C81" class="text-xl font-bold mb-2">{{ challenge.title }}</h2>
+                      <h2 style="color:#1c90ff" class="text-xl font-bold mb-2">{{ challenge.title }}</h2>
                       <span class="text-gray-700 font-bold">Gavėjai:</span>
                       <div v-for="user in challenge.challenged_users" :key="user" class="flex items-center">
                         <div class="mr-1 w-8 mb-1">
@@ -108,7 +108,7 @@
               <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div v-for="challenge in props.publicChallenges" :key="challenge"
                   class="bg-white rounded-lg shadow p-6 relative min-w-[380px] min-h-[220px]">
-                  <h2 style="color:#0F4C81" class="text-xl font-bold mb-2">{{ challenge.title }}</h2>
+                  <h2 style="color:#1c90ff" class="text-xl font-bold mb-2">{{ challenge.title }}</h2>
                   <p class="text-gray-700 mb-8">{{ challenge.description }}</p>
                   <div class="flex justify-between">
                     <span class="text-gray-700 absolute left-6 bottom-4">Skiriama <span class="font-bold">{{
@@ -116,7 +116,7 @@
                         v-if="challenge.xpGiven === 10">patirties taškų</span><span
                         v-if="challenge.xpGiven !== 1 && challenge.xpGiven !== 10">patirties taškai</span></span>
                     <div v-if="challenge.challenged_users.length === 0" class="absolute right-4 bottom-4">
-                      <a-button type="primary" @click="showModal(challenge,1)">Plačiau</a-button>
+                      <a-button type="primary" style="background:#84cc16;border-color:#84cc16" @click="showModal(challenge,1)">Plačiau</a-button>
                     </div>
                     <div v-else class="absolute right-6 bottom-4">
                       <span v-if="challenge.challenged_users[0].status === 'accepted'"
