@@ -509,7 +509,6 @@ class PlanController extends Controller
       'plans' => $plans
     ]);
   }
-  //TODO: fix overall kekw
   public function selectRecommended(Request $request)
   {
     $goalsArray = [];

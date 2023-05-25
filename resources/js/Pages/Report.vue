@@ -5,10 +5,14 @@
     <template #header>
       <a-breadcrumb>
         <a-breadcrumb-item class="text-xl">
+          <Link :href="route('dashboard')">
           <home-outlined style="font-size:20px" />
-          Pagrindinis
+          </Link>
         </a-breadcrumb-item>
-        <!-- TODO -->
+        <a-breadcrumb-item class="text-xl">
+          <bar-chart-outlined style="font-size:20px" />
+          Ataskaita
+        </a-breadcrumb-item>
       </a-breadcrumb>
     </template>
 
@@ -33,8 +37,8 @@
   </AuthenticatedLayout>
 </template>
 <script setup>
-import { Head } from '@inertiajs/vue3';
-import { HomeOutlined } from '@ant-design/icons-vue';
+import { Head, Link } from '@inertiajs/vue3';
+import { HomeOutlined, BarChartOutlined } from '@ant-design/icons-vue';
 import Chart from 'chart.js/auto';
 import { computed, ref } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';

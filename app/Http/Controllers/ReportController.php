@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
-  //TODO exclude challenge tasks and reflection tasks
     public function showReport()
     {
         //$tasks = Plan_task::all();

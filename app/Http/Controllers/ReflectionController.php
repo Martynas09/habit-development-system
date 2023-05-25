@@ -23,7 +23,7 @@ class ReflectionController extends Controller
   {
     $questions = Reflection_question::orderBy('number')->get();
     $answers = Reflection_answer::all();
-    $plans = Plan::where('fk_user', auth()->user()->id)->where('active', '=', 1)->where('title', '!=', 'Refleksija')->whereNotIn('title', ['Iššūkis'])->with('getPlanHabits.habits')->get();
+    $plans = Plan::where('fk_user', auth()->user()->id)->where('active', '=', 1)->where('title', '!=', 'Refleksija')->where('title','not like', '%Iššūkis%')->with('getPlanHabits.habits')->get();
     $habits = $plans->pluck('getPlanHabits')->flatten()->pluck('habits')->flatten()->toArray();
     $filteredHabits = collect($habits)->reject(function ($habit) {
       return $habit['status'] === 'completed';
@@ -36,7 +36,7 @@ class ReflectionController extends Controller
   }
   public function reflectionFinished(Request $request)
   {
-    $plans = Plan::where('fk_user', auth()->user()->id)->where('active', '=', 1)->where('title', '!=', 'Refleksija')->whereNotIn('title', ['Iššūkis'])->with('getPlanHabits.habits')->get();
+    $plans = Plan::where('fk_user', auth()->user()->id)->where('active', '=', 1)->where('title', '!=', 'Refleksija')->where('title','not like', '%Iššūkis%')->with('getPlanHabits.habits')->get();
     $habits = $plans->pluck('getPlanHabits')->flatten()->pluck('habits')->flatten()->toArray();
     foreach ($request->planAnswers as $key => $answer) {
       if ($answer == 1) {
@@ -48,7 +48,7 @@ class ReflectionController extends Controller
       }
     }
     // Check if all plan habits are completed
-    $plansTemp = Plan::where('fk_user', auth()->user()->id)->where('active', '=', 1)->where('title', '!=', 'Refleksija')->whereNotIn('title', ['Iššūkis'])->with('getPlanHabits.habits')->get();
+    $plansTemp = Plan::where('fk_user', auth()->user()->id)->where('active', '=', 1)->where('title', '!=', 'Refleksija')->where('title','not like', '%Iššūkis%')->with('getPlanHabits.habits')->get();
     foreach ($plansTemp as $plan) {
       $planCompleted = true;
       foreach ($plan->getPlanHabits as $planHabit) {
