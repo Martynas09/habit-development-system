@@ -294,7 +294,7 @@ class PlanController extends Controller
     // foreach ($plan->getTasks->where('execution_date', '>', Carbon::now())->load('getTask') as $task) {
     //   $task->getTask->delete();
     // }
-    foreach ($plan->getTasks->where('execution_date', '>', Carbon::now()) as $task) {
+    foreach ($plan->getTasks->where('execution_date', '>', Carbon::now()->addDays(1)) as $task) {
       $task->delete();
     }
 

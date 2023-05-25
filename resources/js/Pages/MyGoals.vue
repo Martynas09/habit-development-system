@@ -85,13 +85,13 @@
                   <template v-if="column.key === 'action'">
                     <div class="flex">
                       <div class="pr-2">
-                        <a-button v-if="editingList[index] === false" @click="editingList[index] = true" type="primary"
+                        <a-button v-if="editingList[index] === false && record.status !== 'completed'" @click="editingList[index] = true" type="primary"
                           shape="circle">
                           <template #icon>
                             <edit-outlined />
                           </template>
                         </a-button>
-                        <a-button v-else html-type="submit" type="primary" shape="circle"
+                        <a-button v-else-if="record.status !== 'completed'" html-type="submit" type="primary" shape="circle"
                           @click="handleEdit(record.title, record.id, index)"><template #icon>
                             <save-outlined />
                           </template></a-button>
