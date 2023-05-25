@@ -47,7 +47,7 @@ class AchievementController extends Controller
     }
     public function showUserAchievements()
     {
-        $achievements= User_achievement::where('fk_user',auth()->user()->id)->get()->load('getAchievement');
+        $achievements= User_achievement::where('fk_user',auth()->user()->id)->orderBy('created_at','desc')->get()->load('getAchievement');
         return Inertia::render('Profile/Achievements', ['achievements' => $achievements]);
     }
 }

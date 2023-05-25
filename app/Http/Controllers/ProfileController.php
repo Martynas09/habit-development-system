@@ -39,7 +39,7 @@ class ProfileController extends Controller
       $userAvatar->load('getHead');
     }
 
-    $achievements = User_achievement::where('fk_user', auth()->user()->id)->get()->load('getAchievement')->take(2);
+    $achievements = User_achievement::where('fk_user', auth()->user()->id)->orderBy('created_at','desc')->get()->load('getAchievement')->take(2);
     $count = User_achievement::where('fk_user', auth()->user()->id)->count() - 2;
 
     return Inertia::render('Profile/Edit', [

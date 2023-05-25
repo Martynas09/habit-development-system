@@ -43,7 +43,6 @@
                   </a-select>
                 </a-form-item>
               </div>
-              <a-alert v-if="!daysValidation && days.length!==0" :message="`Pasirinkite ${challenge.timesPerWeek} dienas`" type="error" show-icon/>
               <div><a-form-item style="margin-top:0px;margin-bottom:0px" name="category" label="Priminimai"
                   :rules="[{ required: true }]"></a-form-item></div>
               <a-select v-model:value="reminder" style="width: 250px" placeholder="Pasirinkite">
@@ -51,6 +50,8 @@
                 <a-select-option value="system">Sisteminiai (<span
                     class="text-sm text-green-500">rekomenduojama</span>)</a-select-option>
               </a-select>
+              <div class="mt-2"></div>
+              <a-alert v-if="!daysValidation && days.length!==0" :message="`Pasirinkite ${challenge.timesPerWeek} dienas ir kitus laukelius`" type="error" show-icon/>
               <div class="flex justify-end my-6 mr-4">
                 <a-button type="primary" @click="acceptChallenge" :disabled="!daysValidation">Priimti
                   iššūkį<send-outlined /></a-button>
@@ -80,7 +81,11 @@ const time = ref();
 const reminder = ref();
 const daysValidation = computed(() => {
   if (days.value.length === props.challenge.timesPerWeek) {
-    return true;
+    if (reminder.value === 'self' || reminder.value === 'system') {
+      if (time.value !== null && time.value !== undefined) {
+        return true;
+      }
+    }
   }
   return false;
 });
