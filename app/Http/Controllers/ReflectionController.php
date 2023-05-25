@@ -97,7 +97,7 @@ class ReflectionController extends Controller
           'Sunday' => array(),
         );
 
-        foreach ($plan->getTasks->where('execution_date', '>', Carbon::now()->addDays(1)) as $task) {
+        foreach ($plan->getTasks->where('execution_date', '>', Carbon::tomorrow()) as $task) {
           $weekday = date('l', strtotime($task['execution_date']));
           $time = date('H:i', strtotime($task['execution_date']));
           $existingTask = null;
@@ -142,7 +142,7 @@ class ReflectionController extends Controller
         }
         //find all plan tasks unique
         $uniqueTasks = array();
-        foreach ($plan->getTasks->where('execution_date', '>', Carbon::now()->addDays(1)) as $task) {
+        foreach ($plan->getTasks->where('execution_date', '>', Carbon::tomorrow()) as $task) {
           $title = $task->getTask;
           if ($title->title !== "Refleksija" && !in_array($title, $uniqueTasks)) {
             $uniqueTasks[] = $task->getTask;
@@ -156,7 +156,7 @@ class ReflectionController extends Controller
         $uniqueTasks = $convertedTaskArray;
 
         //deleting only upcoming tasks except reflection
-        foreach ($plan->getTasks->where('execution_date', '>', Carbon::now()->addDays(1)) as $task) {
+        foreach ($plan->getTasks->where('execution_date', '>', Carbon::tomorrow()) as $task) {
           if ($task->getTask->title !== "Refleksija") {
             $task->delete();
           }
