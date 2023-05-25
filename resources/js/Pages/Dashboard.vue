@@ -15,17 +15,18 @@
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
           <div v-if="!$page.props.auth.user.is_admin">
-            <p class="text-3xl font-bold text-black text-center p-3">Sveiki, {{ $page.props.auth.user.username
-            }}
+            <p class="text-3xl font-bold text-black text-center p-3">Sveiki, {{ $page.props.auth.user.username }}
             </p>
             <div style="padding: 20px">
               <a-row :gutter="16">
                 <a-col :span="16">
                   <a-card :bordered="false">
                     <template #title>
-                      <bell-outlined />
+                      <div class="text-2xl text-sky-500">
+                        <bell-outlined />
                         <span class="font-bold pr-1"> Pranešimai</span>
                         <a-badge :count="props.notification.length"></a-badge>
+                      </div>
                     </template>
                     <p v-if="props.notification.length === 0" class="pt-2 pl-3">Neturite naujų pranešimų</p>
                     <div v-for="challenge in props.notification" :key="challenge">
@@ -36,8 +37,12 @@
                 </a-col>
                 <a-col :span="8">
                   <a-card :bordered="false">
-                    <template #title><calendar-outlined /><span class="font-bold"> Artimiausios
-                        užduotys</span></template>
+                    <template #title>
+                      <div class="text-2xl text-sky-500">
+                        <calendar-outlined />
+                        <span class="font-bold"> Artimiausios užduotys</span>
+                      </div>
+                    </template>
                     <div v-for="task in tasks" :key="task" class="pt-1">
                       <span class="font-semibold">{{ dayjs(task.execution_date).format('dddd/MMMM')
                       }}</span>
@@ -52,7 +57,12 @@
                 </a-col>
                 <a-col :span="8">
                   <a-card :bordered="false">
-                    <template #title><form-outlined /><span class="font-bold"> Naujausi užrašai</span></template>
+                    <template #title>
+                      <div class="text-2xl text-sky-500">
+                        <form-outlined />
+                      <span class="font-bold"> Naujausi užrašai</span>
+                    </div>
+                  </template>
                     <p v-if="notes.length === 0">Neturite užrašų</p>
                     <a-list v-if="notes.length" :data-source="notes" item-layout="horizontal">
                       <template #renderItem="{ item }">

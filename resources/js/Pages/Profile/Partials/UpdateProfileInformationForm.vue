@@ -28,7 +28,7 @@ function updateUsername() {
 <template>
     <section>
         <header>
-            <h2 class="text-lg font-medium text-gray-900">Profilio informacija</h2>
+            <h2 class="text-lg font-bold text-gray-900 ">Profilio informacija</h2>
 
             <p class="mt-1 text-sm text-gray-600">
                 Atnaujinkite savo paskyros profilio informaciją ir el. pašto adresą.

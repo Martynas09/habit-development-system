@@ -19,7 +19,7 @@
     <div class="py-12">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="flex pb-1">
-          <h3 class="pl-2 text-xl flex-grow">Jūsų planai:</h3>
+          <h3 class="pl-2 text-3xl font-bold flex-grow text-sky-500">Jūsų planai:</h3>
           <div class="flex-shrink-0 justify-end pr-2">
             <Link :href="route('Plan.ChooseAlternativeView')">
             <a-button type="primary">Sudaryti naują planą</a-button>

@@ -21,7 +21,7 @@
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="">
                         <div class="flex flex-col items-center p-5">
-                            <div class="text-xl mb-4">Jūsų pozicija: {{ props.rank }}</div>
+                            <div class="text-3xl font-bold text-lime-500 mb-4">Jūsų pozicija: {{ props.rank }}</div>
                             <table class="table-auto border border-gray-300 shadow">
                                 <thead>
                                     <tr>

@@ -27,7 +27,7 @@
 
     <div class="py-12">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <h3 class="pb-2 text-xl">Atsakykite į klausimus:</h3>
+        <h3 class="pb-2 text-3xl text-sky-500 font-bold">Atsakykite į klausimus:</h3>
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
           <div class="questions-container">
             <div class="question text-2xl font-bold m-4">

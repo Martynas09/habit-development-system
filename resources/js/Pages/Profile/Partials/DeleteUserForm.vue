@@ -40,7 +40,7 @@ const deleteUser = () => {
 <template>
     <section class="space-y-6">
         <header>
-            <h2 class="text-lg font-medium text-gray-900">Pašalinti paskyrą</h2>
+            <h2 class="text-lg font-bold text-gray-900">Pašalinti paskyrą</h2>
 
             <p class="mt-1 text-sm text-gray-600">
                 Kai ištrinsite savo paskyrą, visi jos ištekliai ir duomenys bus visam laikui ištrinti. Prieš ištrinant savo

@@ -21,11 +21,11 @@
 
         <div class="py-12">
             <div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
-                <h3 class="pb-2 text-xl">Pasirinkite plano sudarymo alternatyvą:</h3>
+                <h3 class="pb-2 text-3xl text-sky-500 font-bold">Pasirinkite plano sudarymo alternatyvą:</h3>
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="flex justify-center px-4 py-4">
                         <div class="p-4 relative max-w-md">
-                            <p class="flex justify-center font-bold">Apklausos alternatyva</p>
+                            <p class="flex justify-center font-bold text-3xl text-lime-500">Apklausos alternatyva</p>
                             <p>Pasirinkus šią alternatyvą reikia užpildyti klausimyną. Klausimyne
                                 surenkama svarbi informacija apie naudotojo tikslus, pageidavimus ir apribojimus. Tada
                                 sistema naudoja šią informaciją, kad sukurtų naudotojo poreikius atitinkančius asmeninius
@@ -45,7 +45,7 @@
                         </div>
                         <a-divider type="vertical" style="height: 220px; margin: auto; background-color: #69c0ff"/>
                         <div class="p-4 relative max-w-md">
-                            <p class="flex justify-center font-bold">Siūlomų planų alternatyva</p>
+                            <p class="flex justify-center font-bold text-3xl text-lime-500">Siūlomų planų alternatyva</p>
                             <p>Pasirinkus šią alternatyvą planas pasirenkamas iš siūlomų planų sąrašo. Siūlomus planus
                                 generuoja
                                 sistema, remdamasi naudotojų atsiliepimais ir istoriniais duomenimis. Naudotojai gali
@@ -65,7 +65,7 @@
                         </div>
                         <a-divider type="vertical" style="height: 220px; margin: auto; background-color: #69c0ff" />
                         <div class="p-4 relative max-w-md">
-                            <p class="flex justify-center font-bold">Kūrimo nuo nulio alternatyva</p>
+                            <p class="flex justify-center font-bold text-3xl text-lime-500">Kūrimo nuo nulio alternatyva</p>
                             <p class="pb-4">Pasirinkus šią alternatyvą planas kuriamas nuo nulio. Naudotojas gali nurodyti plano parametrus,
                                 pavyzdžiui, trukmę, veiklą ir tikslus. Tada sistema pagal šiuos parametrus sukuria planą.
                                 Šis metodas idealiai tinka naudotojams, kurie turi aiškią idėją, ko nori, ir nori visiškai

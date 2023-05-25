@@ -21,7 +21,7 @@
 
     <div class="pt-12 pb-24">
       <div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
-        <h3 class="pb-2 text-xl">Plano parametrai:</h3>
+        <h3 class="pb-2 text-3xl font-bold text-sky-500">Plano parametrai:</h3>
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
           <a-config-provider :locale="ltLT">
             <p class="text-lg pt-5 pl-6">Planavimas yra sunumeruotas, todėl norint išlaikyti sklandų plano kūrimą, reikia

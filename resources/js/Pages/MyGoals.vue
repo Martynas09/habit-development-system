@@ -19,7 +19,7 @@
       <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
           <div class="flex pb-1">
-            <h3 class="pl-2 text-xl flex-grow">Jūsų tikslai:</h3>
+            <h3 class="pl-2 text-3xl font-bold flex-grow text-sky-500">Jūsų tikslai:</h3>
             <div class="flex-shrink-0 justify-end pr-2">
               <a-button @click="showModal" type="primary">Sukurti naują tikslą</a-button>
               <a-modal v-model:visible="visible" title="Naujas tikslas" @ok="handleOk" ok-text="Sukurti"

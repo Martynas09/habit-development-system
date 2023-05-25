@@ -32,7 +32,8 @@
                             </Link>
                         </div>
                         <div class="pt-6">
-                            <a-card size="small" title="Pasiekimai" class="shadow-sm">
+                            <a-card size="small" class="shadow-sm">
+                              <template #title><span class="font-bold text-lg">Pasiekimai</span></template>
                                 <template #extra><a v-if="achievements.length > 0" :href="route('profile.achievements')">Peržiūrėti visus</a></template>
                                 <div v-if="achievements.length > 0" class="flex items-center">
                                     <a-card-grid v-for="achievement in achievements" :key="achievement">

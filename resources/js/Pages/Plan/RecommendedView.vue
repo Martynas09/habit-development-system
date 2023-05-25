@@ -37,7 +37,7 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                 <div v-for="plan in plans" :key="plan"
                                     class="bg-white rounded-lg shadow p-6 relative min-w-[380px] min-h-[180px]">
-                                    <h2 style="color:#0F4C81" class="text-xl font-bold mb-2">{{ plan.title }}</h2>
+                                    <h2 class="text-xl font-bold mb-2 text-lime-500">{{ plan.title }}</h2>
                                     <p class="text-gray-500 text-base mb-4">
                                         <span v-if="plan.title === 'Sportas'">Planas skirtas norintiems išsiugdyti sportinės
                                             veiklos įprotį</span>
