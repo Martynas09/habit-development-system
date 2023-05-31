@@ -127,6 +127,16 @@ class ScheduleController extends Controller
       $user = User::where('id', auth()->user()->id)->first();
       $user->xp += $achievement->rewardXP;
       $user->save();
+    }else if($count == 30){
+      $text = '30 atliktų užduočių';
+      $achievement = Achievement::where('title', $text)->first();
+      $userAchievemet = new User_achievement();
+      $userAchievemet->fk_user = auth()->user()->id;
+      $userAchievemet->fk_achievement = $achievement->id;
+      $userAchievemet->save();
+      $user = User::where('id', auth()->user()->id)->first();
+      $user->xp += $achievement->rewardXP;
+      $user->save();
     } else if ($count == 50) {
       $text = '50 atliktų užduočių';
       $achievement = Achievement::where('title', $text)->first();
